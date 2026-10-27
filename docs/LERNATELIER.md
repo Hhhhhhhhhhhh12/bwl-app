@@ -13,7 +13,7 @@ Der Nutzer hat nach dem sichtbaren Vergleich die Variante **Lernatelier** gewäh
 | Lokale Umsetzung | Abgeschlossen |
 | Lokale technische Prüfung | 23 von 23 Prüffällen bestanden |
 | Sichtprüfung der Browseraufnahmen durch Entwicklungsagent | Durchgeführt |
-| Visuelle Nutzerabnahme der realen Umsetzung | Offen |
+| Visuelle Nutzerabnahme der realen Umsetzung | Nicht abgenommen; Farben, Schrift und Gesamtwirkung passen noch nicht |
 | Übernahme in `main` / GitHub-Upload dieser Gestaltung | Nicht erfolgt |
 | Bereitstellung / Hostingänderung | Nicht erfolgt |
 
@@ -49,6 +49,12 @@ Dabei entdeckt und behoben: unsichtbare Tooltip-Flächen verbreiterten komplexer
 Die Testhilfe des isolierten Rechner-Unit-Tests wurde auf native Aufklappüberschriften erweitert. Die echte Browserbedienung prüft zusätzlich, dass Enter beim Öffnen keine Antwortprüfung auslöst.
 
 Der lokale Testserver bindet an `127.0.0.1`. Die Browserfälle verwenden frische Profile mit künstlichen Lernständen und blockieren nichtlokale Anfragen. Keine Installation, keine persönlichen Browserdaten und kein externer App-Dienst.
+
+## Rückmeldung und nächster Gestaltungsvergleich
+
+Der Nutzer hat die lokale Umsetzung visuell noch nicht abgenommen und die Kritik ausdrücklich auf **Farben, Schrift oder Gesamtwirkung** eingegrenzt. Das ist keine Ablehnung des Lernatelier-Aufbaus und keine allgemeine dauerhafte Farbpräferenz.
+
+Zwei Gegenentwürfe innerhalb der bestehenden Informationsstruktur werden zusammen mit der bisherigen Farbrichtung sichtbar verglichen: „Klar & modern“ (Blau, kräftige serifenlose Schrift) und „Graphit & Terrakotta“ (wärmere neutrale Flächen, rostfarbene Akzente). Diese Vorschläge sind noch nicht ausgewählt und nicht in den App-Quellstand übernommen. Eine weitere Gestaltungsauswahl ist offen.
 
 ## Grenzen und weitere Zustände
 
