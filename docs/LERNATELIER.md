@@ -56,6 +56,10 @@ Der Nutzer hat die lokale Umsetzung visuell noch nicht abgenommen und die Kritik
 
 Zwei Gegenentwürfe innerhalb der bestehenden Informationsstruktur werden zusammen mit der bisherigen Farbrichtung sichtbar verglichen: „Klar & modern“ (Blau, kräftige serifenlose Schrift) und „Graphit & Terrakotta“ (wärmere neutrale Flächen, rostfarbene Akzente). Diese Vorschläge sind noch nicht ausgewählt und nicht in den App-Quellstand übernommen. Eine weitere Gestaltungsauswahl ist offen.
 
+Die anschließende Nutzerkorrektur lautet **„zu wenig Gaming“**. Die BWL-Oberfläche soll damit eine deutlichere Spielidentität erhalten; ein reiner Wechsel von Farben und Schrift reicht nicht. Der ergänzte sichtbare Vergleich umfasst „Lernmission“ (technische Spieloberfläche mit einem Pfad für die 15 bestehenden Level) und „Lernarena“ (kräftige Konturen und Spielsteine). Die bisherige Lernatelier-Richtung bleibt als Referenz dabei. Empfehlung des Entwicklungsagenten: Lernmission, weil sie den Lernweg sichtbar macht und die Aufgabe fokussiert. Beide Gaming-Richtungen bleiben unbestätigte Entwürfe.
+
+Die separate Gestaltungsvorschau zeigt Rang, Punkte und eine Beispielreaktion mit den bekannten 20/14/8 Punkten. Sie implementiert keine neue Spielregel in der App und ist keine Abnahme des Lernablaufs. Die Vorschau wurde in 24 Kombinationen aus Variante, Farbschema und Fensterbreite auf Überläufe und die Beispielbedienung geprüft. Diese Vorschauprüfung ist vom dokumentierten App-Prüfstand getrennt.
+
 ## Grenzen und weitere Zustände
 
 Die Aufnahmen wurden visuell kontrolliert; die Nutzerabnahme ist weiterhin offen. Chromium und Fenstergrößen ersetzen keine Prüfung auf echten Mobilgeräten, in Safari/Firefox oder mit einem echten Screenreader. Angegebene Aufgabenlösungen wurden technisch akzeptiert, aber nicht unabhängig fachlich vollständig validiert.
