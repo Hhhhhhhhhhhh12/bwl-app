@@ -24,34 +24,9 @@
 
   // Use Dashboard preferences if available
   function enabledTopics(){
-    // 1) Quelle der Nutzerauswahl
-    let base;
-    try{
-      if (typeof window.getEnabledTopics === 'function'){
-        const list = window.getEnabledTopics();
-        if (Array.isArray(list) && list.length) base = list;
-      }
-    }catch(_e){}
-    if (!base) base = TOPICS.slice();
-
-    // 2) Gating anwenden: AREA1 zuerst, AREA2 erst wenn Area1 komplett
-    function isArea1Complete(){
-      try{
-        const p = ensureProg();
-        for (const t of AREA1_TOPICS){
-          const s = (p.topics && p.topics[t]) || {correct:0};
-          if ((s.correct|0) < MAX) return false;
-        }
-        return true;
-      }catch(_e){ return false; }
-    }
-
-    const allowed = isArea1Complete()
-      ? base
-      : base.filter(t => AREA1_TOPICS.includes(t));
-
-    return allowed;
+    return window.BwlTopics.selected().filter(window.BwlTopics.allowed);
   }
+
   window.progEnabledTopics = enabledTopics;
   window.enabledTopics = enabledTopics; // expose for selftest/tools
   const MAX = 15;                 // 15 Level je Thema → Zielgröße
@@ -245,20 +220,15 @@
     const active = enabledTopics();
     const totalCorrect = active.reduce((a,k)=> a + (p.topics[k]?.correct||0), 0);
     const totalSeen    = active.reduce((a,k)=> a + (p.topics[k]?.seen||0), 0);
-    const overallPct   = Math.round(Math.min(100, totalCorrect / (active.length*MAX) * 100));
+    const overallPct   = Math.round(Math.min(100, active.length ? totalCorrect / (active.length*MAX) * 100 : 0));
 
     // Gesamtfortschritt: Donut + Balken (CSP-safe, Visual helpers)
     const arc   = document.getElementById('overall-progress-arc');
     const label = document.getElementById('overall-progress-label');
     const bar   = document.getElementById('overall-progress-bar');
-    if (window.Visual && arc && label){
-      window.Visual.setDonut(arc, label, overallPct);
-    } else if (label) {
-      label.textContent = `${overallPct}%`;
-    }
-    if (window.CSSUtil && bar){
-      window.CSSUtil.setWidthClass(bar, overallPct);
-    }
+    if (arc) arc.setAttribute('stroke-dasharray', `${overallPct} 100`);
+    if (label) label.textContent = `${overallPct}%`;
+    setWidth('overall-progress-bar', overallPct);
     const oc = document.getElementById('overall-correct');
     const ot = document.getElementById('overall-total');
     if (oc) oc.textContent = totalCorrect;
@@ -266,7 +236,8 @@
 
     // Empfehlung: Thema mit geringstem Fortschritt
     let weakest = null; let minRate = 101;
-    active.forEach(t=>{
+    const unfinished = active.filter(t => (p.topics[t]?.correct || 0) < MAX);
+    (unfinished.length ? unfinished : active).forEach(t=>{
       const s = p.topics[t] || {correct:0, seen:0};
       const rate = s.seen ? Math.round((s.correct / s.seen) * 100) : 0; // Quote statt absolut
       if (rate < minRate){ minRate = rate; weakest = t; }
@@ -275,8 +246,15 @@
     const recEl = document.getElementById('recommend-topic');
     if (recEl) recEl.textContent = recName;
     const recBtn = document.getElementById('btn-start-recommend');
-    if (recBtn && weakest){
-      recBtn.onclick = ()=>{ location.hash = '#train'; window.session = { topic: weakest, difficulty: 1, index:0 }; };
+    if (recBtn) {
+      recBtn.onclick = null;
+      if (weakest) {
+        recBtn.href = 'train.html?' + new URLSearchParams({ topic: weakest, difficulty: '1' }).toString();
+        recBtn.removeAttribute('aria-disabled');
+      } else {
+        recBtn.removeAttribute('href');
+        recBtn.setAttribute('aria-disabled', 'true');
+      }
     }
 
     // Humor-Banner (zufällige absurde Botschaft)
@@ -301,7 +279,7 @@
   function svgBar(value, max, w, h){
     const pct = Math.max(0, Math.min(1, max? (value/max):0));
     const fill = Math.round(pct * w);
-    return `\n<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">\n  <rect x="0" y="0" width="${w}" height="${h}" rx="6" ry="6" fill="var(--bar-bg)"/>\n  <rect x="0" y="0" width="${fill}" height="${h}" rx="6" ry="6" fill="url(#g)"/>\n  <defs>\n    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">\n      <stop offset="0%" stop-color="#6CA0FF"/>\n      <stop offset="100%" stop-color="#153E75"/>\n    </linearGradient>\n  </defs>\n</svg>`;
+    return `\n<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">\n  <rect x="0" y="0" width="${w}" height="${h}" rx="6" ry="6" fill="var(--bar-bg)"/>\n  <rect x="0" y="0" width="${fill}" height="${h}" rx="6" ry="6" fill="var(--bar)"/>\n</svg>`;
   }
 
   function renderAchievements(){
@@ -329,7 +307,6 @@
     }).join('');
 
     // Bar: Accuracy per topic
-    const maxSeen = Math.max(1, ...ACTIVE.map(k=> (p.topics[k]?.seen||0)));
     const bars = ACTIVE.map(k=>{
       const s = p.topics[k];
       const acc = s.seen? Math.round((s.correct/s.seen)*100) : 0;
@@ -339,7 +316,7 @@
             <strong>${label(k)}</strong>
             <span class="meta">${acc}%</span>
           </div>
-          ${svgBar(s.correct, MAX, 260, 10)}
+          ${svgBar(s.correct, s.seen, 260, 10)}
         </div>`;
     }).join('');
 
@@ -379,6 +356,21 @@
   window._progState = ensureProg;
   window.progLabel = label;
 
+  function refreshSavedProgress() {
+    window.prog = load();
+    renderRankAll();
+    renderTopicProgress();
+    renderDashboardExtras();
+    if (document.body.dataset.page === 'achievements') renderAchievements();
+    document.dispatchEvent(new CustomEvent('bwl:topics-changed'));
+  }
+  window.addEventListener('storage', event => {
+    if (event.key === STORE_KEY || event.key === null) refreshSavedProgress();
+  });
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) refreshSavedProgress();
+  });
+
   // ------- Boot hooks -------------------------------------------------------
   document.addEventListener('DOMContentLoaded', ()=>{
     try { ensureProg(); renderRankAll(); } catch(e){ console.warn('[progress] rank init', e); }
@@ -386,11 +378,11 @@
     try { renderDashboardExtras(); } catch(e){ console.warn('[progress] dashboard extras', e); }
     // Auto-render achievements when view is opened
     try {
-      const go = ()=>{ if ((location.hash||'#dashboard') === '#achievements'){ renderAchievements(); } };
+      const go = ()=>{ if (document.body.dataset.page === 'achievements'){ renderAchievements(); } };
       window.addEventListener('hashchange', go); go();
     } catch(e){ console.warn('[progress] achievements init', e); }
     try {
-      const refreshDash = ()=>{ if ((location.hash||'#dashboard') === '#dashboard'){ renderDashboardExtras(); } };
+      const refreshDash = ()=>{ if (document.body.dataset.page === 'dashboard'){ renderDashboardExtras(); } };
       window.addEventListener('hashchange', refreshDash);
     }catch(e){}
 
@@ -407,8 +399,8 @@
           renderTopicProgress();
           renderDashboardExtras();
           // optional: Erfolge neu zeichnen, falls offen
-          const hash = location.hash || '#dashboard';
-          if (hash === '#achievements') renderAchievements();
+          if (document.body.dataset.page === 'achievements') renderAchievements();
+          document.dispatchEvent(new CustomEvent('bwl:topics-changed'));
         });
       }
     }catch(_e){}

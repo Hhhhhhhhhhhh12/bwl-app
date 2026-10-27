@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/style.animations.css">
   <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
 </head>
-<body data-page="dashboard"><!-- je Seite anpassen: dashboard|train|achievements|settings -->
+<body data-page="dashboard">
   <header class="app">
     <div class="container">
       <div class="brand">
@@ -32,6 +32,11 @@
   <main class="container no-page-scroll">
   <section class="card card-fit">
     <h2>Dashboard</h2>
+    <div id="notice-disabled" class="mini-card" hidden role="status">
+      <p id="notice-disabled-text"></p>
+      <button class="btn ghost" id="btn-notice-close" type="button">Schließen</button>
+    </div>
+
 
     <div class="grid grid-2 clamp-gap">
       <div class="mini-card">
@@ -67,8 +72,19 @@
         <h3>Benötigte Themen</h3>
         <p class="meta">Nicht ausgewählte Themen werden ausgeblendet.</p>
         <ul id="topic-prefs" class="checklist slim-scroll">
-          <!-- dieselben Checkboxen wie bisher -->
-        </ul>
+            <li><label><input type="checkbox" data-topic="break_even" checked> Break‑Even‑Point</label></li>
+            <li><label><input type="checkbox" data-topic="bab" checked> Betriebsabrechnungsbogen (BAB)</label></li>
+            <li><label><input type="checkbox" data-topic="kostenarten" checked> Kostenartenrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="abgrenzung" checked> Abgrenzung</label></li>
+            <li><label><input type="checkbox" data-topic="kostenstellen" checked> Kostenstellenrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="deckungsbeitrag" checked> Deckungsbeitrag & Preisuntergrenze</label></li>
+            <li><label><input type="checkbox" data-topic="aequivalenz" checked> Äquivalenzziffernrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="zuschlag" checked> Zuschlagskalkulation</label></li>
+            <li><label><input type="checkbox" data-topic="prozesskosten" checked> Prozesskostenrechnung (light)</label></li>
+            <li><label><input type="checkbox" data-topic="kennzahlen" checked> Kennzahlen (Liquidität, EK‑Quote, Cashflow)</label></li>
+            <li><label><input type="checkbox" data-topic="investition" checked> Investitionsrechnung (Amortisation)</label></li>
+            <li><label><input type="checkbox" data-topic="lager" checked> Lagerkennziffern</label></li>
+          </ul>
       </div>
 
       <div class="mini-card">
@@ -83,16 +99,12 @@
 
     <div class="mini-card slim-scroll">
       <h3>Fortschritt je Thema</h3>
-      <ul id="topic-progress" class="prog-list"></ul>
+      <div id="topic-progress" class="prog-list"></div>
     </div>
   </section>
 </main>
 
-<!-- base scripts -->
-<script defer src="js/progress.js"></script>
-<script defer src="js/app-shell.js"></script>
-<!-- seiten-spezifisch -->
-<script defer src="js/quickstart.js"></script>
+
 
     <footer class="footer">
     <div class="container">
@@ -100,5 +112,11 @@
     </div>
   </footer>
 
+
+  <script defer src="js/topics.js"></script>
+  <script defer src="js/progress.js"></script>
+  <script defer src="js/app-shell.js"></script>
+  <script defer src="js/quickstart.js"></script>
+  <script defer src="js/app.js"></script>
 </body>
 </html>

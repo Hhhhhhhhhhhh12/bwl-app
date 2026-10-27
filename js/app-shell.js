@@ -29,16 +29,17 @@
 
   // version (no-store to avoid stale footer after deploy)
   fetch('version.txt', { cache: 'no-store' })
-    .then(r => r.ok ? r.text() : '1.4.3')
+    .then(r => r.ok ? r.text() : 'Stand unbekannt')
     .then(v => {
-      const vv = (v || '').trim();
+      const entry = String(v || '').match(/^version=(.+)$/m);
+      const vv = (entry ? entry[1] : String(v || '').trim()).replace('-arbeitskopie', ' · Arbeitskopie');
       const els = document.querySelectorAll('#app-version, #app-version-dashboard, .app-version');
-      els.forEach(e => e && (e.textContent = vv || '1.4.3'));
+      els.forEach(e => e && (e.textContent = vv || 'Stand unbekannt'));
       log('version', vv);
     })
     .catch(() => {
       const els = document.querySelectorAll('#app-version, #app-version-dashboard, .app-version');
-      els.forEach(e => e && (e.textContent = '1.4.3'));
+      els.forEach(e => e && (e.textContent = 'Stand unbekannt'));
     });
 
   // theme handling (light/dark/auto) with persistence and live updates
@@ -49,12 +50,16 @@
     if (t === 'auto') {
       const dark = !!(mql && mql.matches);
       document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      document.body.dataset.theme = dark ? 'dark' : 'light';
     } else {
       document.documentElement.dataset.theme = t || 'light';
+      document.body.dataset.theme = t || 'light';
     }
   };
 
-  const currentTheme = () => localStorage.getItem(THEME_KEY) || 'light';
+  const currentTheme = () => {
+    try { return localStorage.getItem(THEME_KEY) || 'light'; } catch (_) { return 'light'; }
+  };
 
   // init theme
   applyTheme(currentTheme());
@@ -65,7 +70,7 @@
   document.addEventListener('change', (e) => {
     const t = e.target && e.target.id === 'theme-select' ? e.target.value : null;
     if (!t) return;
-    localStorage.setItem(THEME_KEY, t);
+    try { localStorage.setItem(THEME_KEY, t); } catch (_) {}
     applyTheme(t);
     log('theme change', t);
   });

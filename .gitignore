@@ -1,0 +1,28 @@
+# Local operating system/editor files
+.DS_Store
+.AppleDouble/
+._*
+*.swp
+*.swo
+*.tmp
+*.log
+
+# Credentials and private configuration
+.env
+.env.*
+!.env.example
+.htpasswd
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Reproducible dependencies and caches
+node_modules/
+.cache/
+coverage/
+
+# Local transfer notes and machine-specific inventories
+docs/ORIGINALQUELLEN_SHA256.json
+docs/KONTEXT_NAECHSTE_PHASE.md
+docs/ZUSAMMENFUEHRUNG.md

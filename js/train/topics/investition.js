@@ -17,7 +17,7 @@
           <li>Anschaffung: <strong>${A} €</strong></li>
           <li>jährl. Rückfluss: <strong>${rueck} €</strong>${erspar?`, jährl. Ersparnis: <strong>${erspar} €</strong>`:''}</li>
         </ul>
-        <div class="bab-table" style="display:grid;gap:.6rem">
+        <div class="bab-table task-fields">
           <label>Jährlicher Nettozufluss:
             <input data-answer="${cf}" placeholder="€" />
           </label>

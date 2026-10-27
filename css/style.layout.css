@@ -90,3 +90,40 @@ main.container{ padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 /* Train-Layout: Sidebar fix, Task scrollt intern */
 .task-area .task-slot { overflow: auto; max-height: 50vh; }
 .sidebar .mini-card.slim-scroll { max-height: 50vh; }
+
+/* --- Fix: Task area sometimes not visible ------------------------------ */
+/* Ensure the training card lays out a header (controls) and a content slot */
+.task-area{ 
+  display:grid; 
+  grid-template-rows:auto 1fr; 
+  gap: var(--space);
+}
+
+/* The slot that receives the generated exercise must have height */
+.task-area .task-slot{
+  display:block;
+  min-height: 320px;              /* guarantees visible area */
+  padding: .25rem 0;              /* breathing room without breaking layout */
+  overflow:auto;                  /* scroll inside, not the page */
+}
+
+/* If engine hasn’t mounted content yet, show a subtle placeholder */
+.task-area .task-slot:empty::before{
+  content: "Keine Aufgabe verfügbar – wähle ein Thema und klicke Start.";
+  color: var(--muted);
+  font-size: var(--fs-16);
+}
+
+/* Prevent parent containers from collapsing in the train view */
+.train-layout .card-fit{ 
+  grid-template-rows:auto 1fr; 
+  min-height: calc(100vh - var(--header-h, 64px) - var(--footer-h, 52px) - 2rem);
+}
+
+/* Slightly larger internal scroll height so long tasks fit */
+.task-area .task-slot.slim-scroll{ max-height: 60vh; }
+/* Integration: header, task, controls, calculator within the existing train layout. */
+.task-area { grid-template-rows: auto minmax(320px, 1fr) auto auto; min-width: 0; }
+.task-controls { flex-wrap: wrap; }
+.grid.spaced > * { grid-column: auto; }
+@media (max-width: 640px) { .grid.spaced.two-col { grid-template-columns: 1fr; } }

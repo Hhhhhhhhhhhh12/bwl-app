@@ -10,34 +10,17 @@
   const info=t=>` <span class="i" title="${t}">i</span>`;
 
   function makeEasy(){
-    const ek   = rnd(800,2000);
-    const pag  = rnd(100,400);
-    const erfolg = ek - pag; // einfache Grundlogik ohne kalk. Kosten
-
-    // Wähle bis zu 2 Lücken (maximal 2 Felder als Input)
-    const fields = ['ek','pag','erg'];
-    const blanks = new Set();
-    while (blanks.size < 2){
-      const f = pick(fields);
-      // Stelle sicher, dass Ergebnis nicht die einzige Lücke ist
-      if (blanks.size === 1 && blanks.has('erg')) continue;
-      blanks.add(f);
-      if (blanks.size >= 2) break;
-    }
-
-    const ekCell  = blanks.has('ek')  ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${ek}">` : `<strong>${ek} €</strong>`;
-    const pagCell = blanks.has('pag') ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${pag}">` : `<strong>${pag} €</strong>`;
-    const ergCell = blanks.has('erg') ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${erfolg}">` : `<strong>${erfolg} €</strong>`;
-
+    const ek = rnd(800,2000);
+    const pag= rnd(100,400);
+    const erfolg = ek - pag;
     const markup = html`
-      <div class="card compact">
+      <div class="card">
         <h3>Abgrenzung — Einsteiger</h3>
-        <table class="bab-table compact"><tbody>
-          <tr><th>EK‑Änderung</th><td>${ekCell}</td><td class="muted">€</td></tr>
-          <tr><th>pagatorische Aufw.${info('Zahlungswirksam, tatsächlicher Geldfluss')}</th><td>${pagCell}</td><td class="muted">€</td></tr>
-          <tr><th>Ergebnis</th><td>${ergCell}</td><td class="muted">€</td></tr>
+        <p>EK-Änderung: <strong>${ek} €</strong> · pagatorische Aufw.${info('Zahlungswirksam, tatsächlicher Geldfluss')}: <strong>${pag} €</strong></p>
+        <table class="bab-table"><tbody>
+          <tr><th>Ergebnis</th><td><input type="text" inputmode="numeric" data-answer="${erfolg}"></td><td class="muted">€</td></tr>
         </tbody></table>
-        <div class="explain muted is-hidden" data-explain="1">
+        <div class="explain muted is-hidden mt-6" data-explain="1">
           Rechenweg: <strong>${ek} − ${pag} = ${erfolg} €</strong>.
         </div>
       </div>`;
@@ -45,39 +28,19 @@
   }
 
   function makeNormal(){
-    const ek   = pick([1000,1200,1500,1800,2000,2400,3000,3500,4000]);
-    const pag  = pick([100,200,300,400,500,600,700,800]);
-    const kalk = pick([100,150,200,250,300]);
+    const ek = pick([1000,1200,1500,1800,2000,2400,3000,3500,4000]);
+    const pag= pick([100,200,300,400,500,600,700,800]);
+    const kalk= pick([100,150,200,250,300]);
     const noise = pick(['Hinweis: periodenfremd','Hinweis: neutral','—']);
     const erfolg = ek - pag + kalk;
-
-    // bis zu 2 Lücken
-    const fields = ['ek','pag','kalk','erg'];
-    const blanks = new Set();
-    while (blanks.size < 2){
-      const f = pick(fields);
-      // Ergebnis nicht einzige Lücke
-      if (blanks.size === 1 && blanks.has('erg')) continue;
-      blanks.add(f);
-      if (blanks.size >= 2) break;
-    }
-
-    const ekCell   = blanks.has('ek')   ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${ek}">`   : `<strong>${ek} €</strong>`;
-    const pagCell  = blanks.has('pag')  ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${pag}">`  : `<strong>${pag} €</strong>`;
-    const kalkCell = blanks.has('kalk') ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${kalk}">` : `<strong>${kalk} €</strong>`;
-    const ergCell  = blanks.has('erg')  ? `<input type="text" inputmode="numeric" placeholder="?" data-answer="${erfolg}">` : `<strong>${erfolg} €</strong>`;
-
     const markup = html`
-      <div class="card compact">
+      <div class="card">
         <h3>Abgrenzung — Aufgabe</h3>
-        <p class="muted">${noise}</p>
-        <table class="bab-table compact"><tbody>
-          <tr><th>EK‑Änderung</th><td>${ekCell}</td><td class="muted">€</td></tr>
-          <tr><th>pag. Aufw.${info('Zahlungswirksam')}</th><td>${pagCell}</td><td class="muted">€</td></tr>
-          <tr><th>kalk. Kosten${info('Nicht zahlungswirksam, nur rechnerisch')}</th><td>${kalkCell}</td><td class="muted">€</td></tr>
-          <tr><th>Ergebnis</th><td>${ergCell}</td><td class="muted">€</td></tr>
+        <p>EK-Änderung: <strong>${ek} €</strong>, pag. Aufw.${info('Zahlungswirksam')}: <strong>${pag} €</strong>, kalk. Kosten${info('Nicht zahlungswirksam, nur rechnerisch')}: <strong>${kalk} €</strong>. (${noise})</p>
+        <table class="bab-table"><tbody>
+          <tr><th>Ergebnis</th><td><input type="text" inputmode="numeric" data-answer="${erfolg}"></td><td class="muted">€</td></tr>
         </tbody></table>
-        <div class="explain muted is-hidden" data-explain="1">
+        <div class="explain muted is-hidden mt-6" data-explain="1">
           So rechnest du: <strong>${ek} − ${pag} + ${kalk} = ${erfolg} €</strong>.
         </div>
       </div>`;

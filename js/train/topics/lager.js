@@ -19,7 +19,7 @@
           <li>Jahreswareneinsatz: <strong>${einsatz} €</strong></li>
           <li>Anfangsbestand: <strong>${anfang} €</strong>, Endbestand: <strong>${ende} €</strong></li>
         </ul>
-        <div class="bab-table" style="display:grid;gap:.6rem">
+        <div class="bab-table task-fields">
           <label>Durchschnittlicher Lagerbestand:
             <input data-answer="${dLB}" placeholder="€" />
           </label>

@@ -45,7 +45,7 @@
             <td class="muted">€</td>
           </tr>
         </tbody></table>
-        <div class="explain muted" data-explain="1" style="display:none;margin-top:.5rem">
+        <div class="explain muted is-hidden mt-6" data-explain="1">
           Summe: <strong>${h1} + ${h2} + ${h3} = ${sum} €</strong>. Danach stufenweise verteilen (z. B. Verwaltung → Instandhaltung → Energie).
         </div>
       </div>`;

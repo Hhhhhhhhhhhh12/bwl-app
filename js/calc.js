@@ -10,17 +10,16 @@
   function formatDe(n){
     const num = Number(n);
     if(!Number.isFinite(num)) return '0';
-    try{ return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 10 }).format(num); }catch(_e){ return String(num); }
+    try{ return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 10, useGrouping: false }).format(num); }catch(_e){ return String(num); }
   }
 
   function normalize(expr){
     return String(expr)
       .replace(/,/g,'.')
       .replace(/[×x]/g,'*')
-      .replace(/[÷:]/g,'/')
-      .replace(/\^/g,'**');
+      .replace(/[÷:]/g,'/');
   }
-  // Shunting‑Yard Parser (safe): supports + - * / ( ) and ^ mapped to ** precedence
+  // Shunting-Yard parser: supports + - * / ( ) and ^.
   function safeEval(expr){
     const s = normalize(expr);
     // allow digits, ops, dot, spaces and parentheses only
@@ -127,7 +126,7 @@
     const out = document.createElement('input');
     out.id = DISPLAY_ID;
     out.setAttribute('aria-label','Rechenergebnis');
-    out.setAttribute('inputmode','numeric');
+    out.setAttribute('inputmode','decimal');
     out.className = 'calc-output';
     out.readOnly = true;
     out.value = '0';
@@ -166,7 +165,9 @@
   // ——— Keyboard handling (voll, aber ohne Fokusklau bei Eingabefeldern) --------
   function onKey(e){
     const panel = document.getElementById(PANEL_ID);
-    if (!panel) return; // only act if panel exists
+    if (!panel || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.isContentEditable || e.target.tagName === 'SELECT') return;
+    if (e.key === 'Enter' && e.target.closest('button, a') && !panel.contains(e.target)) return;
 
     // Wenn der Fokus im Lösungsbereich liegt (Trainings‑Eingabefeld), NICHT abfangen
     const target = e.target;

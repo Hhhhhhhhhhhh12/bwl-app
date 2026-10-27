@@ -22,7 +22,7 @@
           ${p3?`<li>Prozess 3: ${k3} € / ${p3} Treiber ⇒ Kostensatz ?</li>`:''}
           <li>Produkt X benötigt: P1×${t1}, P2×${t2}${p3?`, P3×${t3}`:''}</li>
         </ul>
-        <div class="bab-table" style="display:grid;gap:.6rem">
+        <div class="bab-table task-fields">
           <label>Kostensatz P1:
             <input data-answer="${s1}" placeholder="€/Treiber" />
           </label>

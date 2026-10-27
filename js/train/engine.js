@@ -1,36 +1,3 @@
-  function wireDashboardMassToggles(){
-    const btnAllOn  = document.getElementById('btn-enable-all');
-    const btnAllOff = document.getElementById('btn-disable-all');
-
-    if (btnAllOn){
-      btnAllOn.addEventListener('click', ()=>{
-        try{
-          const ALL = ['break_even','bab','kostenarten','abgrenzung','kostenstellen',
-                       'deckungsbeitrag','aequivalenz','zuschlag','prozesskosten',
-                       'kennzahlen','investition','lager'];
-          writeEnabledTopics(ALL);
-          // sync checkboxes
-          ALL.forEach(t=>{
-            const cb = document.querySelector(`input[type="checkbox"][data-topic="${t}"]`);
-            if (cb){ cb.checked = true; cb.setAttribute('aria-checked','true'); }
-          });
-          if (typeof window.renderTopicProgress === 'function') window.renderTopicProgress();
-        }catch(_e){}
-      });
-    }
-
-    if (btnAllOff){
-      btnAllOff.addEventListener('click', ()=>{
-        try{
-          writeEnabledTopics([]);
-          document.querySelectorAll('input[type="checkbox"][data-topic]').forEach(cb=>{
-            cb.checked = false; cb.setAttribute('aria-checked','false');
-          });
-          if (typeof window.renderTopicProgress === 'function') window.renderTopicProgress();
-        }catch(_e){}
-      });
-    }
-  }
 /* =======================================================================
    Train Engine (modular) — zentrale Steuerung
    Exposes: window.Train
@@ -51,70 +18,24 @@
 
   const topics = Object.create(null); // {name: makerFn(difficulty) -> {markup}}
 
+  // Enabled list helper (filters to registered + allowed)
+  function enabledRegisteredTopics() {
+    const raw = (typeof window.getEnabledTopics === 'function') ? window.getEnabledTopics() : readEnabledTopics();
+    return raw.filter(t => topics[t] && topicAllowed(t));
+  }
+  function firstAvailableTopic() {
+    const available = enabledRegisteredTopics();
+    return available.find(topic => firstUnawardedLevel(topic) < MAX_LEVELS_PER_TOPIC) || available[0] || null;
+  }
+
   // CSS helper classes to avoid inline styles (CSP safe)
   const HIDDEN_CLS = 'is-hidden';
   function hideEl(el){ if (el && el.classList) el.classList.add(HIDDEN_CLS); }
   function showEl(el){ if (el && el.classList) el.classList.remove(HIDDEN_CLS); }
 
-  // ---- Enabled-Topics (Dashboard-Checkboxen) ---------------------------
-  const ENABLE_KEY = 'bwl_enabled_topics_v1';
-  const DEFAULT_ALL = [
-    'break_even','bab','kostenarten','abgrenzung','kostenstellen',
-    'deckungsbeitrag','aequivalenz','zuschlag','prozesskosten',
-    'kennzahlen','investition','lager'
-  ];
-  const DEFAULT_DISABLED = new Set(['aequivalenz','prozesskosten','lager','kennzahlen','investition']);
-
-  // === Topic Areas / Gating ==================================================
-  const AREA1_TOPICS = ['deckungsbeitrag','kostenarten','kostenstellen','zuschlag'];
-  const AREA2_TOPICS = ['break_even','bab','abgrenzung','aequivalenz','prozesskosten','kennzahlen','investition','lager'];
-
-  function isArea1Complete(){
-    try{
-      const p = ensureProg();
-      for (const t of AREA1_TOPICS){
-        const s = (p.topics && p.topics[t]) || {correct:0};
-        if ((s.correct|0) < MAX_LEVELS_PER_TOPIC) return false;
-      }
-      return true;
-    }catch(_e){ return false; }
-  }
-  function topicAllowed(topic){
-    if (AREA1_TOPICS.includes(topic)) return true;
-    return isArea1Complete();
-  }
-
-  function readEnabledTopics(){
-    try{
-      const raw = localStorage.getItem(ENABLE_KEY);
-      if (raw){
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr) && arr.length){
-          return arr.filter(t => DEFAULT_ALL.includes(t));
-        }
-      }
-    }catch(_e){}
-    // Default-Initialisierung: alle außer den temporär deaktivierten
-    return DEFAULT_ALL.filter(t => !DEFAULT_DISABLED.has(t));
-  }
-  function writeEnabledTopics(list){
-    try{ localStorage.setItem(ENABLE_KEY, JSON.stringify(list)); }catch(_e){}
-  }
-  function setTopicEnabled(topic, enabled){
-    const cur = new Set(readEnabledTopics());
-    if (enabled) cur.add(topic); else cur.delete(topic);
-    const out = DEFAULT_ALL.filter(t => cur.has(t));
-    writeEnabledTopics(out);
-    // UI-Checkbox auf dem Dashboard synchronisieren (falls vorhanden)
-    try{
-      const cb = document.querySelector(`input[type="checkbox"][data-topic="${topic}"]`);
-      if (cb){ cb.checked = !!enabled; cb.setAttribute('aria-checked', String(!!enabled)); }
-    }catch(_e){}
-  }
-  // Exponiere eine getEnabledTopics-API, falls noch nicht vorhanden
-  if (typeof window.getEnabledTopics !== 'function'){
-    window.getEnabledTopics = () => readEnabledTopics();
-  }
+  const readEnabledTopics = () => window.BwlTopics.selected();
+  const topicAllowed = topic => window.BwlTopics.allowed(topic);
+  const setTopicEnabled = (topic, enabled) => window.BwlTopics.setEnabled(topic, enabled);
 
   const rnd = (min, max) => {
     min = Math.floor(min); max = Math.floor(max);
@@ -159,83 +80,35 @@
     investition: 'Investitionsrechnung (Amortisation): Rückflusszeit bis zum Break‑Even der Anschaffung, ohne Zinseszins.',
     lager: 'Lagerkennziffern: Umschlagshäufigkeit und durchschnittliche Lagerdauer als Effizienzmaß.'
   };
-  function initInlineTooltips(scope){
-    const root = scope || document;
-    const sel = '[data-tip], [data-info], [data-i], .info-btn';
-    const items = root.querySelectorAll(sel);
-    if (!items.length) return;
-
-    // Create a single tooltip element without inline styles
-    let tip = document.getElementById('bwl-tip');
-    if (!tip){
-      tip = document.createElement('div');
-      tip.id = 'bwl-tip';
-      tip.setAttribute('role','tooltip');
-      tip.className = 'bwl-tip'; // styled via CSS (no inline style)
-      document.body.appendChild(tip);
-    }
-
-    // Create/update a dedicated <style> rule for position (CSP safe)
-    let tipPos = document.getElementById('bwl-tip-pos');
-    if (!tipPos){
-      tipPos = document.createElement('style');
-      tipPos.id = 'bwl-tip-pos';
-      document.head.appendChild(tipPos);
-    }
-    const pad = 10;
-    function place(x, y){
-      const mx = Math.max(0, x + pad);
-      const my = Math.max(0, y + pad);
-      // write absolute position through stylesheet (not inline)
-      tipPos.textContent = `#bwl-tip{ left:${mx}px; top:${my}px; }`;
-    }
-
-    function showTip(e, el){
-      const txt = el.getAttribute('data-tip') || el.getAttribute('data-info') || el.getAttribute('data-i') || el.getAttribute('title') || '—';
-      tip.textContent = txt;
-      tip.classList.add('is-visible');
-      place(e.clientX, e.clientY);
-    }
-    function hideTip(){ tip.classList.remove('is-visible'); }
-
-    items.forEach(el=>{
-      if (el.hasAttribute('title')){ el.setAttribute('data-title', el.getAttribute('title')); el.removeAttribute('title'); }
-      el.addEventListener('mouseenter', (e)=> showTip(e, el));
-      el.addEventListener('mousemove', (e)=> place(e.clientX, e.clientY));
-      el.addEventListener('mouseleave', hideTip);
-      el.addEventListener('focus', (e)=> showTip(e, el));
-      el.addEventListener('blur', hideTip);
+  function initInlineTooltips(scope) {
+    scope.querySelectorAll('[data-tip], [data-info], [data-i], .i').forEach(el => {
+      const text = el.dataset.tip || el.dataset.info || el.dataset.i || el.title;
+      if (!text) return;
+      el.dataset.tip = text;
+      el.setAttribute('aria-label', text);
+      el.tabIndex = 0;
     });
   }
 
   function updateLevelPill() {
     const pill = document.getElementById("session-pill");
     if (!pill) return;
+    if (!session.topic) { pill.textContent = 'Kein aktives Thema'; return; }
     const current = Math.min(session.index + 1, MAX_LEVELS_PER_TOPIC);
     pill.textContent = `${labelOf(session.topic)} • Stufe ${session.difficulty} • Level ${current}/${MAX_LEVELS_PER_TOPIC}`;
   }
 
-  // ------------------ Progress helpers (robust, ohne Abhängigkeit) ------
-  function ensureProg() {
-    window.prog = window.prog || {};
-    window.prog.points = window.prog.points || 0;
-    window.prog.topics = window.prog.topics || {}; // {topic: {seen, correct}}
-    return window.prog;
-  }
-  function ensureTopicStat(topic) {
-    const p = ensureProg();
-    p.topics[topic] = p.topics[topic] || { seen: 0, correct: 0 };
-    return p.topics[topic];
-  }
+  // ------------------ Shared persisted progress -------------------------
+  function ensureProg() { return window.ensureProg(); }
   function getLowestCorrectTopic() {
-    // Use enabled topics from quickstart.js if available
-    const enabled = (typeof window.getEnabledTopics === 'function') ? window.getEnabledTopics() : readEnabledTopics();
-    const names = enabled.filter(t => topics[t] && topicAllowed(t));
+    // Use the same selected and unlocked topics as dashboard/settings.
+    const names = enabledRegisteredTopics();
     const p = ensureProg();
     names.forEach(t => { if (!p.topics[t]) p.topics[t] = { seen: 0, correct: 0 }; });
 
     let best = session.topic, bestCorrect = Infinity, bestRate = Infinity;
-    names.forEach(t => {
+    const unfinished = names.filter(t => firstUnawardedLevel(t) < MAX_LEVELS_PER_TOPIC);
+    (unfinished.length ? unfinished : names).forEach(t => {
       const s = p.topics[t];
       const corr = s.correct | 0;
       const rate = s.seen > 0 ? (s.correct / s.seen) : 0;
@@ -246,59 +119,62 @@
     return best || session.topic;
   }
 
-  function giveXP(points, allCorrect) {
-    try {
-      const p = ensureProg();
-      p.points = (p.points | 0) + (points | 0);
-      if (typeof window.renderRank === "function") window.renderRank();
-      if (typeof window.save === "function") window.save(p);
-      if (allCorrect && typeof window.announce === "function") window.announce("Aufgabe korrekt — +" + points + " XP");
-    } catch { /* noop */ }
-  }
-
   // ------------------ Public API ----------------------------------------
   function registerTopic(name, makerFn) {
     topics[name] = makerFn;
   }
 
-  function prime(topic, difficulty) {
-    // Gating: if requested topic is not allowed, pick first allowed fallback
-    if (topic && !topicAllowed(topic)){
-      const enabled = (typeof window.getEnabledTopics === 'function') ? window.getEnabledTopics() : readEnabledTopics();
-      const fallbackList = enabled.filter(t => topics[t] && topicAllowed(t));
-      topic = fallbackList[0] || AREA1_TOPICS[0] || 'deckungsbeitrag';
+  let pendingAdvance = null;
+  let generation = 0;
+  let initialized = false;
+  function cancelAdvance() {
+    if (pendingAdvance !== null) clearTimeout(pendingAdvance);
+    pendingAdvance = null;
+    generation++;
+  }
+  function firstUnawardedLevel(topic) {
+    const awarded = ensureProg().topics[topic]?.awarded || {};
+    for (let index = 0; index < MAX_LEVELS_PER_TOPIC; index++) {
+      if (!awarded[`${topic}_${index}`]) return index;
     }
-    if (topic) session.topic = topic;
-    if (difficulty) session.difficulty = Math.max(1, Math.min(4, parseInt(difficulty, 10) || 1));
-    session.index = 0;
+    return MAX_LEVELS_PER_TOPIC;
+  }
+  function prime(topic, difficulty) {
+    cancelAdvance();
+    const candidates = enabledRegisteredTopics();
+    session.topic = candidates.includes(topic) ? topic : firstAvailableTopic();
+    session.difficulty = Math.max(1, Math.min(4, parseInt(difficulty, 10) || 1));
+    session.index = session.topic ? firstUnawardedLevel(session.topic) : 0;
+    session.correctStreak = 0;
     clampLevel();
     updateLevelPill();
   }
 
   // ------------------ Rendering + Wiring --------------------------------
   function renderFinished() {
-    const retryQueue = (window.progGetRetryQueue && window.progGetRetryQueue(session.topic)) || [];
-    if (retryQueue.length > 0) {
-      session.index = 0;
+    const remaining = firstUnawardedLevel(session.topic);
+    if (remaining < MAX_LEVELS_PER_TOPIC) {
+      session.index = remaining;
       renderTask();
       return;
     }
 
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
+    document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = true; });
     wrap.innerHTML = `
       <div class="card">
         <h3>Alle Level abgeschlossen</h3>
-        <p class="muted">Du hast die ${MAX_LEVELS_PER_TOPIC} Level für dieses Thema erledigt. Wechsle das Thema oder starte die Stufe neu.</p>
+        <p class="muted">Du hast die ${MAX_LEVELS_PER_TOPIC} Level für dieses Thema erledigt. Wechsle zu einem anderen aktiven Thema.</p>
         <div class="task-controls">
           <button class="btn" id="btn-finish-change">Thema wechseln!</button>
         </div>
-        <p class="muted small">Alle falsch beantworteten Aufgaben werden später erneut gestellt.</p>
+        <p class="muted small">Deine gutgeschriebenen Level bleiben gespeichert.</p>
       </div>`;
     const btn = document.getElementById("btn-finish-change");
     if (btn) {
       btn.addEventListener("click", () => {
-        const names = Object.keys(topics).filter(t => t !== session.topic && topicAllowed(t));
+        const names = enabledRegisteredTopics().filter(t => t !== session.topic);
         const pick = names.length ? names[rnd(0, names.length - 1)] : session.topic;
         prime(pick, session.difficulty);
         renderTask();
@@ -395,14 +271,27 @@
       return;
     }
 
-    const maker = topics[session.topic];
-    if (typeof maker !== "function") {
-      wrap.innerHTML = `<div class="card"><h3>Fehler</h3><p>Kein Generator für Thema <strong>${session.topic}</strong>.</p></div>`;
+    if (!enabledRegisteredTopics().includes(session.topic)) prime(firstAvailableTopic(), session.difficulty);
+    let out = null;
+    const candidates = [session.topic, ...enabledRegisteredTopics().filter(t => t !== session.topic)].filter(Boolean);
+    for (const topic of candidates) {
+      if (topic !== session.topic) prime(topic, session.difficulty);
+      if (session.index >= MAX_LEVELS_PER_TOPIC) continue;
+      const maker = topics[session.topic];
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try { out = typeof maker === 'function' ? maker(session.difficulty, session.index) : null; }
+        catch (error) { console.warn('[train] Aufgabe konnte nicht erstellt werden', error); }
+        if (out && out.markup) break;
+      }
+      if (out && out.markup) break;
+    }
+    if (!out || !out.markup) {
+      wrap.innerHTML = '<div class="card"><h3>Keine Aufgabe verfügbar</h3><p>Aktiviere ein verfügbares Thema in den <a href="settings.html">Einstellungen</a>.</p></div>';
+      document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = true; });
       return;
     }
-
-    const out = maker(session.difficulty) || {};
-    wrap.innerHTML = out.markup || `<div class="card"><h3>Keine Aufgabe</h3></div>`;
+    document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = false; });
+    wrap.innerHTML = out.markup;
 
     // Level‑1: fachliche Einordnung oben als Intro-Karte
     if (session.index === 0) {
@@ -428,7 +317,7 @@
     // Prüfen-Button neutralisieren
     try {
       const btn = document.querySelector('[data-action="check"]');
-      if (btn) btn.classList.remove("ok", "err");
+      if (btn) { btn.classList.remove("ok", "err"); btn.disabled = false; }
     } catch { /* noop */ }
 
     updateLevelPill();
@@ -443,6 +332,7 @@
 
     // Prüfen
     if (btnCheck) btnCheck.addEventListener("click", () => {
+      if (!wrap || !session.topic || pendingAdvance !== null) return;
       let total = 0, ok = 0;
       // tolerant parsing: decimal comma/point, thousands, percent off-by-one
       const EPS_NUM = 0.5;   // numeric tolerance
@@ -460,27 +350,21 @@
         let raw = String(s).trim();
         // remove spaces
         raw = raw.replace(/\s+/g,'');
-        // If both separators appear, treat last one as decimal, others as thousand
+        // If both separators appear, the last is decimal and earlier ones group digits.
+        raw = raw.replace(/'/g, '');
         const lastSep = Math.max(raw.lastIndexOf(','), raw.lastIndexOf('.'));
-        if (lastSep > -1){
-          const head = raw.slice(0,lastSep).replace(/[.,]/g,'');
-          const tail = raw.slice(lastSep+1);
-          raw = head + '.' + tail;
+        if (lastSep > -1) {
+          const head = raw.slice(0, lastSep).replace(/[.,]/g, '');
+          raw = head + '.' + raw.slice(lastSep + 1);
         }
-        // If only comma appears
-        else if (/,/.test(raw)){
-          raw = raw.replace(/,/g,'.');
-        }
-        // remove thousand groupers like 1'000 (CH)
-        raw = raw.replace(/'(?!\d{3}(\D|$))/g, "");
         // strip percent sign for numeric part
         const pct = /%$/.test(raw);
         raw = raw.replace(/%$/,'');
-        const n = parseFloat(raw);
+        const n = /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(raw) ? Number(raw) : NaN;
         return { num: n, raw: s, pct };
       }
 
-      wrap.querySelectorAll('input[data-answer]').forEach(inp => {
+      wrap.querySelectorAll('input[data-answer], select[data-answer]').forEach(inp => {
         total++;
         const wantStr = String(inp.getAttribute('data-answer')).trim();
         const gotStr = String(inp.value || '').trim();
@@ -502,8 +386,9 @@
         else { inp.classList.remove('ok'); inp.classList.add('err'); }
       });
 
-      const allCorrect = ok === total && total > 0;
-      // Streak-Logik: nach 3 korrekten Antworten Thema mit geringstem Fortschritt laden
+      if (!total) return;
+      const allCorrect = ok === total;
+      // Preserve D's automatic transition to the selected topic with least progress.
       if (allCorrect) {
         // 1) Persist result ONCE for current taskId (before index changes)
         try {
@@ -519,37 +404,29 @@
           if (btnCheck) { btnCheck.classList.remove('err'); btnCheck.classList.add('ok'); btnCheck.disabled = true; }
         } catch {}
 
-        // 3) Update streak for auto-topic switching after 3 correct
+        // 3) Track the current correct-answer streak.
         session.correctStreak = (session.correctStreak | 0) + 1;
 
         // 4) After a short pause, clear calc & advance
-        setTimeout(() => {
+        const currentGeneration = generation;
+        pendingAdvance = setTimeout(() => {
+          pendingAdvance = null;
+          if (generation !== currentGeneration) return;
           // Rechner leeren beim Themen-/Levelwechsel
           try { if (window.calc && typeof window.calc.clear === 'function') window.calc.clear(); } catch {}
 
           // Level increment
           session.index = Math.min(session.index + 1, MAX_LEVELS_PER_TOPIC);
 
-          // Zielthema bestimmen (geringster Fortschritt und ggf. Streak-Trigger)
-          let target = session.topic;
-          if ((session.correctStreak | 0) >= 3) {
-            target = getLowestCorrectTopic();
-            session.correctStreak = 0; // Streak zurücksetzen nach Wechsel
-          } else {
-            target = getLowestCorrectTopic();
-          }
-          if (target !== session.topic) {
-            prime(target, session.difficulty);
-          }
+          const target = getLowestCorrectTopic();
+          if (target !== session.topic) prime(target, session.difficulty);
+          else if (session.index >= MAX_LEVELS_PER_TOPIC) session.index = firstUnawardedLevel(session.topic);
 
           if (session.index >= MAX_LEVELS_PER_TOPIC) {
             renderFinished();
           } else {
             renderTask();
           }
-
-          // Re-enable button for next task
-          if (btnCheck) btnCheck.disabled = false;
 
           // Refresh rank/progress UI
           if (typeof window.renderRank === 'function') window.renderRank();
@@ -558,10 +435,6 @@
 
         return; // stop immediate navigation on correct; handled by timeout
       }
-
-      const base = session.difficulty === 1 ? 10 : 15;
-      const partial = total > 0 ? Math.max(1, Math.floor((ok / total) * (session.difficulty === 1 ? 4 : 6))) : 0;
-      // giveXP(allCorrect ? base : partial, allCorrect); // removed, replaced by progMarkResult
 
       if (typeof window.progMarkResult === 'function') {
         const taskId = `${session.topic}_${session.index}`;
@@ -581,15 +454,16 @@
 
       // Fokus: erstes falsches Feld, sonst erstes Feld
       try {
-        const bad = wrap.querySelector("input.err");
-        const first = wrap.querySelector('input[data-answer]');
+        const bad = wrap.querySelector("input.err, select.err");
+        const first = wrap.querySelector('input[data-answer], select[data-answer]');
         (bad || first) && (bad || first).focus();
       } catch { /* noop */ }
     });
 
     // Lösung zeigen
     if (btnReveal) btnReveal.addEventListener("click", () => {
-      wrap.querySelectorAll('input[data-answer]').forEach(inp => {
+      if (pendingAdvance !== null) return;
+      wrap.querySelectorAll('input[data-answer], select[data-answer]').forEach(inp => {
         inp.value = inp.getAttribute("data-answer");
         inp.classList.remove("err"); inp.classList.add("ok");
       });
@@ -602,6 +476,7 @@
 
     // Nächste
     if (btnNext) btnNext.addEventListener("click", () => {
+      cancelAdvance();
       if (session.index + 1 >= MAX_LEVELS_PER_TOPIC) {
         session.index = MAX_LEVELS_PER_TOPIC;
         updateLevelPill();
@@ -618,7 +493,8 @@
 
     // Thema wechseln
     if (btnChange) btnChange.addEventListener("click", () => {
-      const names = Object.keys(topics).filter(t => t !== session.topic && topicAllowed(t));
+      cancelAdvance();
+      const names = enabledRegisteredTopics().filter(t => t !== session.topic);
       const pick = names.length ? names[rnd(0, names.length - 1)] : session.topic;
       prime(pick, session.difficulty);
       updateLevelPill();
@@ -634,6 +510,8 @@
     // - Sonst: Prüfen
     let enterLock = false;
     document.addEventListener("keydown", (ev) => {
+      if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+      if (ev.target.closest && ev.target.closest('button, a, select')) return;
       if (enterLock) return;
       if (ev.key === "Enter") {
         enterLock = true;
@@ -641,13 +519,13 @@
       } else {
         return;
       }
-      if ((location.hash || "#dashboard") !== "#train") return;
+      if (document.body.dataset.page !== "train") return;
 
       const target = ev.target;
       // Rechner? Dann nichts tun – calc.js übernimmt
       if (target && typeof target.closest === 'function' && target.closest('#calc-panel')) return;
       // In Textareas kein Prüfen mit Enter
-      if (target && target.tagName === "TEXTAREA") return;
+      if (target && (target.tagName === "TEXTAREA" || target.isContentEditable)) return;
 
       const active = document.activeElement;
       const inTaskInput = !!(active && active.tagName === 'INPUT' && active.closest && active.closest('#bab-wrapper'));
@@ -663,7 +541,7 @@
           return;
         }
         // Nicht leer → Lösung anzeigen statt prüfen
-        const btnSol = wrap.querySelector('[data-action="solution"], [data-action="show-solution"], [data-action="reveal"]');
+        const btnSol = btnReveal;
         if (btnSol){
           ev.preventDefault(); ev.stopPropagation();
           btnSol.click();
@@ -687,27 +565,31 @@
           setTopicEnabled(session.topic, false);
           localStorage.setItem('bwl_last_disabled', session.topic);
         }catch(_e){}
-        location.hash = '#dashboard';
+        cancelAdvance();
+        location.href = 'dashboard.html';
       });
     }
 
-    // Sicherstellen: Dashboard-only Elemente im Training unsichtbar
-    if ((location.hash||'#dashboard') === '#train'){
-      document.querySelectorAll('.only-dashboard').forEach(hideEl);
-    }
   }
 
   function init() {
-    // Stelle sicher, dass ENABLE_KEY initialisiert ist
-    try{
-      if (!localStorage.getItem(ENABLE_KEY)){
-        writeEnabledTopics(readEnabledTopics());
-      }
-    }catch(_e){}
-    try{ wireDashboardMassToggles(); }catch(_e){}
+    if (initialized) return;
+    initialized = true;
+    if (!session.topic) prime(null, 1);
     updateLevelPill();
     renderTask();
     wireControls();
+    window.addEventListener('pagehide', cancelAdvance);
+    window.addEventListener('storage', event => {
+      if (event.key === null || ['bwl_topics_enabled', 'bwl_enabled_topics_v1'].includes(event.key)) {
+        prime(session.topic, session.difficulty);
+        renderTask();
+      }
+    });
+    document.addEventListener('bwl:topics-changed', () => {
+      prime(session.topic, session.difficulty);
+      renderTask();
+    });
   }
 
   // Expose

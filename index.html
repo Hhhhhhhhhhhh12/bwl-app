@@ -4,282 +4,119 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>BWL Lern‑App</title>
+  <title>BWL-App</title>
   <link rel="stylesheet" href="css/style.base.css">
   <link rel="stylesheet" href="css/style.layout.css">
   <link rel="stylesheet" href="css/style.components.css">
   <link rel="stylesheet" href="css/style.accessibility.css">
   <link rel="stylesheet" href="css/style.animations.css">
-  <link rel="stylesheet" href="css/style.dashboard.css">
+  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
 </head>
-
-<body>
-  <div id="notice-disabled" class="hidden" role="alert">
-    <span>Hinweis: Einige Module sind derzeit deaktiviert.</span>
-    <button id="btn-notice-close" class="btn ghost small" type="button">Schließen</button>
-  </div>
+<body data-page="dashboard">
   <header class="app">
     <div class="container">
       <div class="brand">
-        <strong class="brand-title">BWL‑App</strong>
+        <strong class="brand-title">BWL-App</strong>
         <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
       </div>
       <nav aria-label="Hauptnavigation">
         <ul class="nav">
-          <li><button class="nav-btn" data-view="dashboard" aria-current="page">Dashboard</button></li>
-          <li><button class="nav-btn" data-view="train">Trainieren</button></li>
-          <li><button class="nav-btn" data-view="achievements">Erfolge</button></li>
-          <li><button class="nav-btn" data-view="settings">Einstellungen</button></li>
+          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
+          <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
         </ul>
       </nav>
     </div>
   </header>
+  <main class="container no-page-scroll">
+  <section class="card card-fit">
+    <h2>Dashboard</h2>
+    <div id="notice-disabled" class="mini-card" hidden role="status">
+      <p id="notice-disabled-text"></p>
+      <button class="btn ghost" id="btn-notice-close" type="button">Schließen</button>
+    </div>
 
-  <main class="container" id="app-root">
-    <!-- Dashboard -->
-    <section class="view active only-dashboard" data-view="dashboard">
-      <div class="card only-dashboard my-card-gap">
-        <h2>Dein Start</h2>
-        <p class="muted">Wähle benötigte Themen und starte direkt aus der Übersicht. <span id="reco-label" class="ml-8"></span></p>
 
-        <div class="grid spaced my-grid-gap">
-          <!-- Empfohlenes Thema -->
-          <div class="mini-card" id="card-recommend">
-            <h3>Empfehlung</h3>
-            <p class="muted">Basierend auf deinen schwächsten Bereichen:</p>
-            <div class="flex gap-sm items-center">
-              <strong id="recommend-topic">–</strong>
-              <button class="btn" id="btn-start-recommend">Empfohlen starten</button>
-            </div>
+    <div class="grid grid-2 clamp-gap">
+      <div class="mini-card">
+        <h3>Empfehlung</h3>
+        <p class="muted">Schwächster Bereich zuerst.</p>
+        <div class="flex gap-sm items-center">
+          <strong id="recommend-topic">–</strong>
+          <a class="btn" id="btn-start-recommend" href="train.html">Empfohlen starten</a>
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <h3>Gesamtfortschritt</h3>
+        <div class="flex gap-md items-center">
+          <div class="donut" id="overall-progress-donut" role="img" aria-label="Gesamtfortschritt">
+            <svg viewBox="0 0 36 36" class="donut-svg" aria-hidden="true">
+              <circle class="donut-track" cx="18" cy="18" r="15.9155"></circle>
+              <circle class="donut-fill" id="overall-progress-arc" cx="18" cy="18" r="15.9155" stroke-dasharray="0 100"></circle>
+            </svg>
+            <span id="overall-progress-label" class="donut-label">0%</span>
           </div>
-
-          <!-- Gesamtfortschritt (Donut/Bar) -->
-          <div class="mini-card" id="card-overall">
-            <h3>Gesamtfortschritt</h3>
-            <div class="flex gap-md items-center">
-              <div class="donut" id="overall-progress-donut" aria-label="Gesamtfortschritt" role="img">
-                <svg viewBox="0 0 36 36" class="donut-svg" aria-hidden="true" focusable="false">
-                  <circle class="donut-track" cx="18" cy="18" r="15.9155"></circle>
-                  <circle class="donut-fill" id="overall-progress-arc" cx="18" cy="18" r="15.9155" stroke-dasharray="0 100"></circle>
-                </svg>
-                <span id="overall-progress-label" class="donut-label">0%</span>
-              </div>
-              <div class="flex-1">
-                <div class="bar bar-tall"><i id="overall-progress-bar" class="w-0"></i></div>
-                <small class="muted">Richtig beantwortet gesamt: <span id="overall-correct">0</span>/<span id="overall-total">0</span></small>
-              </div>
-            </div>
-              <button id="btn-reset-progress" class="btn ghost small" type="button">Fortschritt zurücksetzen</button>
-          </div>
-
-          <!-- Humor-Banner -->
-          <div class="mini-card" id="card-humor" aria-live="polite">
-            <h3>Motivation</h3>
-            <p id="humor-line" class="muted">Dein Taschenrechner ist stolz auf dich 😎 — er hat heute schon 3 mal eingeatmet und einmal Pi angezwinkert.</p>
+          <div class="flex-1">
+            <div class="bar bar-tall"><i id="overall-progress-bar" class="w-0"></i></div>
+            <small class="muted">Richtig: <span id="overall-correct">0</span>/<span id="overall-total">0</span></small>
           </div>
         </div>
+        <button id="btn-reset-progress" class="btn ghost small" type="button">Fortschritt zurücksetzen</button>
+      </div>
+    </div>
 
-        <div class="mini-card" id="onboarding-hint">
-          <strong>Kurzer Einstieg:</strong> Wähle zuerst deine Themen → starte dann mit <em>Trainieren</em>. Du kannst Themen später jederzeit deaktivieren.
-        </div>
-
-        <!-- Themenauswahl (Checkboxen) -->
-        <div class="mini-card">
-          <h3>Benötigte Themen</h3>
-          <p class="meta">Nicht ausgewählte Themen werden weder abgefragt noch im Fortschritt angezeigt.</p>
-          <ul id="topic-prefs" class="checklist">
-            <li><label><input type="checkbox" data-topic="break_even" checked> Grundlagen & Ergebnis: Break‑Even</label></li>
-            <li><label><input type="checkbox" data-topic="bab" checked> Kostenverteilung: BAB</label></li>
-            <li><label><input type="checkbox" data-topic="kostenarten" checked> Grundlagen: Kostenarten</label></li>
-            <li><label><input type="checkbox" data-topic="abgrenzung" checked> Abgrenzung (pagatorisch/kalk.)</label></li>
-            <li><label><input type="checkbox" data-topic="kostenstellen" checked> Kostenstellen & Zuschläge</label></li>
-            <li><label><input type="checkbox" data-topic="deckungsbeitrag" checked> Deckungsbeitrag & Preisuntergrenzen</label></li>
-            <li><label><input type="checkbox" data-topic="aequivalenz" checked> Äquivalenzziffern</label></li>
+    <div class="grid grid-2 clamp-gap">
+      <div class="mini-card">
+        <h3>Benötigte Themen</h3>
+        <p class="meta">Nicht ausgewählte Themen werden ausgeblendet.</p>
+        <ul id="topic-prefs" class="checklist slim-scroll">
+            <li><label><input type="checkbox" data-topic="break_even" checked> Break‑Even‑Point</label></li>
+            <li><label><input type="checkbox" data-topic="bab" checked> Betriebsabrechnungsbogen (BAB)</label></li>
+            <li><label><input type="checkbox" data-topic="kostenarten" checked> Kostenartenrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="abgrenzung" checked> Abgrenzung</label></li>
+            <li><label><input type="checkbox" data-topic="kostenstellen" checked> Kostenstellenrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="deckungsbeitrag" checked> Deckungsbeitrag & Preisuntergrenze</label></li>
+            <li><label><input type="checkbox" data-topic="aequivalenz" checked> Äquivalenzziffernrechnung</label></li>
             <li><label><input type="checkbox" data-topic="zuschlag" checked> Zuschlagskalkulation</label></li>
-            <li><label><input type="checkbox" data-topic="prozesskosten" checked> Prozesskosten (light)</label></li>
+            <li><label><input type="checkbox" data-topic="prozesskosten" checked> Prozesskostenrechnung (light)</label></li>
             <li><label><input type="checkbox" data-topic="kennzahlen" checked> Kennzahlen (Liquidität, EK‑Quote, Cashflow)</label></li>
             <li><label><input type="checkbox" data-topic="investition" checked> Investitionsrechnung (Amortisation)</label></li>
-            <li><label><input type="checkbox" data-topic="lager" checked> Lagerkennziffern (Umschlag, Dauer)</label></li>
+            <li><label><input type="checkbox" data-topic="lager" checked> Lagerkennziffern</label></li>
           </ul>
-        </div>
+      </div>
 
-        <div class="card" id="topics-matrix">
-          <h3>Themenmatrix</h3>
-          <p class="muted">Strukturiert nach Bereichen – wie ein Stundenplan/Skilltree.</p>
-
-          <div class="grid spaced">
-            <div>
-              <h4>Grundlagen</h4>
-              <div class="grid grid-tiles">
-                <button class="tile" data-start-topic="kostenarten"><span class="t">Kostenarten</span><small class="muted">Grundlagen</small></button>
-                <button class="tile" data-start-topic="abgrenzung"><span class="t">Abgrenzung</span><small class="muted">pag./kalk.</small></button>
-                <button class="tile" data-start-topic="break_even"><span class="t">Break‑Even</span><small class="muted">Ergebnis</small></button>
-              </div>
-            </div>
-
-            <div>
-              <h4>Verteilung</h4>
-              <div class="grid grid-tiles">
-                <button class="tile" data-start-topic="bab"><span class="t">BAB</span><small class="muted">Kostenverteilung</small></button>
-                <button class="tile" data-start-topic="kostenstellen"><span class="t">Kostenstellen</span><small class="muted">Zuschlagssätze</small></button>
-                <button class="tile" data-start-topic="aequivalenz"><span class="t">Äquivalenz</span><small class="muted">Ziffern</small></button>
-              </div>
-            </div>
-
-            <div>
-              <h4>Analyse & Kalkulation</h4>
-              <div class="grid grid-tiles">
-                <button class="tile" data-start-topic="deckungsbeitrag"><span class="t">Deckungsbeitrag</span><small class="muted">Preisuntergrenzen</small></button>
-                <button class="tile" data-start-topic="zuschlag"><span class="t">Zuschlagskalkulation</span><small class="muted">ein-/mehrstufig</small></button>
-                <button class="tile" data-start-topic="prozesskosten"><span class="t">Prozesskosten</span><small class="muted">light</small></button>
-              </div>
-            </div>
-
-            <div>
-              <h4>Kennzahlen</h4>
-              <div class="grid grid-tiles">
-                <button class="tile" data-start-topic="kennzahlen"><span class="t">Kennzahlen</span><small class="muted">Liq., EK, Cashflow</small></button>
-                <button class="tile" data-start-topic="investition"><span class="t">Investition</span><small class="muted">Amortisation</small></button>
-                <button class="tile" data-start-topic="lager"><span class="t">Lager</span><small class="muted">Umschlag/Dauer</small></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Themenübersicht (Tiles zum direkten Start) -->
-        <div class="grid spaced" id="topic-tiles" aria-label="Themenübersicht">
-          <button class="tile" data-start-topic="break_even"><span class="t">Break‑Even</span><small class="muted">Grundlagen & Ergebnis</small></button>
-          <button class="tile" data-start-topic="bab"><span class="t">BAB</span><small class="muted">Kostenverteilung</small></button>
-          <button class="tile" data-start-topic="kostenarten"><span class="t">Kostenarten</span><small class="muted">Grundlagen</small></button>
-          <button class="tile" data-start-topic="abgrenzung"><span class="t">Abgrenzung</span><small class="muted">pagatorisch/kalk.</small></button>
-          <button class="tile" data-start-topic="kostenstellen"><span class="t">Kostenstellen</span><small class="muted">Zuschlagssätze</small></button>
-          <button class="tile" data-start-topic="deckungsbeitrag"><span class="t">Deckungsbeitrag</span><small class="muted">& Preisuntergrenzen</small></button>
-          <button class="tile" data-start-topic="aequivalenz"><span class="t">Äquivalenz</span><small class="muted">Ziffernrechnung</small></button>
-          <button class="tile" data-start-topic="zuschlag"><span class="t">Zuschlagskalkulation</span><small class="muted">ein-/mehrstufig</small></button>
-          <button class="tile" data-start-topic="prozesskosten"><span class="t">Prozesskosten</span><small class="muted">light</small></button>
-          <button class="tile" data-start-topic="kennzahlen"><span class="t">Kennzahlen</span><small class="muted">Liq., EK, Cashflow</small></button>
-          <button class="tile" data-start-topic="investition"><span class="t">Investition</span><small class="muted">Amortisation</small></button>
-          <button class="tile" data-start-topic="lager"><span class="t">Lager</span><small class="muted">Umschlag, Dauer</small></button>
-        </div>
-
-        <p class="meta">Version <span id="app-version-dashboard">–</span></p>
-
-        <div class="mini-card" id="release-notes">
-          <h3>Neu in Version 1.4.1</h3>
-          <ul class="meta">
-            <li>Dark‑Mode global</li>
-            <li>Deckungsbeitrag‑Modul</li>
-            <li>Elegante Fortschrittsbalken & aufgeräumte Views</li>
-            <li>Zuschlagskalkulation als ausgefüllte Tabelle (max. 2 Lücken)</li>
-          </ul>
-        </div>
-
-        <div class="grid spaced my-bottom-gap">
-          <div class="mini-card">
-            <h3>Fortschritt</h3>
-            <ul id="topic-progress" class="prog-list" aria-live="polite"></ul>
-            <!-- rank-box entfernt, um Doppelanzeige zu vermeiden -->
-          </div>
-          <hr class="divider">
-          <div class="mini-card">
-            <h3>Rang</h3>
-            <div class="rank-row"><span id="rank-badge-dashboard" class="badge pill">BWL‑Justus</span></div>
-            <div class="level">
-              <div class="bar"><i id="rank-level-fill-dashboard"></i></div>
-              <small id="rank-level-label-dashboard" class="muted">Level 1 → 2 · 0/100 XP</small>
-            </div>
-          </div>
-        </div>
-    </section>
-
-    <!-- Training -->
-    <section class="view only-train" data-view="train">
-      <div class="card my-card-gap">
-        <div class="train-layout">
-          <div class="task-area">
-            <h2 id="session-pill" class="pill">Thema • Stufe 1</h2>
-            <div id="bab-wrapper"></div>
-            <div class="task-controls">
-              <button class="btn" data-action="check">Prüfen</button>
-              <button class="btn" data-action="reveal">Lösung anzeigen</button>
-              <button class="btn" data-action="next">Nächste</button>
-              <button class="btn" id="btn-change-topic">Thema wechseln!</button>
-              <button class="btn ghost" id="btn-skip-topic">Dieses Thema benötige ich nicht!</button>
-            </div>
-            <button class="btn linklike" id="btn-calc-toggle-dup">Rechner</button>
-          </div>
-
-          <aside class="sidebar" aria-label="Seitenleiste: Fortschritt & Ziele">
-            <div class="mini-card">
-              <h4 class="sidebar-sub">Rang</h4>
-              <div class="rank-row">
-                <span id="rank-badge" class="badge pill">BWL‑Justus</span>
-              </div>
-              <div class="level">
-                <div class="bar"><i id="rank-level-fill"></i></div>
-                <small id="rank-level-label" class="muted">Level 1 → 2 · 0/100 XP</small>
-              </div>
-            </div>
-            <div class="mini-card">
-              <h3 class="sidebar-title">Fortschritt</h3>
-              <ul id="topic-progress-train" class="prog-list" aria-live="polite"></ul>
-            </div>
-          </aside>
+      <div class="mini-card">
+        <h3>Rang</h3>
+        <div class="rank-row"><span id="rank-badge-dashboard" class="badge pill">BWL-Justus</span></div>
+        <div class="level">
+          <div class="bar"><i id="rank-level-fill-dashboard"></i></div>
+          <small id="rank-level-label-dashboard" class="muted">Level 1 → 2 · 0/100 XP</small>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Achievements -->
-    <section class="view only-achievements" data-view="achievements">
-      <div class="card">
-        <h2>Erfolge</h2>
-        <p class="muted">Hier siehst du alle bisherigen Meilensteine, Ränge und deine Statistik.</p>
-        <ul id="achievement-list" class="ach-list"></ul>
-      </div>
-    </section>
+    <div class="mini-card slim-scroll">
+      <h3>Fortschritt je Thema</h3>
+      <div id="topic-progress" class="prog-list"></div>
+    </div>
+  </section>
+</main>
 
-    <!-- Settings -->
-    <section class="view" data-view="settings">
-      <div class="card">
-        <h2>Einstellungen</h2>
-        <label for="theme-select">Darstellung</label>
-        <select id="theme-select">
-          <option value="light">Hell</option>
-          <option value="dark">Dunkel</option>
-        </select>
-      </div>
-    </section>
-  </main>
 
-  <footer class="footer">
+
+    <footer class="footer">
     <div class="container">
-      <p class="muted version-text" aria-label="App Version">Version <span id="app-version">1.4.1</span></p>
+      <p class="muted version-text">Version <span id="app-version">–</span></p>
     </div>
   </footer>
 
-  <script defer src="js/app-shell.js"></script>
+
+  <script defer src="js/topics.js"></script>
   <script defer src="js/progress.js"></script>
-  <script defer src="js/router.js"></script>
-
-  <!-- Modular Train Engine + Topics -->
-  <script defer src="js/train/engine.js"></script>
-  <script defer src="js/train/topics/break-even.js"></script>
-  <script defer src="js/train/topics/bab.js"></script>
-  <script defer src="js/train/topics/kostenarten.js"></script>
-  <script defer src="js/train/topics/abgrenzung.js"></script>
-  <script defer src="js/train/topics/kostenstellen.js"></script>
-  <script defer src="js/train/topics/deckungsbeitrag.js"></script>
-  <script defer src="js/train/topics/aequivalenz.js"></script>
-  <script defer src="js/train/topics/zuschlag.js"></script>
-  <script defer src="js/train/topics/prozesskosten.js"></script>
-  <script defer src="js/train/topics/kennzahlen.js"></script>
-  <script defer src="js/train/topics/investition.js"></script>
-  <script defer src="js/train/topics/lager.js"></script>
-
+  <script defer src="js/app-shell.js"></script>
   <script defer src="js/quickstart.js"></script>
-  <script defer src="js/calc.js"></script>
   <script defer src="js/app.js"></script>
-  <!-- Dev tools (self-guarded; active only with ?dev=1) -->
-  <script defer src="js/dev/selftest.js"></script>
 </body>
 </html>

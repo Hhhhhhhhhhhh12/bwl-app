@@ -25,9 +25,9 @@
           <li>Fixkosten gesamt: <strong>${fk} €</strong></li>
         </ul>
 
-        <div class="task-controls" style="margin-top:.8rem"></div>
+        <div class="task-controls"></div>
 
-        <div class="bab-table" style="margin-top:.6rem;display:grid;gap:.6rem">
+        <div class="bab-table task-fields mt-6">
           <label>Deckungsbeitrag je Stück:
             <input data-answer="${db_stk}" placeholder="€" />
             <span class="i" title="DB je Stück = Preis − variable Kosten"></span>

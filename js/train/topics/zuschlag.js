@@ -42,55 +42,55 @@
       <div class="card">
         <h3>Zuschlagskalkulation</h3>
         <p class="muted">Ausgefüllte Tabelle – fülle die markierten Lücken (max. zwei).</p>
-        <table class="calc-table" style="width:100%; border-collapse:separate; border-spacing:.5rem .4rem;">
+        <table class="calc-table">
           <tbody>
             <tr>
-              <th style="text-align:left;">Einzelkosten Material</th>
+              <th>Einzelkosten Material</th>
               <td>${fmtEUR(ekm)}</td>
               <td class="muted">EKm</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Einzelkosten Fertigung</th>
+              <th>Einzelkosten Fertigung</th>
               <td>${fmtEUR(ekf)}</td>
               <td class="muted">EKf</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Materialgemeinkosten</th>
+              <th>Materialgemeinkosten</th>
               <td>${fmtEUR(mgk)}</td>
               <td class="muted">${zm}%</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Fertigungsgemeinkosten</th>
+              <th>Fertigungsgemeinkosten</th>
               <td>${fmtEUR(fgk)}</td>
               <td class="muted">${zf}%</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Herstellkosten</th>
+              <th>Herstellkosten</th>
               <td>${cellVal('herstell', herstell, 'HK = EKm + EKf + MGK + FGK')}</td>
               <td class="muted">HK</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Verwaltungsgemeinkosten</th>
+              <th>Verwaltungsgemeinkosten</th>
               <td>${fmtEUR(vwgk)}</td>
               <td class="muted">${zv}%</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Vertriebsgemeinkosten</th>
+              <th>Vertriebsgemeinkosten</th>
               <td>${fmtEUR(vtkg)}</td>
               <td class="muted">${zvt}%</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Selbstkosten</th>
+              <th>Selbstkosten</th>
               <td>${cellVal('selbst', selbst, 'SK = HK + VWGK + VTGK')}</td>
               <td class="muted">SK</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Gewinnzuschlag</th>
+              <th>Gewinnzuschlag</th>
               <td>${gew? (Math.round(selbst*gew/100) + ' \u20AC') : '—'}</td>
               <td class="muted">${gew? (gew+'%') : ''}</td>
             </tr>
             <tr>
-              <th style="text-align:left;">Listenpreis</th>
+              <th>Listenpreis</th>
               <td>${cellVal('preis', preis, gew? 'LP = SK · (1+Gewinn%)' : 'LP = SK')}</td>
               <td class="muted">LP</td>
             </tr>

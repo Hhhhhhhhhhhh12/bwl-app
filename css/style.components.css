@@ -256,3 +256,13 @@ input.hint{ animation: pulseGrey .16s ease-out; }
   color: var(--muted); background: var(--surface); cursor:help; margin-left:.35rem;
 }
 .info-btn:hover, .info-btn:focus-visible{ color: var(--brand); border-color: color-mix(in oklab, var(--brand), white 40%); }
+/* Connections required by the merged templates; retain D's visual tokens. */
+.task-fields { display: grid; gap: .6rem; }
+.calc-table { width: 100%; border-collapse: separate; border-spacing: .5rem .4rem; }
+.calc-table th { text-align: left; }
+.bar > i { display: block; height: 100%; background: var(--bar); }
+.nav-link { display: inline-block; padding: .55rem .95rem; border: 1px solid var(--line); border-radius: 10px; }
+select.ok { border-color: var(--ok); }
+select.err { border-color: var(--err); }
+.btn[aria-disabled="true"] { opacity: .55; cursor: default; }
+[hidden] { display: none !important; }

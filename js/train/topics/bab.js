@@ -24,7 +24,7 @@
             <td class="muted">%</td>
           </tr>
         </tbody></table>
-        <div class="explain muted" data-explain="1" style="display:none;margin-top:.5rem">
+        <div class="explain muted is-hidden mt-6" data-explain="1">
           Rechenweg: MGK ÷ EM × 100 = <strong>${mgk} ÷ ${em} × 100 = ${zus}%</strong>.
         </div>
       </div>`;
@@ -62,7 +62,7 @@
           <tr><th>Vw/Vt-Zuschlag${info('(VwGK+VtGK) ÷ HK × 100')}</th>
             <td><input type="text" inputmode="numeric" data-answer="${rateVwVt}"></td><td class="muted">%</td></tr>
         </tbody></table>
-        <div class="explain muted" data-explain="1" style="display:none;margin-top:.5rem">
+        <div class="explain muted is-hidden mt-6" data-explain="1">
           1) MGK-Zuschlag = <strong>${MGK} ÷ ${EM} × 100 ≈ ${rateMGK}%</strong>
           <br>2) FGK-Zuschlag = <strong>${FGK} ÷ ${FL} × 100 ≈ ${rateFGK}%</strong>
           <br>3) HK = EM + FL + MGK + FGK = <strong>${HK} €</strong>

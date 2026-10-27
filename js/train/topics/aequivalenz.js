@@ -16,7 +16,7 @@
           <li>Basis (ÄZ = 1): <strong>${base} €</strong></li>
           <li>ÄZ(A)=1, ÄZ(B)=${zB}${zC?`, ÄZ(C)=${zC}`:''}</li>
         </ul>
-        <div class="bab-table" style="display:grid;gap:.6rem">
+        <div class="bab-table task-fields">
           <label>Preis A:
             <input data-answer="${pA}" placeholder="€" />
             <span class="i" title="Preis = Basis × ÄZ"></span>

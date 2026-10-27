@@ -29,7 +29,7 @@
           <li>kurzfr. Verb.: ${kurzV} €, langfr. Verb.: ${langV} €, Eigenkapital: ${ek} €</li>
           <li>Einzahlungen: ${cf_ein} €, Auszahlungen: ${cf_aus} €</li>
         </ul>
-        <div class="bab-table" style="display:grid;gap:.6rem">
+        <div class="bab-table task-fields">
           <label>Liquidität I (%):
             <input data-answer="${liq1}" placeholder="%" />
           </label>
