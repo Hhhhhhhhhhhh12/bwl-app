@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Version 1.5.0: Lernmission mit ruhigem Hintergrund, lokal in Chromium geprüft.** GitHub-Übernahme und Veröffentlichung über GitHub Pages sind ausdrücklich beauftragt. Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Eine separate visuelle Nutzerabnahme, weitere Geräteprüfungen und fachliche Inhaltsprüfung bleiben gesonderte Zustände.
+**Version 1.5.0: Lernmission mit ruhigem Hintergrund, lokal in Chromium geprüft.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Eine separate visuelle Nutzerabnahme, weitere Geräteprüfungen und fachliche Inhaltsprüfung bleiben gesonderte Zustände.
 
 ## Aufbau
 

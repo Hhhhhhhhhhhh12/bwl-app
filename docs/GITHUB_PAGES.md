@@ -6,7 +6,7 @@ Stand: 27. Oktober 2026. Version 1.5.0 (Lernmission).
 
 Der Nutzer hat die Anpassung von GitHub und Hosting beauftragt und ausdrücklich GitHub Pages unter der GitHub-Adresse gewählt. Die BWL-App bleibt getrennt von Believe in Me. Eine eigene Domain oder ein weiterer Hosting-Anbieter ist nicht Teil dieses Schritts.
 
-Geplante Adresse: https://hhhhhhhhhhhh12.github.io/bwl-app/
+Online-Adresse: https://hhhhhhhhhhhh12.github.io/bwl-app/
 Repository: https://github.com/Hhhhhhhhhhhh12/bwl-app
 Quelle: `main`, Ordner `/`.
 
@@ -28,4 +28,12 @@ Die Lernmission besitzt 25 bestandene lokale Prüffälle. Die Pages-Anpassung wi
 
 ## Status
 
-GitHub-Übernahme und Einrichtung sind beauftragt und vorbereitet. Der erfolgreiche Online-Status wird nach Einrichtung ergänzt.
+- Lernmission 1.5.0 in `main` übernommen und auf GitHub hochgeladen.
+- GitHub Pages aktiviert: Quelle `main`, Ordner `/`, HTTPS erzwungen.
+- Die erste Bereitstellung von `30f6070` wurde von GitHub mit `built` und ohne Fehler abgeschlossen.
+- Vier gezielte lokale Prüfungen im Pages-Modus ohne Apache-Header bestanden: alle Einstiegsseiten, sichtbares Training, Punkte/Pfad und tatsächliche Blockierung eingebetteten Codes durch die HTML-Policy.
+- Öffentliche Startadresse und 49 referenzierte Seiten/Dateien schreibfrei abgeglichen: insgesamt 50 Antworten mit HTTP 200, alle inhaltlich identisch mit dem freigegebenen Anwendungsstand. Vorübergehende 503-/Verbindungsfehler verschwanden beim gezielten erneuten Abruf; es blieb kein abweichendes oder fehlendes Asset.
+- Die Repository-Homepage verweist auf die öffentliche App.
+- Believe in Me, dessen Webspace und DNS wurden bei diesem Auftrag nicht verändert.
+
+Die Online-Quellenprüfung führt keine Lernaktionen aus und liest keine persönlichen Browserdaten. Der frühere lokale Prüfnachweis mit 25 bestandenen Fällen bleibt davon getrennt.

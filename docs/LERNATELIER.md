@@ -14,8 +14,8 @@ Der Nutzer hatte zunächst **Lernatelier** gewählt und die lokale Umsetzung sam
 | Lokale technische Prüfung | 25 von 25 Prüffällen bestanden |
 | Sichtprüfung der Browseraufnahmen durch Entwicklungsagent | Durchgeführt |
 | Visuelle Nutzerabnahme der realen Umsetzung | Aktuelle Lernmission-Umsetzung noch offen; Designrichtung und Hintergrundkorrektur bestätigt |
-| Übernahme in `main` / GitHub-Upload dieser Gestaltung | Am 27.10.2026 ausdrücklich beauftragt |
-| Bereitstellung / Hostingänderung | GitHub Pages unter der GitHub-Adresse ausdrücklich ausgewählt und beauftragt |
+| Übernahme in `main` / GitHub-Upload dieser Gestaltung | Am 27.10.2026 beauftragt und durchgeführt |
+| Bereitstellung / Hostingänderung | GitHub Pages unter der gewählten GitHub-Adresse eingerichtet; erste Bereitstellung und öffentliche Quellen erfolgreich geprüft |
 
 ## Umsetzung
 
