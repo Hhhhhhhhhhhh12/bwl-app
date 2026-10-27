@@ -74,6 +74,7 @@ async function layoutState(page) {
 async function snapshot(page, name) {
   if (!process.env.BWL_TEST_ARTIFACTS) return;
   await fs.mkdir(process.env.BWL_TEST_ARTIFACTS, { recursive: true });
+  await page.evaluate(async () => { await document.fonts.ready; await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); });
   await page.screenshot({ path: path.join(process.env.BWL_TEST_ARTIFACTS, `${process.env.BWL_SNAPSHOT_LABEL || 'current'}-${name}.png`), fullPage: true, animations: 'disabled' });
 }
 test('all five entry pages load with local assets and strict CSP', async t => {
@@ -135,6 +136,8 @@ test('all Kostenarten levels complete and remain complete', async t => {
   await page.locator('#bab-wrapper h3').filter({ hasText: 'Alle Level abgeschlossen' }).waitFor();
   const result = await saved(page);
   assert.equal(result.points, 300); assert.equal(result.topics.kostenarten.correct, 15);
+  assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(), 15);
+  assert.equal(await page.locator('#mission-level-map [aria-current="step"]').count(), 0);
   assert.equal(await page.locator('#btn-check').isDisabled(), true);
   await page.reload(); assert.match(await page.locator('#bab-wrapper').textContent(), /Alle Level abgeschlossen/);
   assert.deepEqual(errors, []);
@@ -256,9 +259,12 @@ test('a second tab receives progress and reset without reloading', async t => {
   await dashboard.goto(`${origin}/dashboard.html`);
   await answerAll(page); await page.locator('#btn-check').click();
   await dashboard.waitForFunction(() => document.getElementById('overall-correct').textContent === '1');
+  assert.equal(await dashboard.locator('#mission-total-xp').textContent(), '20');
   dashboard.once('dialog', dialog => dialog.accept());
   await dashboard.locator('#btn-reset-progress').click();
   await page.waitForFunction(() => document.getElementById('session-pill').textContent.includes('Level 1/15'));
+  assert.equal(await page.locator('#mission-total-xp').textContent(), '0');
+  assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(), 0);
   assert.equal(await page.evaluate(() => window.ensureProg().points), 0);
 });
 test('unavailable storage reports a warning and retains the in-session result', async t => {
@@ -328,6 +334,8 @@ test('Lernatelier covers every view in both themes, reflow and reduced motion', 
       for (const name of ['dashboard','train','achievements','settings']) {
         await page.goto(`${origin}/${name}.html`);
         assert.equal(await page.locator('html').getAttribute('data-design'), 'lernatelier');
+        assert.equal(await page.locator('body').getAttribute('data-game-style'), 'mission');
+        assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundImage), 'none', 'calm background without pattern');
         assert.equal(await page.locator('body').getAttribute('data-theme'), theme);
         assert.equal(await page.locator('h1').count(), 1);
         assert.equal(await page.locator('nav [aria-current="page"]').count(), 1);
@@ -372,4 +380,52 @@ test('all training topic layouts fit a 320px Lernatelier worksheet', async t => 
     if (['bab','zuschlag','kostenstellen'].includes(topic)) await snapshot(page, `table-${topic}-320`);
   }
   assert.deepEqual(errors, []); assert.deepEqual(violations, []);
+});
+
+test('mission path and XP follow actual awards, retry amounts and resume', async t => {
+  const { page, errors, violations } = await session(t, {selection:['kostenarten']});
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  assert.equal(await page.locator('#mission-topic-label').textContent(),'Kostenarten');
+  assert.equal(await page.locator('#mission-level-map li').count(),15);
+  assert.equal(await page.locator('#mission-level-map [aria-current="step"]').getAttribute('data-level'),'1');
+  assert.match(await page.locator('#mission-reward-text').textContent(),/20 XP/);
+  await page.locator('#bab-wrapper [data-answer]').first().fill('-999');await page.locator('#btn-check').click();
+  assert.match(await page.locator('#mission-reward-text').textContent(),/14 XP/);
+  assert.equal(await page.locator('#mission-total-xp').textContent(),'0');
+  await answerAll(page);await page.locator('#btn-check').click();
+  assert.match(await page.locator('#task-feedback').textContent(),/\+14 XP/);
+  assert.equal(await page.locator('#mission-total-xp').textContent(),'14');
+  assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(),1);
+  await page.waitForFunction(()=>document.querySelector('#mission-level-map [aria-current="step"]')?.dataset.level==='2');
+  await page.reload();
+  assert.equal(await page.locator('#mission-total-xp').textContent(),'14');
+  assert.equal(await page.locator('#mission-level-map [aria-current="step"]').getAttribute('data-level'),'2');
+  assert.equal(await page.locator('#mission-level-map li[data-level="1"]').getAttribute('data-complete'),'true');
+  assert.match(await page.locator('#mission-reward-text').textContent(),/20 XP/);
+  for (let wrong = 0; wrong < 2; wrong++) {
+    await page.locator('#bab-wrapper [data-answer]').first().fill('-999');
+    await page.locator('#btn-check').click();
+  }
+  assert.match(await page.locator('#mission-reward-text').textContent(),/8 XP/);
+  await answerAll(page); await page.locator('#btn-check').click();
+  assert.match(await page.locator('#task-feedback').textContent(),/\+8 XP/);
+  assert.equal(await page.locator('#mission-total-xp').textContent(),'22');
+  assert.deepEqual(errors,[]);assert.deepEqual(violations,[]);
+});
+
+test('mission map follows automatic topic changes and hides for empty selection', async t => {
+  const { page }=await session(t,{selection:['kostenarten','kostenstellen']});
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  await answerAll(page);await page.locator('#btn-check').click();
+  await page.waitForFunction(()=>document.getElementById('mission-topic-label').textContent==='Kostenstellen');
+  assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(),0,'new topic has its own path');
+  assert.equal(await page.locator('#mission-total-xp').textContent(),'20');
+  assert.equal((await saved(page)).topics.kostenarten.correct,1);
+  await page.goto(`${origin}/settings.html`);
+  await page.locator('input[data-topic="kostenarten"]').uncheck();
+  await page.locator('input[data-topic="kostenstellen"]').uncheck();
+  await page.goto(`${origin}/train.html`);
+  assert.equal(await page.locator('#mission-route').isVisible(),false);
+  assert.equal(await page.locator('#mission-reward-text').textContent(),'');
+  assert.match(await page.locator('#bab-wrapper').textContent(),/Keine Aufgabe verfügbar/);
 });

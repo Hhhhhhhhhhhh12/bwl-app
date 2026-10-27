@@ -1,29 +1,30 @@
-# Lernatelier: lokale Umsetzung und Prüfung
+# Lernatelier / Lernmission: lokale Umsetzung und Prüfung
 
 Stand: 27. Oktober 2026. Basis: `main` bei `7a229a5`.
 Arbeitszweig: `work/bwl-lernatelier-20261027`.
 
 ## Entscheidung und Freigabe
 
-Der Nutzer hat nach dem sichtbaren Vergleich die Variante **Lernatelier** gewählt und die lokale Umsetzung samt Prüfung betroffener Ansichten und Abläufe ausdrücklich beauftragt.
+Der Nutzer hatte zunächst **Lernatelier** gewählt und die lokale Umsetzung samt Prüfung betroffener Ansichten und Abläufe ausdrücklich beauftragt. Nach der Rückmeldung „zu wenig Gaming“ wurde **Lernmission mit ruhigerem Hintergrund** ausdrücklich ausgewählt. Diese Korrektur wird im bereits autorisierten lokalen Ablauf umgesetzt.
 
 | Zustand | Status |
 |---|---|
-| Designrichtung | Lernatelier bestätigt |
+| Designrichtung | Lernmission bestätigt; ruhiger, gleichmäßiger Hintergrund ohne Raster |
 | Lokale Umsetzung | Abgeschlossen |
-| Lokale technische Prüfung | 23 von 23 Prüffällen bestanden |
+| Lokale technische Prüfung | 25 von 25 Prüffällen bestanden |
 | Sichtprüfung der Browseraufnahmen durch Entwicklungsagent | Durchgeführt |
-| Visuelle Nutzerabnahme der realen Umsetzung | Nicht abgenommen; Farben, Schrift und Gesamtwirkung passen noch nicht |
+| Visuelle Nutzerabnahme der realen Umsetzung | Aktuelle Lernmission-Umsetzung noch offen; Designrichtung und Hintergrundkorrektur bestätigt |
 | Übernahme in `main` / GitHub-Upload dieser Gestaltung | Nicht erfolgt |
 | Bereitstellung / Hostingänderung | Nicht erfolgt |
 
 ## Umsetzung
 
-- Papierfarbene Flächen, dunkelgrüne Aktionen, redaktionelle Überschriften; passende dunkle Darstellung. Vorhandene lokale Schriftdatei, keine neue Abhängigkeit.
+- Gleichmäßiger, ruhiger Seitenhintergrund ohne Raster oder Textur, markanter Missionskopf, kräftige serifenlose Überschriften und aktive grüne Akzente; passende dunkle Darstellung. Vorhandene lokale Schriftdatei, keine neue Abhängigkeit oder externe Schriftanfrage.
 - Gemeinsame Navigation und Seitengestaltung für Übersicht (auch `index.html`), Training, Erfolge und Einstellungen.
 - Übersicht mit Trainingsempfehlung, Themenfortschritt und schmaler Begleitleiste. Themenauswahl bleibt in den Einstellungen erreichbar.
-- Training mit klar abgegrenztem Arbeitsblatt und Hauptaktion „Antwort prüfen“. Kontext und Fortschritt stehen auf großen Fenstern daneben, auf schmalen darunter. Die Seite scrollt ohne zusätzliche innere Aufgaben-Scrollbereiche.
-- Eine Grafik stellt bei der einfachen Kostenarten-Einstiegsaufgabe die tatsächlich erzeugten Werte und ihre Multiplikation dar. Das Ergebnis erscheint nach Lösungseinblendung oder richtiger Prüfung.
+- Training mit klar abgegrenztem Arbeitsblatt und Hauptaktion „Antwort prüfen“. Links steht der Pfad der 15 bestehenden Aufgabenlevel mit den tatsächlich gespeicherten Abschlüssen und dem aktuellen Level; Rang und Kontext ergänzen ihn. Auf schmalen Ansichten steht die Aufgabe zuerst und der Pfad darunter. Die Seite scrollt ohne zusätzliche innere Aufgaben-Scrollbereiche.
+- Die Punkteanzeige in der Navigation, der Pfad und der Hinweis auf die nächste mögliche Gutschrift lesen vorhandene Lernstände. Sichtbare Erfolgsrückmeldung zeigt nur die tatsächlich hinzugekommenen Punkte. Eine knappe Benachrichtigung verbindet die bestehende Trainingssteuerung mit dieser Darstellung; sie vergibt selbst keine Punkte und speichert nichts.
+- Eine Grafik stellt bei der einfachen Kostenarten-Einstiegsaufgabe die tatsächlich erzeugten Werte und ihre Multiplikation dar. Paketmarken veranschaulichen die tatsächliche Stückzahl. Das Ergebnis erscheint nach Lösungseinblendung oder richtiger Prüfung.
 - „Rechenweg“ zeigt die vorhandene Erklärung, ohne Eingaben zu überschreiben oder Punkte zu vergeben. Sie kann die vollständige Rechnung einschließlich Ergebnis enthalten. „Lösung anzeigen“ behält das bisherige Ausfüllen der Antwortfelder bei.
 - Der Rechner ist aufklappbar; geschlossen fängt er keine Tastatureingaben ab. Enter auf der Aufklappüberschrift führt ausschließlich deren native Aktion aus.
 - Sichtbare textliche Antwortmeldung zusätzlich zu Farbe und bestehender Vorlesemeldung, `aria-invalid` für fehlerhafte Antworten, sichtbarer Sprunglink bei Tastaturfokus.
@@ -32,11 +33,15 @@ Aufgabenkennungen, Punktelogik, Speicherung, Freischaltregeln und der automatisc
 
 ## Prüfung und behobene Befunde
 
-Abschlusslauf: **23 bestanden, 0 fehlgeschlagen, 0 ausgelassen** (19 Browserfälle und 4 Rechnerfälle), Chromium `148.0.7778.96`, Node.js `24.16.0`.
+Abschlusslauf: **25 bestanden, 0 fehlgeschlagen, 0 ausgelassen** (21 Browserfälle und 4 Rechnerfälle), Chromium `148.0.7778.96`, Node.js `24.16.0`.
 
 Die vorhandenen Funktionsprüfungen bleiben enthalten: alle Einstiege unter der unveränderten Content Security Policy, alle zwölf aktiven Themen in vier Schwierigkeitsstufen, vollständiger Kostenarten-Durchlauf, richtige/falsche Antworten, einmalige Punkte, Wiederaufnahme, Einstellungen, Reset, zwei Tabs und Speicherfehler.
 
 Zusätzlich geprüft:
+
+- Levelpfad, einmalige Punkte, 20/14/8-Hinweise aus den bestehenden Regeln, automatische Themenwechsel, Wiederaufnahme und kein aktiver Knoten nach vollständigem Abschluss.
+- Punkte- und Pfadanzeigen aktualisieren sich auch nach Fortschrittsänderung oder Reset aus einem zweiten Tab; bei leerer Auswahl wird kein falscher Pfad angezeigt.
+- Ruhiger Seitenhintergrund ohne Hintergrundbild in beiden Farbschemata auf allen aktiven Ansichten.
 
 - Rechenweg öffnen/schließen ohne Überschreiben, Lösung anzeigen, zurückgesetzte Hilfestellung nach Aufgabenwechsel.
 - Rechner über Tastatur öffnen/schließen, rechnen, geschlossenen Rechner nicht unbeabsichtigt bedienen.
@@ -56,9 +61,9 @@ Der Nutzer hat die lokale Umsetzung visuell noch nicht abgenommen und die Kritik
 
 Zwei Gegenentwürfe innerhalb der bestehenden Informationsstruktur werden zusammen mit der bisherigen Farbrichtung sichtbar verglichen: „Klar & modern“ (Blau, kräftige serifenlose Schrift) und „Graphit & Terrakotta“ (wärmere neutrale Flächen, rostfarbene Akzente). Diese Vorschläge sind noch nicht ausgewählt und nicht in den App-Quellstand übernommen. Eine weitere Gestaltungsauswahl ist offen.
 
-Die anschließende Nutzerkorrektur lautet **„zu wenig Gaming“**. Die BWL-Oberfläche soll damit eine deutlichere Spielidentität erhalten; ein reiner Wechsel von Farben und Schrift reicht nicht. Der ergänzte sichtbare Vergleich umfasst „Lernmission“ (technische Spieloberfläche mit einem Pfad für die 15 bestehenden Level) und „Lernarena“ (kräftige Konturen und Spielsteine). Die bisherige Lernatelier-Richtung bleibt als Referenz dabei. Empfehlung des Entwicklungsagenten: Lernmission, weil sie den Lernweg sichtbar macht und die Aufgabe fokussiert. Beide Gaming-Richtungen bleiben unbestätigte Entwürfe.
+Die anschließende Nutzerkorrektur lautet **„zu wenig Gaming“**. Die BWL-Oberfläche soll damit eine deutlichere Spielidentität erhalten; ein reiner Wechsel von Farben und Schrift reicht nicht. Der ergänzte sichtbare Vergleich umfasst „Lernmission“ (technische Spieloberfläche mit einem Pfad für die 15 bestehenden Level) und „Lernarena“ (kräftige Konturen und Spielsteine). Die bisherige Lernatelier-Richtung bleibt als Referenz dabei. Empfehlung des Entwicklungsagenten: Lernmission, weil sie den Lernweg sichtbar macht und die Aufgabe fokussiert. Der Nutzer wählte anschließend ausdrücklich **Lernmission**, mit der Bedingung **„ruhigerer Hintergrund!!“**. Das Raster entfällt vollständig; die akzeptierten Gaming-Elemente bleiben erhalten. Lernarena bleibt ungewählt.
 
-Die separate Gestaltungsvorschau zeigt Rang, Punkte und eine Beispielreaktion mit den bekannten 20/14/8 Punkten. Sie implementiert keine neue Spielregel in der App und ist keine Abnahme des Lernablaufs. Die Vorschau wurde in 24 Kombinationen aus Variante, Farbschema und Fensterbreite auf Überläufe und die Beispielbedienung geprüft. Diese Vorschauprüfung ist vom dokumentierten App-Prüfstand getrennt.
+Die ursprüngliche separate Gestaltungsvorschau zeigt Rang, Punkte und eine Beispielreaktion mit den bekannten 20/14/8 Punkten. Die anschließend lokal umgesetzte Lernmission bindet diese Darstellung an die echte bestehende Trainingssteuerung. Neue Aufgaben-, Freischalt- oder Belohnungsregeln wurden nicht eingeführt; die Umsetzung ist keine vorweggenommene Nutzerabnahme des Lernablaufs. Die Vorschau wurde in 24 Kombinationen aus Variante, Farbschema und Fensterbreite auf Überläufe und die Beispielbedienung geprüft. Diese Vorschauprüfung ist vom dokumentierten App-Prüfstand getrennt.
 
 ## Grenzen und weitere Zustände
 

@@ -157,6 +157,7 @@
     }catch{}
 
     // If all 15 done, we do not reset; wrongIds remain for späteres Wiederholen
+    document.dispatchEvent(new CustomEvent('bwl:progress-changed'));
     return p;
   }
 
@@ -178,6 +179,12 @@
 
   // Expose to train engine
   window.progMarkResult = markResult;
+  window.progNextTaskReward = function (topic, taskId) {
+    const current = ensureProg().topics[topic];
+    if (current?.awarded?.[taskId]) return 0;
+    const tries = current?.tries?.[taskId] || 0;
+    return tries === 0 ? AWARD_FIRST : tries === 1 ? AWARD_SECOND : AWARD_LATER;
+  };
 
   // ------- DOM helpers ------------------------------------------------------
   function setText(id, text){ const n = document.getElementById(id); if (n) n.textContent = String(text); }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" data-design="lernatelier">
+<html lang="de" data-design="lernatelier" data-game-style="mission">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,15 +13,16 @@
   <link rel="stylesheet" href="css/style.animations.css">
   <link rel="stylesheet" href="css/style.dashboard.css">
   <link rel="stylesheet" href="css/style.atelier.css">
+  <link rel="stylesheet" href="css/style.mission.css">
 </head>
-<body data-page="achievements" data-design="lernatelier">
+<body data-page="achievements" data-design="lernatelier" data-game-style="mission">
   <a class="sr-only skip-link" href="#main-content">Zum Inhalt</a>
   <header class="app atelier-header">
     <div class="container">
       <div class="brand">
         <span class="atelier-brand-mark" aria-hidden="true">B</span>
         <strong class="brand-title">BWL-App</strong>
-        <small class="muted brand-sub">Dein Lernatelier für Kostenrechnung</small>
+        <small class="muted brand-sub">Deine Lernmission für Kostenrechnung</small>
       </div>
       <nav aria-label="Hauptnavigation">
         <ul class="nav">
@@ -31,6 +32,7 @@
           <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
         </ul>
       </nav>
+      <div class="mission-header-xp" aria-label="Gesamtpunkte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 10-13h-7l1-7Z"></path></svg><span id="mission-total-xp">0</span> XP</div>
     </div>
   </header>
   <main id="main-content" class="container atelier-container" tabindex="-1">
@@ -42,6 +44,7 @@
   </div></footer>
   <script defer src="js/topics.js"></script>
   <script defer src="js/progress.js"></script>
+  <script defer src="js/mission.js"></script>
   <script defer src="js/app-shell.js"></script>
   <script defer src="js/quickstart.js"></script>
   <script defer src="js/app.js"></script>

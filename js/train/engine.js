@@ -96,6 +96,9 @@
   }
 
   function updateLevelPill() {
+    document.dispatchEvent(new CustomEvent('bwl:task-state', { detail: {
+      topic: session.topic, index: session.index, difficulty: session.difficulty, max: MAX_LEVELS_PER_TOPIC
+    } }));
     const intro = document.getElementById('topic-intro');
     if (intro) intro.textContent = TOPIC_INTRO[session.topic] || 'Wähle ein aktives Thema in den Einstellungen, um loszulegen.';
     const pill = document.getElementById("session-pill");
@@ -165,6 +168,7 @@
       renderTask();
       return;
     }
+    updateLevelPill();
 
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
@@ -427,12 +431,15 @@
       if (!total) return;
       const allCorrect = ok === total;
       const message = allCorrect ? 'Richtig gelöst. Weiter zur nächsten Aufgabe …' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`;
-      announce(message);
       const feedback = document.getElementById('task-feedback');
-      if (feedback) { feedback.textContent = message; feedback.hidden = false; }
+      if (!allCorrect) {
+        announce(message);
+        if (feedback) { feedback.textContent = message; feedback.hidden = false; }
+      }
       if (allCorrect) showEquationResult(wrap);
       // Preserve D's automatic transition to the selected topic with least progress.
       if (allCorrect) {
+        const previousPoints = ensureProg().points;
         // 1) Persist result ONCE for current taskId (before index changes)
         try {
           if (typeof window.progMarkResult === 'function') {
@@ -440,6 +447,10 @@
             window.progMarkResult(session.topic, taskId, true);
           }
         } catch {}
+        const gained = ensureProg().points - previousPoints;
+        const success = gained > 0 ? `Level gelöst! +${gained} XP. Weiter zur nächsten Aufgabe …` : message;
+        announce(success);
+        if (feedback) { feedback.textContent = success; feedback.hidden = false; }
 
         // 2) Visual feedback: show explanations, mark button green
         try {

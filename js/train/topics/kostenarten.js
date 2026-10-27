@@ -19,9 +19,10 @@
     // Preserve D's easy introductory exercise; A/B's EK+GK follows for later stages.
     if (difficulty === 1) {
       const variable = rnd(2, 10), quantity = rnd(5, 20);
+      const packages = `<span class="mission-packages" aria-hidden="true">${'<i class="mission-package"></i>'.repeat(quantity)}</span>`;
       const graphic = `<div class="atelier-equation" aria-label="Kosten je Stück mal Menge ergibt Gesamtkosten">
         <div class="atelier-quantity"><strong>${variable} €</strong><small>je Stück</small></div><span class="atelier-operator" aria-hidden="true">×</span>
-        <div class="atelier-quantity"><strong>${quantity}</strong><small>Stück</small></div><span class="atelier-operator" aria-hidden="true">=</span>
+        <div class="atelier-quantity">${packages}<strong>${quantity}</strong><small>Stück</small></div><span class="atelier-operator" aria-hidden="true">=</span>
         <div class="atelier-quantity atelier-unknown"><strong data-equation-result data-equation-answer="${fmt(variable * quantity)} €">?</strong><small>Kosten gesamt</small></div></div>`;
       return task('Einsteiger', 'Wie hoch sind die Gesamtkosten für diese Menge?',
         field('Gesamtkosten', variable * quantity), `${variable} × ${quantity} = ${variable * quantity} €.`, graphic);
