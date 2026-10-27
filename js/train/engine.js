@@ -90,6 +90,11 @@
     });
   }
 
+  function announce(message) {
+    const region = document.getElementById('train-status');
+    if (region) region.textContent = message;
+  }
+
   function updateLevelPill() {
     const pill = document.getElementById("session-pill");
     if (!pill) return;
@@ -111,7 +116,7 @@
     (unfinished.length ? unfinished : names).forEach(t => {
       const s = p.topics[t];
       const corr = s.correct | 0;
-      const rate = s.seen > 0 ? (s.correct / s.seen) : 0;
+      const rate = s.seen > 0 ? ((s.successfulAttempts ?? s.correct) / s.seen) : 0;
       if (corr < bestCorrect || (corr === bestCorrect && rate < bestRate)) {
         best = t; bestCorrect = corr; bestRate = rate;
       }
@@ -162,6 +167,7 @@
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
     document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = true; });
+    announce(`${labelOf(session.topic)}: Alle Level abgeschlossen.`);
     wrap.innerHTML = `
       <div class="card">
         <h3>Alle Level abgeschlossen</h3>
@@ -218,7 +224,7 @@
     let node;
     const makeSpan = (txt, tip)=>{
       const s = document.createElement('span');
-      s.className = 'info-btn';
+      s.className = 'info-btn info-term';
       s.setAttribute('data-tip', tip || '—');
       s.textContent = txt;
       s.tabIndex = 0; // fokusierbar für a11y
@@ -287,11 +293,21 @@
     }
     if (!out || !out.markup) {
       wrap.innerHTML = '<div class="card"><h3>Keine Aufgabe verfügbar</h3><p>Aktiviere ein verfügbares Thema in den <a href="settings.html">Einstellungen</a>.</p></div>';
+      announce('Keine Aufgabe verfügbar. Bitte prüfe die Themenauswahl in den Einstellungen.');
       document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = true; });
       return;
     }
     document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = false; });
     wrap.innerHTML = out.markup;
+    announce(`${labelOf(session.topic)}: Level ${session.index + 1} von ${MAX_LEVELS_PER_TOPIC}.`);
+    wrap.querySelectorAll('input[data-answer], select[data-answer]').forEach((field, index) => {
+      if (!field.labels?.length && !field.hasAttribute('aria-label') && !field.hasAttribute('aria-labelledby')) {
+        const header = field.closest('tr')?.querySelector('th');
+        const name = header?.textContent.replace(/\s+/g, ' ').trim();
+        field.setAttribute('aria-label', name || `Antwort ${index + 1}`);
+      }
+      if (field.tagName === 'INPUT' && Number.isFinite(Number(field.dataset.answer))) field.inputMode = 'decimal';
+    });
 
     // Level‑1: fachliche Einordnung oben als Intro-Karte
     if (session.index === 0) {
@@ -388,6 +404,7 @@
 
       if (!total) return;
       const allCorrect = ok === total;
+      announce(allCorrect ? 'Richtig gelöst.' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`);
       // Preserve D's automatic transition to the selected topic with least progress.
       if (allCorrect) {
         // 1) Persist result ONCE for current taskId (before index changes)

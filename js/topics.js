@@ -37,11 +37,20 @@
     const existing = read(PREF_KEY);
     const prefs = existing && typeof existing === 'object' && !Array.isArray(existing) ? existing : {};
     keys.forEach(item => { prefs[item] = list.has(item); });
+    let previousPrefs, previousEnabled;
     try {
+      previousPrefs = localStorage.getItem(PREF_KEY);
+      previousEnabled = localStorage.getItem(ENABLE_KEY);
       localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
       localStorage.setItem(ENABLE_KEY, JSON.stringify(ordered));
     } catch (_) {
-      window.alert('Die Themenauswahl konnte nicht gespeichert werden. Prüfe die Speichereinstellungen deines Browsers.');
+      try {
+        if (previousPrefs === null) localStorage.removeItem(PREF_KEY);
+        else if (previousPrefs !== undefined) localStorage.setItem(PREF_KEY, previousPrefs);
+        if (previousEnabled === null) localStorage.removeItem(ENABLE_KEY);
+        else if (previousEnabled !== undefined) localStorage.setItem(ENABLE_KEY, previousEnabled);
+      } catch (_) { /* Keep the existing choice if storage is unavailable. */ }
+      document.dispatchEvent(new CustomEvent('bwl:storage-error'));
       return;
     }
     document.dispatchEvent(new CustomEvent('bwl:topics-changed'));

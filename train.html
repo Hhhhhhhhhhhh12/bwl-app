@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>BWL-App</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.base.css">
   <link rel="stylesheet" href="css/style.layout.css">
   <link rel="stylesheet" href="css/style.components.css">
@@ -35,7 +36,8 @@
   <section class="card card-fit train-layout">
     <div class="task-area">
       <h2 id="session-pill" class="pill">Thema • Stufe 1</h2>
-      <div id="bab-wrapper" class="task-slot slim-scroll" aria-live="polite"></div>
+      <p id="train-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div id="bab-wrapper" class="task-slot slim-scroll"></div>
 
       <div class="task-controls">
         <button class="btn" id="btn-check" data-action="check">Prüfen</button>

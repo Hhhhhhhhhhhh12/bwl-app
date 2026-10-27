@@ -43,24 +43,41 @@
 
   // ------- State & Persistence ----------------------------------------------
   function blankTopics(){
-    const t = {}; TOPICS.forEach(k => t[k] = { seen:0, correct:0, correctIds:[], wrongIds:[], awarded:{} });
+    const t = {}; TOPICS.forEach(k => t[k] = { seen:0, correct:0, successfulAttempts:0, correctIds:[], wrongIds:[], awarded:{}, tries:{} });
     return t;
   }
+  const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  function count(value) {
+    const number = Number(value);
+    return Number.isSafeInteger(number) && number >= 0 ? number : 0;
+  }
+  function normalizeTopic(value) {
+    const original = isRecord(value) ? value : {};
+    const correct = count(original.correct);
+    const seen = Math.max(correct, count(original.seen));
+    return {
+      ...original, seen, correct,
+      // Earlier saves do not distinguish successful attempts from unique levels.
+      successfulAttempts: Math.min(seen, Math.max(correct, count(original.successfulAttempts))),
+      correctIds: Array.isArray(original.correctIds) ? original.correctIds.filter(id => typeof id === 'string') : [],
+      wrongIds: Array.isArray(original.wrongIds) ? original.wrongIds.filter(id => typeof id === 'string') : [],
+      awarded: isRecord(original.awarded) ? original.awarded : {},
+      tries: isRecord(original.tries) ? original.tries : {},
+    };
+  }
+  function storageWarning() { document.dispatchEvent(new CustomEvent('bwl:storage-error')); }
   function load(){
-    try{
-      const raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return { points:0, topics: blankTopics(), lastRank:'' };
-      const o = JSON.parse(raw);
-      // ensure shape
-      o.points = o.points|0;
-      o.topics = o.topics || blankTopics();
-      TOPICS.forEach(k=>{ o.topics[k] = Object.assign({ seen:0, correct:0, correctIds:[], wrongIds:[], awarded:{} }, o.topics[k]||{}); });
-      o.lastRank = o.lastRank || '';
-      return o;
-    }catch{ return { points:0, topics: blankTopics(), lastRank:'' }; }
+    let original;
+    try { original = JSON.parse(localStorage.getItem(STORE_KEY)); }
+    catch (_) { storageWarning(); }
+    if (!isRecord(original)) return { points:0, topics:blankTopics(), lastRank:'' };
+    const topics = isRecord(original.topics) ? { ...original.topics } : {};
+    TOPICS.forEach(key => { topics[key] = normalizeTopic(topics[key]); });
+    return { ...original, points:count(original.points), topics, lastRank:typeof original.lastRank === 'string' ? original.lastRank : '' };
   }
   function save(p){
-    try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch{}
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(p)); }
+    catch (_) { storageWarning(); }
   }
 
   function ensureProg(){
@@ -74,7 +91,7 @@
   window.Progress = window.Progress || {};
   window.Progress.getTopic = function(id){
     const p = ensureProg();
-    return (p.topics && p.topics[id]) || { seen:0, correct:0, correctIds:[], wrongIds:[], awarded:{} };
+    return (p.topics && p.topics[id]) || { seen:0, correct:0, successfulAttempts:0, correctIds:[], wrongIds:[], awarded:{}, tries:{} };
   };
   Object.defineProperty(window.Progress, 'data', { get(){ return ensureProg(); } });
   function label(t){ return TOPIC_LABELS[t] || t; }
@@ -91,9 +108,10 @@
     const cur  = RANK_STEPS[curIdx];
     const next = RANK_STEPS[Math.min(curIdx+1, RANK_STEPS.length-1)];
     const span = Math.max(1, next - cur);
-    const into = Math.max(0, Math.min(points - cur, span));
+    const atHighestRank = curIdx === RANK_STEPS.length - 1;
+    const into = atHighestRank ? span : Math.max(0, Math.min(points - cur, span));
     const pct  = Math.round(into / span * 100);
-    return { curIdx, cur, next, pct, need: Math.max(0, next - points) };
+    return { curIdx, cur, next, pct, need: Math.max(0, next - points), atHighestRank };
   }
   // expose helpers (read-only)
   window.rankTitle = rankTitle;
@@ -103,13 +121,14 @@
   // Call this once per task result
   function markResult(topic, taskId, correct){
     const p = ensureProg();
-    const t = p.topics[topic] || (p.topics[topic] = { seen:0, correct:0, correctIds:[], wrongIds:[], awarded:{} });
+    const t = p.topics[topic] || (p.topics[topic] = { seen:0, correct:0, successfulAttempts:0, correctIds:[], wrongIds:[], awarded:{}, tries:{} });
 
     // Versuche-Map initialisieren und hochzählen
     if (!t.tries) t.tries = {};
     t.tries[taskId] = (t.tries[taskId]||0) + 1;
 
     t.seen++;
+    if (correct) t.successfulAttempts = (t.successfulAttempts || 0) + 1;
 
     // Award only once pro Task (mit XP nach Versuchen)
     if (correct){
@@ -142,6 +161,7 @@
   }
 
   function animateRankChange(){
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ids = ['rank-badge','rank-badge-dashboard'];
     ids.forEach(id => {
       const el = document.getElementById(id);
@@ -177,11 +197,11 @@
 
     setText('rank-badge', title);
     setWidth('rank-level-fill', st.pct);
-    setText('rank-level-label', `noch ${st.need} XP bis zum nächsten Rang`);
+    setText('rank-level-label', st.atHighestRank ? 'Höchster Rang erreicht' : `noch ${st.need} XP bis zum nächsten Rang`);
 
     setText('rank-badge-dashboard', title);
     setWidth('rank-level-fill-dashboard', st.pct);
-    setText('rank-level-label-dashboard', `noch ${st.need} XP bis zum nächsten Rang`);
+    setText('rank-level-label-dashboard', st.atHighestRank ? 'Höchster Rang erreicht' : `noch ${st.need} XP bis zum nächsten Rang`);
 
     const rb = document.getElementById('rank-box');
     if (rb && !rb.dataset.filled){ rb.textContent = `${title} • ${p.points} XP`; rb.dataset.filled='1'; }
@@ -195,7 +215,7 @@
     function row(t){
       const s = p.topics[t];
       const done = Math.min(s.correct | 0, MAX);
-      const rate = s.seen > 0 ? Math.round((s.correct / s.seen) * 100) : 0;
+      const rate = s.seen > 0 ? Math.round(((s.successfulAttempts ?? s.correct) / s.seen) * 100) : 0;
       const w = Math.round((done / MAX) * 100);
       return `
         <div class="row">
@@ -239,7 +259,7 @@
     const unfinished = active.filter(t => (p.topics[t]?.correct || 0) < MAX);
     (unfinished.length ? unfinished : active).forEach(t=>{
       const s = p.topics[t] || {correct:0, seen:0};
-      const rate = s.seen ? Math.round((s.correct / s.seen) * 100) : 0; // Quote statt absolut
+      const rate = s.seen ? Math.round(((s.successfulAttempts ?? s.correct) / s.seen) * 100) : 0; // Quote statt absolut
       if (rate < minRate){ minRate = rate; weakest = t; }
     });
     const recName = weakest ? (TOPIC_LABELS[weakest] || weakest) : '—';
@@ -291,7 +311,8 @@
     // Build cards
     const totalCorrect = ACTIVE.reduce((a,k)=> a + (p.topics[k]?.correct||0), 0);
     const totalSeen    = ACTIVE.reduce((a,k)=> a + (p.topics[k]?.seen||0), 0);
-    const overallRate  = totalSeen? Math.round(totalCorrect/totalSeen*100) : 0;
+    const totalSuccessful = ACTIVE.reduce((sum, key) => sum + (p.topics[key]?.successfulAttempts ?? p.topics[key]?.correct ?? 0), 0);
+    const overallRate = totalSeen ? Math.round(totalSuccessful/totalSeen*100) : 0;
 
     // Donuts per topic (correct/15)
     const donuts = ACTIVE.map(k=>{
@@ -309,14 +330,14 @@
     // Bar: Accuracy per topic
     const bars = ACTIVE.map(k=>{
       const s = p.topics[k];
-      const acc = s.seen? Math.round((s.correct/s.seen)*100) : 0;
+      const acc = s.seen? Math.round(((s.successfulAttempts ?? s.correct)/s.seen)*100) : 0;
       return `
         <div class="mini-card bar-card">
           <div class="bar-head">
             <strong>${label(k)}</strong>
             <span class="meta">${acc}%</span>
           </div>
-          ${svgBar(s.correct, s.seen, 260, 10)}
+          ${svgBar(s.successfulAttempts ?? s.correct, s.seen, 260, 10)}
         </div>`;
     }).join('');
 
@@ -326,10 +347,10 @@
     const head = `
       <div class="card" id="stats-head">
         <h3>Dein Lernprofil</h3>
-        <p class="subtle">Gesamt richtig: <strong>${totalCorrect}</strong> · Versuche: <strong>${totalSeen}</strong> · Quote: <strong>${overallRate}%</strong></p>
+        <p class="subtle">Abgeschlossene Level: <strong>${totalCorrect}</strong> · Versuche: <strong>${totalSeen}</strong> · Quote: <strong>${overallRate}%</strong></p>
         <div class="progress mt-6">
           <div class="bar"><i id="rank-level-fill-stats" class="w-${st.pct}"></i></div>
-          <div class="meta" id="rank-level-label-stats">Rang: <strong>${rankNow}</strong> • noch ${st.need} XP bis: <strong>${RANK_TITLES[Math.min(st.curIdx+1, RANK_TITLES.length-1)]}</strong></div>
+          <div class="meta" id="rank-level-label-stats">Rang: <strong>${rankNow}</strong> • ${st.atHighestRank ? 'Höchster Rang erreicht' : `noch ${st.need} XP bis: <strong>${RANK_TITLES[st.curIdx + 1]}</strong>`}</div>
         </div>
       </div>`;
 
@@ -393,7 +414,8 @@
         btnReset.addEventListener('click', ()=>{
           const ok = window.confirm('Fortschritt wirklich zurücksetzen? (Alle XP & Themenstände werden gelöscht)');
           if (!ok) return;
-          localStorage.removeItem(STORE_KEY);
+          try { localStorage.removeItem(STORE_KEY); }
+          catch (_) { storageWarning(); return; }
           window.prog = load();
           renderRankAll();
           renderTopicProgress();

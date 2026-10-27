@@ -1,11 +1,11 @@
 /* ==== LAYOUT: Container, Header, Nav, Grids, Seiten ===================== */
 
-.container{ max-width:1280px; margin:0 auto; padding: calc(var(--space) * 1.25); }
+.container{ max-width:1280px; margin:0 auto; padding: clamp(1rem, 3vw, calc(var(--space) * 1.25)); }
 main.container{ padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 
 .app{ position:sticky; top:0; z-index:40; background:var(--surface); border-bottom:1px solid var(--line); }
 .app .container{ display:flex; align-items:center; justify-content:space-between; gap:var(--space); flex-wrap:wrap; }
-.brand{ display:flex; align-items:center; gap:.6rem; }
+.brand{ display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap; }
 .brand strong{ font-weight:800; letter-spacing:.2px; }
 
 /* Navigation */
@@ -22,16 +22,21 @@ main.container{ padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 .nav-btn[aria-current="page"]{ background:var(--brand); color:var(--brand-ink); border-color:transparent; box-shadow:var(--shadow-sm); }
 
 /* Grids & Cards Rahmen */
-.grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap: calc(var(--space-lg) * 1.35); }
-.grid > *{ grid-column: span 12; }
+.grid{ display:grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: calc(var(--space-lg) * 1.35); }
+.grid > *{ grid-column: span 12; min-width:0; }
 @media (min-width: 900px){ .grid > *{ grid-column: span 6; } }
+/* Two-card sections need actual one/two columns; twelve fixed gaps cannot fit a phone. */
+.grid.grid-2 { grid-template-columns:minmax(0, 1fr); }
+.grid.grid-2 > * { grid-column:auto; }
+@media (min-width:900px) { .grid.grid-2 { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
 
 .card{
   grid-column: span 12;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius: calc(var(--radius) + 2px);
-  padding: calc(var(--space-xl) * 1.05);
+  padding: clamp(1rem, 3vw, calc(var(--space-xl) * 1.05));
+  min-width:0;
   --space-inner: 1rem;
   box-shadow: var(--shadow);
   transition: transform .22s, box-shadow .3s;
@@ -48,11 +53,13 @@ main.container{ padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 
 /* --- Training Layout ----------------------------------------------------- */
 /* Donut & Bars helpers (CSP-safe templates) */
-.donut-row{ display:grid; grid-template-columns:auto 1fr; gap:.6rem; align-items:center; }
+.donut-row{ display:grid; grid-template-columns:auto minmax(0, 1fr); gap:.6rem; align-items:center; }
 .donut-wrap{ display:flex; align-items:center; justify-content:center; }
-.donut-info{ display:grid; gap:.25rem; }
-.title-strong{ font-weight:800; }
-.bar-card{ display:grid; gap:.4rem; }
+.donut-info{ display:grid; gap:.25rem; min-width:0; }
+.title-strong{ font-weight:800; overflow-wrap:anywhere; }
+.bar-card{ display:grid; grid-template-columns:minmax(0, 1fr); gap:.4rem; }
+.bar-card > svg { max-width:100%; }
+.bar-head strong { overflow-wrap:anywhere; }
 .bar-head{ display:flex; justify-content:space-between; align-items:center; }
 
 .train-layout{
@@ -63,7 +70,7 @@ main.container{ padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 }
 @media (max-width:1024px){
   .train-layout{ grid-template-columns:1fr; }
-  .sidebar{ order:-1; }
+  .sidebar{ order:0; }
 }
 .sidebar{
   display:grid; gap:var(--space); align-content:start;
@@ -123,7 +130,20 @@ main.container{ padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 /* Slightly larger internal scroll height so long tasks fit */
 .task-area .task-slot.slim-scroll{ max-height: 60vh; }
 /* Integration: header, task, controls, calculator within the existing train layout. */
-.task-area { grid-template-rows: auto minmax(320px, 1fr) auto auto; min-width: 0; }
+.task-area { grid-template-columns:minmax(0, 1fr); grid-template-rows: auto minmax(320px, 1fr) auto auto; min-width: 0; }
+.task-area > * { grid-column:1; min-width:0; }
 .task-controls { flex-wrap: wrap; }
 .grid.spaced > * { grid-column: auto; }
 @media (max-width: 640px) { .grid.spaced.two-col { grid-template-columns: 1fr; } }
+
+/* Utility classes already used by the separate-page templates. */
+.flex { display:flex; flex-wrap:wrap; }
+.items-center { align-items:center; }
+.gap-sm { gap:.6rem; }
+.gap-md { gap:1rem; }
+.flex-1 { flex:1 1 8rem; min-width:0; }
+@media (max-width:640px) {
+  .task-area { grid-template-rows:auto auto auto auto; }
+  .task-area .task-slot { min-height:0; max-height:none; }
+  .card-fit { grid-template-rows:auto; align-content:start; }
+}

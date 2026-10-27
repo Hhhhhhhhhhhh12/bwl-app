@@ -129,7 +129,9 @@ input.err{ border-color: var(--err) !important; background:#FFF2F1 !important; }
 
 /* Progress */
 .progress{ display:grid; gap:.35rem; }
-.progress .row{ display:flex; align-items:center; gap:.6rem; }
+.progress .row{ display:grid; grid-template-columns:minmax(0, 1fr) minmax(3rem, 1fr) auto; align-items:center; gap:.6rem; }
+.progress .label { overflow-wrap:anywhere; }
+.progress .value { white-space:nowrap; }
 .progress .label, .progress .value{ color:var(--muted); font-size:var(--fs-14); }
 .progress .value{ margin-left:auto; }
 .progress .track{
@@ -266,3 +268,15 @@ select.ok { border-color: var(--ok); }
 select.err { border-color: var(--err); }
 .btn[aria-disabled="true"] { opacity: .55; cursor: default; }
 [hidden] { display: none !important; }
+
+/* The dashboard SVG needs explicit ring strokes; default SVG fill is black. */
+.donut { position:relative; width:88px; height:88px; flex:0 0 88px; }
+.donut-svg { display:block; width:100%; height:100%; transform:rotate(-90deg); }
+.donut-track, .donut-fill { fill:none; stroke-width:3; }
+.donut-track { stroke:var(--bar-bg); }
+.donut-fill { stroke:var(--bar); }
+.donut-label { position:absolute; inset:0; display:grid; place-items:center; font-weight:800; }
+.info-term { display:inline; width:auto; height:auto; margin-left:0; border:0; border-bottom:1px dotted var(--muted); border-radius:0; font:inherit; color:inherit; }
+.storage-notice { margin-bottom:1rem; border-color:var(--err); }
+input.ok, select.ok { color:var(--ink); background:color-mix(in srgb, var(--surface), var(--ok) 10%) !important; }
+input.err, select.err { color:var(--ink); background:color-mix(in srgb, var(--surface), var(--err) 10%) !important; }

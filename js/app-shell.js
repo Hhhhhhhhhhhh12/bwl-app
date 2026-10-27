@@ -2,6 +2,16 @@
 (function(){
   'use strict';
 
+  document.addEventListener('bwl:storage-error', () => {
+    if (document.getElementById('storage-warning')) return;
+    const warning = document.createElement('p');
+    warning.id = 'storage-warning';
+    warning.className = 'mini-card storage-notice';
+    warning.setAttribute('role', 'status');
+    warning.textContent = 'Dein Browser kann Änderungen gerade nicht speichern. Neue Lernfortschritte sind nach dem Schließen möglicherweise nicht mehr verfügbar.';
+    document.querySelector('main').prepend(warning);
+  });
+
   // debug guard (enable with ?dev=1)
   const DBG = new URLSearchParams(location.search).get('dev') === '1' || location.search.includes('dev=1');
   const log = (...a) => { if (DBG) console.debug('[shell]', ...a); };

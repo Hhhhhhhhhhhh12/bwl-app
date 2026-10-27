@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Entwicklungsstand: zusammengeführter Quellstand, noch nicht technisch getestet oder visuell abgenommen.** Dieses Repository ist eine eigenständige Codeablage. Eine neue Bereitstellung der App ist damit nicht verbunden.
+**Entwicklungsstand: lokal in Chromium geprüft; visuelle Nutzerabnahme und fachliche Inhaltsprüfung stehen noch aus.** Dieses Repository ist eine eigenständige Codeablage. Eine neue Bereitstellung der App ist damit nicht verbunden.
 
 ## Aufbau
 
@@ -28,9 +28,29 @@ Die Versionsgeschichte beginnt mit der ausgewählten Referenzfassung 1.4.4. Dara
 
 Die enthaltene `.htaccess` stammt unverändert aus der Referenzfassung und beschreibt den historischen Apache-Betrieb unter `/bwl-app/`. Sie ist keine fertige Konfiguration für ein neues Hosting. Der laufende bisherige Webauftritt wurde durch die Übernahme in dieses Repository nicht verändert.
 
-## Noch offen
+## Lokale Prüfung
 
-- Technische Funktionsprüfung, Tastaturbedienung und visuelle Abnahme.
+Die Regressionstests decken App-Start, Training, Punkte/Fortschritt, Einstellungen, Speicherung, Rechner und Darstellungsfehler ab. Umfang, behobene Fehler und Grenzen stehen in [docs/LOKALE_PRUEFUNG.md](docs/LOKALE_PRUEFUNG.md).
+
+Rechnerprüfungen benötigen nur Node.js:
+
+```sh
+node --test tests/calculator.test.cjs
+```
+
+Für die Browsertests wird eine bereits vorhandene Playwright-/Chromium-Installation verwendet:
+
+```sh
+node --test tests/browser.test.cjs
+```
+
+Bei einer externen Installation kann `BWL_PLAYWRIGHT_MODULE` auf das vorhandene Playwright-Modul und `BWL_CHROMIUM_PATH` auf den vorhandenen Chromium-Browser zeigen. Die Tests installieren oder laden nichts automatisch herunter. `BWL_TEST_ARTIFACTS` ist ein optionaler Ausgabeordner für Screenshots und Laufzeitangaben. Der Testserver bindet ausschließlich an `127.0.0.1`; jede Prüfung verwendet ein eigenes temporäres Browserprofil mit künstlichen Daten.
+
+## Ziel und offene Schritte
+
+Langfristiges Ziel ist eine eigenständige, online nutzbare und visuell hochwertige BWL-Lernapp. Die aktuellen Gestaltungskorrekturen beheben konkrete Anzeigeprobleme im vorhandenen Stil. Ein größeres Gestaltungskonzept wird getrennt verglichen und abgenommen.
+
+- Visuelle Nutzerabnahme und Prüfung auf echten Geräten sowie in weiteren Browsern.
 - Fachliche Prüfung der Aufgaben und Lernregeln.
 - Datenübernahme für vorhandene Lernstände.
 - Auswahl und Prüfung des neuen Hostings.

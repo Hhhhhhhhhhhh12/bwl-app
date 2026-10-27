@@ -26,7 +26,7 @@ Der zweite Commit enthält die daraus abgeleitete Arbeitsfassung und eine für G
 
 ## Grenzen
 
-Dieser Stand wurde ausschließlich anhand von Quellen, Diffs und Dateiinhalten bearbeitet. Es wurden keine technischen Tests, Syntaxprüfungen, Builds, QA, Simulationen, App-/Browserstarts oder visuellen Abnahmen durchgeführt. Eine bestätigte Funktionsfähigkeit oder Veröffentlichungsreife der Anwendung wird damit nicht behauptet.
+Die erste Zusammenführung wurde ausschließlich anhand von Quellen, Diffs und Dateiinhalten bearbeitet. Am 27. Oktober 2026 wurden danach ausdrücklich beauftragte lokale Rechner- und Browserprüfungen mit Fehlerkorrekturen ergänzt. Der aktuelle Umfang und seine Grenzen sind in `LOKALE_PRUEFUNG.md` dokumentiert. Eine allgemeine Veröffentlichungsreife oder visuelle Nutzerabnahme wird damit nicht behauptet.
 
 Bestehende Lernregeln bleiben erhalten: Bereich 2 setzt jeweils 15 gutgeschriebene Aufgaben in vier Grundthemen voraus; das Abwählen eines erforderlichen Grundthemas kann diese Freischaltung weiterhin verhindern. Der automatische Wechsel zum schwächsten Thema und die bestehende Punktebehandlung nach Lösungshinweisen wurden nicht neu gestaltet.
 
@@ -34,4 +34,4 @@ Kennungen wie `thema_index` bezeichnen Levelplätze, keine exakt gespeicherten Z
 
 Fortschritt wird weiterhin unter `bwl_prog_v2` gespeichert. Eine automatische Übernahme früherer Schlüssel oder Browserdaten eines anderen Ursprungs ist nicht implementiert. Einzelne Punkte wie Zahleneingaben, Speicherausfälle und Seitenübergänge benötigen eine gesonderte technische Prüfung.
 
-GitHub-Codeablage und Betrieb der Webanwendung sind getrennte Schritte. Es ist kein neuer Hostingdienst, keine GitHub-Pages-Seite, kein automatischer Workflow und keine Abschaltung des bisherigen Angebots eingerichtet.
+GitHub-Codeablage und Betrieb der Webanwendung sind getrennte Schritte. Es ist kein neuer Hostingdienst, keine GitHub-Pages-Seite und kein automatischer Workflow eingerichtet. Der frühere BWL-Bestand wurde in einem separat freigegebenen Auftrag aus Believe in Me entfernt und vollständig gesichert. Während der lokalen Prüf- und Fehlerkorrekturarbeit wurden keine weiteren Hostingänderungen vorgenommen.
