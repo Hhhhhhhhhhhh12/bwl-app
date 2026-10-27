@@ -44,7 +44,7 @@ Die Regressionstests bestehen aus vier Rechnerprüfungen und sechzehn Browserpr�
 - Dunkles Theme über Seitennavigation hinweg, gesperrte/fremde Themenparameter und Datenaustausch zwischen zwei Testtabs.
 - Dashboard, Training, Erfolge und Einstellungen bei 320, 390, 768, 1024 und 1440 Pixeln Breite, ohne horizontales Überlaufen der Seite; zusätzliche Aufnahme des dunklen Trainings bei 390 Pixeln.
 
-Der erste Browserlauf vor den Korrekturen schlug in sechs von zehn damaligen Prüffällen fehl. Die ergänzten Tests bilden auch die später gefundenen Fehler ab. **Abschlusslauf: 20 von 20 Prüffällen bestanden (16 Browserprüfungen, 4 Rechnerprüfungen), keine fehlgeschlagenen oder ausgelassenen Tests.** Das lokale Prüfprotokoll enthält die Einzelergebnisse.
+Der erste Browserlauf vor den Korrekturen schlug in sechs von zehn damaligen Prüffällen fehl. Die ergänzten Tests bilden auch die später gefundenen Fehler ab. **Abschlusslauf: 20 von 20 Prüffällen bestanden (16 Browserprüfungen, 4 Rechnerprüfungen), keine fehlgeschlagenen oder ausgelassenen Tests.** Das lokale Prüfprotokoll enthält die Einzelergebnisse. Nach der abschließenden mobilen Beschriftungskorrektur wurden die beiden betroffenen Ansichtsprüfungen nochmals gezielt ausgeführt; beide bestanden.
 
 ## Praktische Grenzen
 

@@ -132,6 +132,12 @@ input.err{ border-color: var(--err) !important; background:#FFF2F1 !important; }
 .progress .row{ display:grid; grid-template-columns:minmax(0, 1fr) minmax(3rem, 1fr) auto; align-items:center; gap:.6rem; }
 .progress .label { overflow-wrap:anywhere; }
 .progress .value { white-space:nowrap; }
+@media (max-width:640px) {
+  .progress .row { grid-template-columns:minmax(0, 1fr) auto; row-gap:.2rem; }
+  .progress .label { grid-column:1 / -1; overflow-wrap:normal; }
+  .progress .row > .bar { grid-column:1; }
+  .progress .value { grid-column:2; }
+}
 .progress .label, .progress .value{ color:var(--muted); font-size:var(--fs-14); }
 .progress .value{ margin-left:auto; }
 .progress .track{

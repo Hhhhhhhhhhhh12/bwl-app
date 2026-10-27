@@ -71,7 +71,7 @@ async function answerAll(page) {
 async function snapshot(page, name) {
   if (!process.env.BWL_TEST_ARTIFACTS) return;
   await fs.mkdir(process.env.BWL_TEST_ARTIFACTS, { recursive: true });
-  await page.screenshot({ path: path.join(process.env.BWL_TEST_ARTIFACTS, `${process.env.BWL_SNAPSHOT_LABEL || 'current'}-${name}.png`), fullPage: true });
+  await page.screenshot({ path: path.join(process.env.BWL_TEST_ARTIFACTS, `${process.env.BWL_SNAPSHOT_LABEL || 'current'}-${name}.png`), fullPage: true, animations: 'disabled' });
 }
 test('all five entry pages load with local assets and strict CSP', async t => {
   const { page, errors, violations } = await session(t);
