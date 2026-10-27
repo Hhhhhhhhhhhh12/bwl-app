@@ -14,8 +14,8 @@ Der Nutzer hatte zunächst **Lernatelier** gewählt und die lokale Umsetzung sam
 | Lokale technische Prüfung | 25 von 25 Prüffällen bestanden |
 | Sichtprüfung der Browseraufnahmen durch Entwicklungsagent | Durchgeführt |
 | Visuelle Nutzerabnahme der realen Umsetzung | Aktuelle Lernmission-Umsetzung noch offen; Designrichtung und Hintergrundkorrektur bestätigt |
-| Übernahme in `main` / GitHub-Upload dieser Gestaltung | Nicht erfolgt |
-| Bereitstellung / Hostingänderung | Nicht erfolgt |
+| Übernahme in `main` / GitHub-Upload dieser Gestaltung | Am 27.10.2026 ausdrücklich beauftragt |
+| Bereitstellung / Hostingänderung | GitHub Pages unter der GitHub-Adresse ausdrücklich ausgewählt und beauftragt |
 
 ## Umsetzung
 
@@ -69,4 +69,4 @@ Die ursprüngliche separate Gestaltungsvorschau zeigt Rang, Punkte und eine Beis
 
 Die Aufnahmen wurden visuell kontrolliert; die Nutzerabnahme ist weiterhin offen. Chromium und Fenstergrößen ersetzen keine Prüfung auf echten Mobilgeräten, in Safari/Firefox oder mit einem echten Screenreader. Angegebene Aufgabenlösungen wurden technisch akzeptiert, aber nicht unabhängig fachlich vollständig validiert.
 
-Der Quellstand ist lokal versioniert. Die frühere Freigabe zum Upload der Funktionskorrekturen erstreckt sich nicht automatisch auf diese neue Gestaltung. `main`, GitHub und das Hosting bleiben auf ihrem vorherigen Stand.
+Der Nutzer hat am 27. Oktober 2026 die Anpassung von GitHub und Hosting ausdrücklich beauftragt und GitHub Pages unter der GitHub-Adresse gewählt. Damit ist die Übernahme und Veröffentlichung des vorliegenden Lernmission-Stands freigegeben. Der konkrete Bereitstellungsstatus wird in [GITHUB_PAGES.md](GITHUB_PAGES.md) dokumentiert. Eine separate ausdrückliche visuelle Abnahme wurde nicht nachträglich behauptet.

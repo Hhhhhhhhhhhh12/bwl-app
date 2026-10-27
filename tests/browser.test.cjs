@@ -28,7 +28,9 @@ before(async () => {
       const file = path.resolve(root, '.' + (name === '/' ? '/index.html' : name));
       if (!file.startsWith(root + path.sep)) throw Error('invalid path');
       const data = await fs.readFile(file);
-      res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Content-Security-Policy': csp, 'Cache-Control': 'no-store' });
+      const headers = { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' };
+      if (process.env.BWL_TEST_HOSTING !== 'github-pages') headers['Content-Security-Policy'] = csp;
+      res.writeHead(200, headers);
       res.end(data);
     } catch (_) { res.writeHead(404); res.end('Not found'); }
   });
@@ -428,4 +430,27 @@ test('mission map follows automatic topic changes and hides for empty selection'
   assert.equal(await page.locator('#mission-route').isVisible(),false);
   assert.equal(await page.locator('#mission-reward-text').textContent(),'');
   assert.match(await page.locator('#bab-wrapper').textContent(),/Keine Aufgabe verfügbar/);
+});
+
+
+test('published HTML enforces its own CSP without Apache settings', async t => {
+  const { page } = await session(t, { selection:['kostenarten'] });
+  const response = await page.goto(`${origin}/train.html?topic=kostenarten`);
+  if (process.env.BWL_TEST_HOSTING === 'github-pages') assert.equal(response.headers()['content-security-policy'], undefined);
+  const policy = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
+  assert.match(policy, /script-src 'self'/);
+  assert.doesNotMatch(policy, /frame-ancestors/, 'frame-ancestors requires an HTTP header');
+  const blocked = await page.evaluate(() => new Promise(resolve => {
+    const timer = setTimeout(() => resolve({executed:document.documentElement.dataset.cspProbe==='ran'}), 1000);
+    document.addEventListener('securitypolicyviolation', event => {
+      clearTimeout(timer); resolve({executed:document.documentElement.dataset.cspProbe==='ran', directive:event.effectiveDirective, blocked:event.blockedURI});
+    }, {once:true});
+    const script=document.createElement('script');
+    script.textContent="document.documentElement.dataset.cspProbe='ran'";
+    document.head.appendChild(script);
+  }));
+  assert.equal(blocked.executed,false);
+  assert.equal(blocked.blocked,'inline');
+  assert.equal(blocked.directive,'script-src-elem');
+  assert.ok(await page.locator('#bab-wrapper [data-answer]').count()>0);
 });

@@ -2,7 +2,7 @@
 
 Stand: 27. Oktober 2026. Ausgangspunkt der ersten Funktionsprüfung: GitHub-Quellstand `d72f7c8`.
 
-Dieses Dokument beschreibt die erste Fehlerkorrektur und deren bereits freigegebene Übernahme. Die anschließend ausgewählte, getrennt lokal umgesetzte Gestaltung und ihre neuen Prüfergebnisse stehen in [LERNATELIER.md](LERNATELIER.md).
+Dieses Dokument beschreibt die erste Fehlerkorrektur und deren bereits freigegebene Übernahme. Die danach ausdrücklich beauftragte Veröffentlichung wird getrennt in [GITHUB_PAGES.md](GITHUB_PAGES.md) dokumentiert. Die anschließend ausgewählte, getrennt lokal umgesetzte Gestaltung und ihre neuen Prüfergebnisse stehen in [LERNATELIER.md](LERNATELIER.md).
 
 ## Auftrag und langfristiges Ziel
 

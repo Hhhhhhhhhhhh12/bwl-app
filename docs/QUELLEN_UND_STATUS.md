@@ -35,3 +35,7 @@ Kennungen wie `thema_index` bezeichnen Levelplätze, keine exakt gespeicherten Z
 Fortschritt wird weiterhin unter `bwl_prog_v2` gespeichert. Eine automatische Übernahme früherer Schlüssel oder Browserdaten eines anderen Ursprungs ist nicht implementiert. Einzelne Punkte wie Zahleneingaben, Speicherausfälle und Seitenübergänge benötigen eine gesonderte technische Prüfung.
 
 GitHub-Codeablage und Betrieb der Webanwendung sind getrennte Schritte. Es ist kein neuer Hostingdienst, keine GitHub-Pages-Seite und kein automatischer Workflow eingerichtet. Der frühere BWL-Bestand wurde in einem separat freigegebenen Auftrag aus Believe in Me entfernt und vollständig gesichert. Während der lokalen Prüf- und Fehlerkorrekturarbeit wurden keine weiteren Hostingänderungen vorgenommen.
+
+## Spätere Hosting-Freigabe
+
+Am 27. Oktober 2026 hat der Nutzer die Übernahme der Lernmission in GitHub und die Veröffentlichung über GitHub Pages ausdrücklich beauftragt. Der spätere Betriebsstatus steht in [GITHUB_PAGES.md](GITHUB_PAGES.md); die Aussagen zum damals noch nicht eingerichteten Hosting oben beschreiben den vorherigen Arbeitsschritt.

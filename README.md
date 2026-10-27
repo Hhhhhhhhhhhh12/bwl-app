@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Entwicklungsstand: gewählte Designrichtung „Lernmission“ mit ruhigem Hintergrund lokal umgesetzt und in Chromium geprüft; visuelle Nutzerabnahme und fachliche Inhaltsprüfung stehen noch aus.** Dieses Repository ist eine eigenständige Codeablage. Eine neue Bereitstellung der App ist damit nicht verbunden.
+**Version 1.5.0: Lernmission mit ruhigem Hintergrund, lokal in Chromium geprüft.** GitHub-Übernahme und Veröffentlichung über GitHub Pages sind ausdrücklich beauftragt. Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Eine separate visuelle Nutzerabnahme, weitere Geräteprüfungen und fachliche Inhaltsprüfung bleiben gesonderte Zustände.
 
 ## Aufbau
 
@@ -16,7 +16,7 @@ Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter and
 - `js/train/`: Trainingssteuerung und Aufgabenmodule.
 - `css/`, `assets/`: Styles, Symbole und lokale Schriftdatei.
 
-Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallation und keinen Build-Schritt. Die Dateien sind für die Auslieferung über einen Webserver vorgesehen; die Versionsdatei wird relativ per HTTP abgerufen. Eine konkrete neue Hostingplattform ist noch nicht ausgewählt.
+Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallation und keinen Build-Schritt. Die Dateien sind für die Auslieferung über einen Webserver vorgesehen; die Versionsdatei wird relativ per HTTP abgerufen. Als Hosting ist GitHub Pages aus `main` und dem Repository-Hauptordner ausgewählt; `.nojekyll` hält die statischen Dateien unverändert.
 
 ## Lernfortschritt
 
@@ -26,7 +26,7 @@ Die App speichert Fortschritte und Einstellungen lokal im jeweiligen Browser. Es
 
 Die Versionsgeschichte beginnt mit der ausgewählten Referenzfassung 1.4.4. Darauf folgt die gezielte Zusammenführung ergänzender Quellen: Startablauf, kompatible zusätzliche Kostenarten-Aufgaben, begrenzte Ersatzsuche und Layout-Ergänzungen. Die bisherige Aufteilung in getrennte HTML-Seiten bleibt erhalten. Einzelheiten stehen in [docs/QUELLEN_UND_STATUS.md](docs/QUELLEN_UND_STATUS.md).
 
-Die enthaltene `.htaccess` stammt unverändert aus der Referenzfassung und beschreibt den historischen Apache-Betrieb unter `/bwl-app/`. Sie ist keine fertige Konfiguration für ein neues Hosting. Der laufende bisherige Webauftritt wurde durch die Übernahme in dieses Repository nicht verändert.
+Die enthaltene `.htaccess` stammt unverändert aus der Referenzfassung und beschreibt den historischen Apache-Betrieb unter `/bwl-app/`. GitHub Pages verarbeitet diese Apache-Datei nicht. Alle aktiven HTML-Seiten enthalten deshalb zusätzlich die dort unterstützte Content Security Policy und die Referrer-Regel als Meta-Angaben. HTTP-Header-Regeln werden dadurch nicht vollständig nachgebildet; Einzelheiten stehen in der Hosting-Dokumentation.
 
 ## Lokale Prüfung
 
@@ -53,6 +53,6 @@ Langfristiges Ziel ist eine eigenständige, online nutzbare und visuell hochwert
 - Visuelle Nutzerabnahme und Prüfung auf echten Geräten sowie in weiteren Browsern.
 - Fachliche Prüfung der Aufgaben und Lernregeln.
 - Datenübernahme für vorhandene Lernstände.
-- Auswahl und Prüfung des neuen Hostings.
+- Weitere Geräte- und Browserprüfung des veröffentlichten Stands.
 
 Historische Dateien wie `js/router.js`, `js/train-engine.js`, `style.css` und `js/dev/selftest.js` bleiben nachvollziehbar erhalten, werden von den aktiven HTML-Seiten jedoch nicht geladen. Der Selftest enthält Schreibcode und ist keine nachgewiesen schreibfreie Prüfroutine. Es ist kein automatischer Test- oder Deployment-Workflow eingerichtet.
