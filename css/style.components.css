@@ -1,0 +1,258 @@
+/* ==== COMPONENTS: Cards, Buttons, Forms, Tiles, Calc, Progress, Tooltips */
+
+.card h2 + p, .card h3 + p{ margin-top:.35rem; }
+
+/* Buttons */
+.btn{
+  appearance:none; cursor:pointer; font-weight:800; font-size: var(--fs-16);
+  border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  border-radius:12px; padding:.75rem 1.1rem;
+  transition: transform .06s, box-shadow .18s, background-color .12s, border-color .12s;
+}
+.btn.ghost{ background: transparent; color: var(--brand); border-color: var(--brand); }
+.btn.ghost:hover{ background: var(--brand-soft); }
+.btn.primary{ background:var(--brand); color:var(--brand-ink); border-color:transparent; box-shadow: var(--shadow-sm); }
+.btn:hover{ box-shadow: 0 6px 16px rgba(10,37,64,.10); }
+.btn-sm{ padding:.55rem .8rem; font-size:var(--fs-14); }
+.btn-lg{ padding:.9rem 1.25rem; font-size:var(--fs-18); }
+.btn.btn-xs{ padding:.35rem .6rem; font-size:12px; border-radius:8px; }
+.btn.ghost.btn-xs{ color:var(--muted); border-color: var(--line); }
+/* Toggle-sized button */
+.btn.toggle{ padding:.3rem .55rem; font-size:12px; border-radius:999px; }
+.btn:disabled, .btn[disabled]{ opacity:.55; cursor:not-allowed; filter:grayscale(.1); box-shadow:none; }
+
+/* Active tab indication via aria-current */
+nav [aria-current="page"],
+.btn[aria-current="page"]{
+  background: var(--brand-soft);
+  border-color: color-mix(in oklab, var(--brand), white 35%);
+  color: var(--brand);
+}
+
+/* Prüfen-Button reagiert auf Ergebnis (Animationen in style.animations.css) */
+.btn.ok{
+  background: color-mix(in oklab, var(--ok), white 18%);
+  color: var(--brand-ink);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(26,158,103,.18);
+}
+.btn.err{
+  background: color-mix(in oklab, var(--err), white 14%);
+  color: var(--brand-ink);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(214,69,69,.18);
+}
+
+/* Actions-Reihen */
+.card .actions, .task-controls{
+  display:flex; gap:.6rem; align-items:center; margin-top:1rem;
+}
+.card .actions .btn.primary, .task-controls .btn.primary{ margin-left:auto; }
+
+/* Formulare */
+select, input{
+  padding:.65rem .9rem; border-radius:10px; font-weight:700; font-size: var(--fs-16);
+  border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink);
+  transition: background-color .12s, border-color .12s, box-shadow .15s;
+}
+input.ok{ border-color: var(--ok) !important; background:#F3FCF7 !important; }
+input.err{ border-color: var(--err) !important; background:#FFF2F1 !important; }
+
+/* Dashboard CTA sizes */
+#btn-quickstart, #btn-reco{ font-size: var(--fs-14); padding:.5rem .8rem; line-height: 1.2; }
+#dashboard select{ font-size: var(--fs-14); padding:.45rem .7rem; }
+
+/* Checklist */
+.checklist{ list-style:none; padding:0; margin:0; display:grid; gap:.5rem; }
+.checklist li{ margin:0; }
+.checklist label{ display:flex; align-items:center; gap:.6rem; padding:.35rem .5rem; border:1px dashed var(--line); border-radius:10px; }
+.checklist input[type="checkbox"]{ width:1.05rem; height:1.05rem; accent-color: var(--brand); }
+
+/* Tiles */
+.tile{
+  display:flex; flex-direction:column; align-items:flex-start; gap:.25rem; cursor:pointer;
+  padding:1.05rem 1.15rem; border:1px solid var(--line); border-radius:12px; background:var(--surface); box-shadow: var(--shadow-sm);
+  transition: border-color .15s, background-color .15s, box-shadow .18s, transform .06s;
+}
+.tile .t{ font-weight:800; letter-spacing:.2px; }
+.tile small{ font-size: var(--fs-14); color: var(--muted); }
+.tile:hover{
+  background: color-mix(in oklab, var(--brand-soft), white 60%);
+  border-color: color-mix(in oklab, var(--brand), white 40%);
+  box-shadow: var(--shadow);
+}
+.tile:active{ transform: translateY(1px); }
+@media (min-width:1200px){ #topic-tiles > *{ grid-column: span 4; } }
+
+/* Mini-Cards (Sidebar) */
+.mini-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  padding:1rem 1.1rem; box-shadow:0 4px 12px rgba(10,37,64,.06);
+  transition: transform .18s, box-shadow .28s;
+}
+.mini-card > * + *{ margin-top:.55rem; }
+.mini-card:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+
+/* Mini-card Icons */
+.mini-card[data-icon]{ padding-left: calc(.8rem + 32px + .6rem); position:relative; }
+.mini-card[data-icon]::before{
+  content:""; position:absolute; left:.9rem; top:.9rem; width:24px; height:24px;
+  background: currentColor; opacity:.9;
+  -webkit-mask: var(--icon) no-repeat center / contain;
+          mask: var(--icon) no-repeat center / contain;
+}
+.mini-card.icon-break-even{ --icon: url('../assets/icons/break-even.svg'); }
+.mini-card.icon-bab{ --icon: url('../assets/icons/bab.svg'); }
+.mini-card.icon-kostenarten{ --icon: url('../assets/icons/kostenarten.svg'); }
+.mini-card.icon-abgrenzung{ --icon: url('../assets/icons/abgrenzung.svg'); }
+.mini-card.icon-kostenstellen{ --icon: url('../assets/icons/kostenstellen.svg'); }
+.mini-card.icon-stufenleiter{ --icon: url('../assets/icons/stufenleiter.svg'); }
+.mini-card.icon-deckungsbeitrag{ --icon: url('../assets/icons/deckungsbeitrag.svg'); }
+.mini-card.icon-aequivalenz{ --icon: url('../assets/icons/aequivalenz.svg'); }
+.mini-card.icon-zuschlag{ --icon: url('../assets/icons/zuschlag.svg'); }
+.mini-card.icon-prozesskosten{ --icon: url('../assets/icons/prozesskosten.svg'); }
+.mini-card.icon-kennzahlen{ --icon: url('../assets/icons/kennzahlen.svg'); }
+.mini-card.icon-investition{ --icon: url('../assets/icons/investition.svg'); }
+.mini-card.icon-lager{ --icon: url('../assets/icons/lager.svg'); }
+
+/* Calculator */
+#calc-panel{ border:1px solid var(--line); border-radius:12px; }
+#calc-panel .calc-output{
+  width:100%; font-weight:800; font-size: var(--fs-18);
+  padding:.65rem .75rem; border:1.5px solid var(--line-strong); border-radius:10px;
+  background:var(--surface); color:var(--ink);
+}
+.calc-card{ margin-top:.6rem; padding:1rem; }
+.calc-header{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; flex-wrap:wrap; }
+.calc-body{ margin-top:.6rem; }
+.calc-hint{ display:block; margin-top:.35rem; }
+
+/* Progress */
+.progress{ display:grid; gap:.35rem; }
+.progress .row{ display:flex; align-items:center; gap:.6rem; }
+.progress .label, .progress .value{ color:var(--muted); font-size:var(--fs-14); }
+.progress .value{ margin-left:auto; }
+.progress .track{
+  width:100%; height:10px; border-radius:999px;
+  background:var(--bar-bg); border:1px solid var(--line);
+  overflow:hidden; position:relative;
+}
+.progress .fill{ height:100%; width:0%; background:var(--bar); border-radius:999px; transition: width .25s ease; }
+/* Legacy alias */
+.bar{ width:100%; height:10px; background:var(--bar-bg); border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+.bar > .fill{ height:100%; width:0%; background:var(--bar); transition: width .25s ease; border-radius:999px; }
+
+/* Width utilities (CSP-safe) */
+[class^="w-"], [class*=" w-"]{ max-width:100%; }
+.w-0{width:0%} .w-1{width:1%} .w-2{width:2%} .w-3{width:3%} .w-4{width:4%} .w-5{width:5%}
+.w-6{width:6%} .w-7{width:7%} .w-8{width:8%} .w-9{width:9%} .w-10{width:10%}
+.w-11{width:11%} .w-12{width:12%} .w-13{width:13%} .w-14{width:14%} .w-15{width:15%}
+.w-16{width:16%} .w-17{width:17%} .w-18{width:18%} .w-19{width:19%} .w-20{width:20%}
+.w-21{width:21%} .w-22{width:22%} .w-23{width:23%} .w-24{width:24%} .w-25{width:25%}
+.w-26{width:26%} .w-27{width:27%} .w-28{width:28%} .w-29{width:29%} .w-30{width:30%}
+.w-31{width:31%} .w-32{width:32%} .w-33{width:33%} .w-34{width:34%} .w-35{width:35%}
+.w-36{width:36%} .w-37{width:37%} .w-38{width:38%} .w-39{width:39%} .w-40{width:40%}
+.w-41{width:41%} .w-42{width:42%} .w-43{width:43%} .w-44{width:44%} .w-45{width:45%}
+.w-46{width:46%} .w-47{width:47%} .w-48{width:48%} .w-49{width:49%} .w-50{width:50%}
+.w-51{width:51%} .w-52{width:52%} .w-53{width:53%} .w-54{width:54%} .w-55{width:55%}
+.w-56{width:56%} .w-57{width:57%} .w-58{width:58%} .w-59{width:59%} .w-60{width:60%}
+.w-61{width:61%} .w-62{width:62%} .w-63{width:63%} .w-64{width:64%} .w-65{width:65%}
+.w-66{width:66%} .w-67{width:67%} .w-68{width:68%} .w-69{width:69%} .w-70{width:70%}
+.w-71{width:71%} .w-72{width:72%} .w-73{width:73%} .w-74{width:74%} .w-75{width:75%}
+.w-76{width:76%} .w-77{width:77%} .w-78{width:78%} .w-79{width:79%} .w-80{width:80%}
+.w-81{width:81%} .w-82{width:82%} .w-83{width:83%} .w-84{width:84%} .w-85{width:85%}
+.w-86{width:86%} .w-87{width:87%} .w-88{width:88%} .w-89{width:89%} .w-90{width:90%}
+.w-91{width:91%} .w-92{width:92%} .w-93{width:93%} .w-94{width:94%} .w-95{width:95%}
+.w-96{width:96%} .w-97{width:97%} .w-98{width:98%} .w-99{width:99%} .w-100{width:100%}
+
+/* Tooltips (CSP-safe) */
+[data-tip]{ position:relative; }
+[data-tip]::after{
+  content: attr(data-tip);
+  position:absolute; left:50%; transform:translateX(-50%) translateY(-6px);
+  bottom:calc(100% + 8px); max-width:280px; width:max-content;
+  padding:.35rem .55rem; font-size:.8rem; line-height:1.2; font-weight:600;
+  color:var(--ink); background:var(--surface);
+  border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow-sm);
+  opacity:0; pointer-events:none; transition:opacity .12s, transform .12s; z-index:60; white-space:normal;
+}
+[data-tip]::before{
+  content:""; position:absolute; left:50%; transform:translateX(-50%) rotate(45deg);
+  bottom:calc(100% + 4px); width:10px; height:10px; background:var(--surface);
+  border-left:1px solid var(--line); border-top:1px solid var(--line); opacity:0; transition:opacity .12s; z-index:61;
+}
+[data-tip]:hover::after,[data-tip]:focus-visible::after{ opacity:1; transform:translateX(-50%) translateY(0); }
+[data-tip]:hover::before,[data-tip]:focus-visible::before{ opacity:1; }
+
+/* Error Overlay (CSP-safe) */
+.err-overlay{
+  position: fixed; right: 12px; bottom: 12px; z-index: 99999;
+  max-width: 420px; background: var(--surface); border:1px solid var(--line);
+  border-radius: 10px; box-shadow: var(--shadow-lg);
+  padding: 10px 12px; font-size: 12px; color: var(--ink);
+}
+.err-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.err-title{ font-weight:700; }
+.err-stats{ opacity:.7; }
+.err-list{ margin:6px 0 0; padding-left:18px; }
+.err-actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+
+/* ==== Engine.js Tooltips (CSP-safe, global) ================================= */
+#bwl-tip.bwl-tip{
+  position: fixed;
+  z-index: 9999;
+  max-width: 28rem;
+  pointer-events: none;
+  padding: .45rem .6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: var(--fs-14);
+  color: var(--text);
+  display: none; /* visibility controlled via .is-visible */
+}
+#bwl-tip.is-visible{ display:block; }
+@media (prefers-reduced-motion: reduce){
+  #bwl-tip{ transition: none !important; }
+}
+
+/* ==== Buttons: focus/active clarity & subtle visited-state =================== */
+.btn:focus-visible{ outline: 3px solid color-mix(in oklab, var(--brand), white 60%); outline-offset: 2px; }
+.btn:active{ transform: translateY(1px); }
+
+/* When a check happened, keep button colored to match result (class applied in JS) */
+.btn.ok.persist, .btn.err.persist{ filter: saturate(1.05); box-shadow: 0 0 0 3px color-mix(in oklab, var(--ink), transparent 90%); }
+
+/* ==== Cards spacing tweaks (more breathing room inside cards) ================ */
+.card > * + *{ margin-top: .75rem; }
+.card .actions{ margin-top: 1rem; }
+
+/* ==== Calculator hint pulse for empty enter (paired with .hint class) ======== */
+input.hint{ animation: pulseGrey .16s ease-out; }
+
+/* ==== Progress bars: keep a pleasant blue and smooth anim ==================== */
+.progress .track{ background: var(--bar-bg, #EEF2F7); }
+.progress .fill{ background: var(--bar, #5B9BFF); transition: width .25s ease; }
+
+/* ==== Compact cards & tables for training tasks ============================ */
+.card.compact{ font-size: var(--fs-14); line-height: 1.35; }
+
+/* Base table (safe if not defined elsewhere) */
+.bab-table{ width:100%; border-collapse:separate; border-spacing:0; }
+.bab-table th, .bab-table td{ padding:.55rem .65rem; border-bottom:1px solid var(--line); vertical-align:middle; }
+.bab-table th{ text-align:left; font-weight:800; }
+
+/* Compact variant (smaller paddings for dense layouts) */
+.bab-table.compact th, .bab-table.compact td{ padding:.4rem .5rem; }
+
+/* Inputs inside tables stay readable but small */
+.bab-table input{ width:10ch; max-width:100%; font-size:inherit; padding:.45rem .55rem; border-radius:8px; }
+
+/* Inline info button ("i") used in tasks */
+.info-btn{
+  display:inline-grid; place-items:center; width:18px; height:18px;
+  border:1px solid var(--line); border-radius:999px; font-size:11px; font-weight:800;
+  color: var(--muted); background: var(--surface); cursor:help; margin-left:.35rem;
+}
+.info-btn:hover, .info-btn:focus-visible{ color: var(--brand); border-color: color-mix(in oklab, var(--brand), white 40%); }

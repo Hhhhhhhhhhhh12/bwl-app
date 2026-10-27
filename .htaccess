@@ -1,0 +1,75 @@
+# /htdocs/bwl-app/.htaccess
+
+DirectoryIndex dashboard.html
+
+# Sicherheit / Kompatibilität
+Options -Indexes -MultiViews
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /bwl-app/
+  # HTTPS erzwingen – auch hinter Proxy (kein Loop mit X-Forwarded-Proto)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Statische Dateien/Ordner normal ausliefern
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Root der App immer auf dashboard.html leiten
+  RewriteRule ^$ dashboard.html [L]
+
+  # /index.html hart auf dashboard.html umleiten (Altlasten)
+  RewriteRule ^index\.html$ dashboard.html [L,R=302]
+</IfModule>
+
+# Fallback 404 (wenn mod_rewrite deaktiviert)
+ErrorDocument 404 /bwl-app/dashboard.html
+
+# Erweiterte Sicherheitsheader
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Permitted-Cross-Domain-Policies "none"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  # CSP: Eine "harte" Policy + Report-Only parallel (bewusst beides gesetzt)
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self'; style-src-attr 'none'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests"
+  Header always set Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self'; style-src-attr 'none'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; worker-src 'none'; manifest-src 'none'"
+  Header always append Content-Security-Policy-Report-Only "; report-uri /bwl-app/csp-violation-log"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# Cache static assets aggressively (7 days)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType text/javascript "access plus 7 days"
+  ExpiresByType font/woff2 "access plus 7 days"
+  ExpiresByType image/svg+xml "access plus 7 days"
+  ExpiresByType image/png "access plus 7 days"
+  ExpiresByType image/jpeg "access plus 7 days"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:css|js|woff2|svg|png|jpe?g)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:css|js|svg)$">
+    Header merge Vary "Accept-Encoding"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:html)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>

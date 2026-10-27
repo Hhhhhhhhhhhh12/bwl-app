@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>BWL-App</title>
+  <link rel="stylesheet" href="css/style.base.css">
+  <link rel="stylesheet" href="css/style.layout.css">
+  <link rel="stylesheet" href="css/style.components.css">
+  <link rel="stylesheet" href="css/style.accessibility.css">
+  <link rel="stylesheet" href="css/style.animations.css">
+  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
+</head>
+<body data-page="train"><!-- je Seite anpassen: dashboard|train|achievements|settings -->
+  <header class="app">
+    <div class="container">
+      <div class="brand">
+        <strong class="brand-title">BWL-App</strong>
+        <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
+      </div>
+      <nav aria-label="Hauptnavigation">
+        <ul class="nav">
+          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
+          <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+
+<main class="container no-page-scroll">
+  <section class="card card-fit train-layout">
+    <div class="task-area">
+      <h2 id="session-pill" class="pill">Thema • Stufe 1</h2>
+      <div id="task-slot" class="task-slot slim-scroll"></div>
+
+      <div class="task-controls">
+        <button class="btn" data-action="check">Prüfen</button>
+        <button class="btn" data-action="reveal">Lösung anzeigen</button>
+        <button class="btn" data-action="next">Nächste</button>
+        <button class="btn" id="btn-change-topic">Thema wechseln!</button>
+        <button class="btn ghost" id="btn-skip-topic">Dieses Thema benötige ich nicht!</button>
+      </div>
+
+      <div id="calc-panel" class="calc-panel visible"><!-- Rechner dauerhaft sichtbar -->
+        <input id="calc-input" class="calc-display" inputmode="decimal" aria-label="Rechner">
+        <div class="calc-row">
+          <button class="btn ghost small" data-calc="C">C</button>
+          <button class="btn ghost small" data-calc="⌫">⌫</button>
+          <button class="btn ghost small" data-calc="=">=</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="mini-card">
+        <h4>Rang</h4>
+        <div class="rank-row"><span id="rank-badge" class="badge pill">BWL-Justus</span></div>
+        <div class="level">
+          <div class="bar"><i id="rank-level-fill"></i></div>
+          <small id="rank-level-label" class="muted">Level 1 → 2 · 0/100 XP</small>
+        </div>
+      </div>
+      <div class="mini-card slim-scroll">
+        <h3>Fortschritt</h3>
+        <ul id="topic-progress-train" class="prog-list"></ul>
+      </div>
+    </aside>
+  </section>
+</main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="muted version-text">Version <span id="app-version">–</span></p>
+    </div>
+  </footer>
+
+<script defer src="js/progress.js"></script>
+<script defer src="js/app-shell.js"></script>
+<!-- seiten-spezifisch -->
+<script defer src="js/train/engine.js"></script>
+<script defer src="js/train/topics/break-even.js"></script>
+<script defer src="js/train/topics/bab.js"></script>
+<script defer src="js/train/topics/kostenarten.js"></script>
+<script defer src="js/train/topics/abgrenzung.js"></script>
+<script defer src="js/train/topics/kostenstellen.js"></script>
+<script defer src="js/train/topics/deckungsbeitrag.js"></script>
+<script defer src="js/train/topics/aequivalenz.js"></script>
+<script defer src="js/train/topics/zuschlag.js"></script>
+<script defer src="js/train/topics/prozesskosten.js"></script>
+<script defer src="js/train/topics/kennzahlen.js"></script>
+<script defer src="js/train/topics/investition.js"></script>
+<script defer src="js/train/topics/lager.js"></script>
+<script defer src="js/calc.js"></script>
+
+</body>
+</html>

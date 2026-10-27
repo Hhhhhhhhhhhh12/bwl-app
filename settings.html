@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>BWL-App</title>
+  <link rel="stylesheet" href="css/style.base.css">
+  <link rel="stylesheet" href="css/style.layout.css">
+  <link rel="stylesheet" href="css/style.components.css">
+  <link rel="stylesheet" href="css/style.accessibility.css">
+  <link rel="stylesheet" href="css/style.animations.css">
+  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
+</head>
+<body data-page="settings"><!-- je Seite anpassen: dashboard|train|achievements|settings -->
+  <header class="app">
+    <div class="container">
+      <div class="brand">
+        <strong class="brand-title">BWL-App</strong>
+        <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
+      </div>
+      <nav aria-label="Hauptnavigation">
+        <ul class="nav">
+          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
+          <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container no-page-scroll">
+    <section class="card card-fit">
+      <h2>Einstellungen</h2>
+
+      <div class="grid grid-2 clamp-gap">
+        <div class="mini-card">
+          <h3>Darstellung</h3>
+          <label for="theme-select" class="block">Theme</label>
+          <select id="theme-select" aria-label="Theme auswählen">
+            <option value="light">Hell</option>
+            <option value="dark">Dunkel</option>
+            <option value="auto">System (Auto)</option>
+          </select>
+          <p class="muted">Deine Auswahl wird gespeichert.</p>
+        </div>
+
+        <div class="mini-card">
+          <h3>Themenauswahl</h3>
+          <p class="meta">Nicht ausgewählte Themen werden im Training ausgeblendet.</p>
+          <ul id="topic-prefs" class="checklist slim-scroll">
+            <li><label><input type="checkbox" data-topic="break_even" checked> Break‑Even‑Point</label></li>
+            <li><label><input type="checkbox" data-topic="bab" checked> Betriebsabrechnungsbogen (BAB)</label></li>
+            <li><label><input type="checkbox" data-topic="kostenarten" checked> Kostenartenrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="abgrenzung" checked> Abgrenzung</label></li>
+            <li><label><input type="checkbox" data-topic="kostenstellen" checked> Kostenstellenrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="deckungsbeitrag" checked> Deckungsbeitrag & Preisuntergrenze</label></li>
+            <li><label><input type="checkbox" data-topic="aequivalenz" checked> Äquivalenzziffernrechnung</label></li>
+            <li><label><input type="checkbox" data-topic="zuschlag" checked> Zuschlagskalkulation</label></li>
+            <li><label><input type="checkbox" data-topic="prozesskosten" checked> Prozesskostenrechnung (light)</label></li>
+            <li><label><input type="checkbox" data-topic="kennzahlen" checked> Kennzahlen (Liquidität, EK‑Quote, Cashflow)</label></li>
+            <li><label><input type="checkbox" data-topic="investition" checked> Investitionsrechnung (Amortisation)</label></li>
+            <li><label><input type="checkbox" data-topic="lager" checked> Lagerkennziffern</label></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <h3>Fortschritt</h3>
+        <button id="btn-reset-progress" class="btn ghost" type="button">Fortschritt zurücksetzen</button>
+        <p class="muted">Setzt XP, Ränge und Themenfortschritte zurück.</p>
+      </div>
+    </section>
+  </main>
+  
+    <footer class="footer">
+    <div class="container">
+      <p class="muted version-text">Version <span id="app-version">–</span></p>
+    </div>
+  </footer>
+
+  <script defer src="js/progress.js"></script>
+  <script defer src="js/app-shell.js"></script>
+  <!-- seiten-spezifische Scripts kommen DANACH -->
+</body>
+</html>

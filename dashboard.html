@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>BWL-App</title>
+  <link rel="stylesheet" href="css/style.base.css">
+  <link rel="stylesheet" href="css/style.layout.css">
+  <link rel="stylesheet" href="css/style.components.css">
+  <link rel="stylesheet" href="css/style.accessibility.css">
+  <link rel="stylesheet" href="css/style.animations.css">
+  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
+</head>
+<body data-page="dashboard"><!-- je Seite anpassen: dashboard|train|achievements|settings -->
+  <header class="app">
+    <div class="container">
+      <div class="brand">
+        <strong class="brand-title">BWL-App</strong>
+        <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
+      </div>
+      <nav aria-label="Hauptnavigation">
+        <ul class="nav">
+          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
+          <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main class="container no-page-scroll">
+  <section class="card card-fit">
+    <h2>Dashboard</h2>
+
+    <div class="grid grid-2 clamp-gap">
+      <div class="mini-card">
+        <h3>Empfehlung</h3>
+        <p class="muted">Schwächster Bereich zuerst.</p>
+        <div class="flex gap-sm items-center">
+          <strong id="recommend-topic">–</strong>
+          <a class="btn" id="btn-start-recommend" href="train.html">Empfohlen starten</a>
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <h3>Gesamtfortschritt</h3>
+        <div class="flex gap-md items-center">
+          <div class="donut" id="overall-progress-donut" role="img" aria-label="Gesamtfortschritt">
+            <svg viewBox="0 0 36 36" class="donut-svg" aria-hidden="true">
+              <circle class="donut-track" cx="18" cy="18" r="15.9155"></circle>
+              <circle class="donut-fill" id="overall-progress-arc" cx="18" cy="18" r="15.9155" stroke-dasharray="0 100"></circle>
+            </svg>
+            <span id="overall-progress-label" class="donut-label">0%</span>
+          </div>
+          <div class="flex-1">
+            <div class="bar bar-tall"><i id="overall-progress-bar" class="w-0"></i></div>
+            <small class="muted">Richtig: <span id="overall-correct">0</span>/<span id="overall-total">0</span></small>
+          </div>
+        </div>
+        <button id="btn-reset-progress" class="btn ghost small" type="button">Fortschritt zurücksetzen</button>
+      </div>
+    </div>
+
+    <div class="grid grid-2 clamp-gap">
+      <div class="mini-card">
+        <h3>Benötigte Themen</h3>
+        <p class="meta">Nicht ausgewählte Themen werden ausgeblendet.</p>
+        <ul id="topic-prefs" class="checklist slim-scroll">
+          <!-- dieselben Checkboxen wie bisher -->
+        </ul>
+      </div>
+
+      <div class="mini-card">
+        <h3>Rang</h3>
+        <div class="rank-row"><span id="rank-badge-dashboard" class="badge pill">BWL-Justus</span></div>
+        <div class="level">
+          <div class="bar"><i id="rank-level-fill-dashboard"></i></div>
+          <small id="rank-level-label-dashboard" class="muted">Level 1 → 2 · 0/100 XP</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="mini-card slim-scroll">
+      <h3>Fortschritt je Thema</h3>
+      <ul id="topic-progress" class="prog-list"></ul>
+    </div>
+  </section>
+</main>
+
+<!-- base scripts -->
+<script defer src="js/progress.js"></script>
+<script defer src="js/app-shell.js"></script>
+<!-- seiten-spezifisch -->
+<script defer src="js/quickstart.js"></script>
+
+    <footer class="footer">
+    <div class="container">
+      <p class="muted version-text">Version <span id="app-version">–</span></p>
+    </div>
+  </footer>
+
+</body>
+</html>

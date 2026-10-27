@@ -1,0 +1,32 @@
+/* ==== ACCESSIBILITY: SR-only, Focus, Live-Region ======================== */
+
+[aria-live] {
+  position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;
+}
+.sr-only {
+  position: absolute !important; width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+  clip: rect(0,0,0,0) !important; border: 0 !important;
+}
+:where(button, .btn, input, select, a):focus-visible{
+  outline: 2px solid color-mix(in oklab, var(--brand), white 25%);
+  outline-offset: 2px;
+}
+:focus-visible {
+  outline: 3px solid color-mix(in oklab, var(--brand), white 20%);
+  outline-offset: 3px; border-radius: 6px; transition: outline-color .15s ease;
+}
+/* SR-Statusfarben */
+[role="status"].ok { color: var(--ok); }
+[role="status"].err { color: var(--err); }
+
+/* Dark mode component tweaks */
+body[data-theme="dark"] .card,
+body[data-theme="dark"] .mini-card{
+  background:var(--surface); border-color:var(--line-strong); box-shadow: var(--shadow);
+}
+body[data-theme="dark"] .card:hover{ box-shadow: var(--shadow-lg); }
+body[data-theme="dark"] .progress .bar{ border-color: var(--line-strong); }
+body[data-theme="dark"] .btn.primary{ box-shadow: 0 6px 16px rgba(108,160,255,.25); }
+body[data-theme="dark"] #calc-panel{ border-color: var(--line-strong); }
+body[data-theme="dark"] #calc-panel .calc-output{ background:var(--surface); color:var(--ink); border-color:var(--line-strong); }

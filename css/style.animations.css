@@ -1,0 +1,11 @@
+/* ==== ANIMATIONS: Feedback & Pulse ===================================== */
+@keyframes flashOk{ from{ box-shadow:0 0 0 0 rgba(26,158,103,0);} to{ box-shadow:0 0 0 6px rgba(26,158,103,.18);} }
+@keyframes flashErr{ from{ box-shadow:0 0 0 0 rgba(214,69,69,0);} to{ box-shadow:0 0 0 6px rgba(214,69,69,.18);} }
+input.ok{ animation: flashOk .15s ease-out; }
+input.err{ animation: flashErr .15s ease-out; }
+.btn.ok{ animation: flashOk .15s ease-out; }
+.btn.err{ animation: flashErr .15s ease-out; }
+
+/* Pulse-Grau (leere Eingaben) */
+@keyframes pulseGrey{ from{ box-shadow:0 0 0 0 rgba(120,130,140,0);} to{ box-shadow:0 0 0 6px rgba(120,130,140,.20);} }
+input.hint{ animation: pulseGrey .16s ease-out; }
