@@ -262,3 +262,40 @@ body[data-design="lernatelier"] .storage-notice { border:1px solid var(--err); p
   body[data-design="lernatelier"] .atelier-quantity small { font-size:.68rem; }
   body[data-design="lernatelier"] .atelier-operator { font-size:1rem; }
 }
+
+/* Feedback stays textual as well as colored; keyboard access includes disclosures. */
+body[data-design="lernatelier"] .atelier-feedback { margin:0; font-size:.85rem; color:var(--ink); }
+body[data-design="lernatelier"] .atelier-input-unit { display:grid; grid-template-columns:minmax(0,18rem) auto; align-items:center; gap:.75rem; max-width:23rem; margin-top:.4rem; }
+body[data-design="lernatelier"] .task-controls.atelier-answer-actions { align-items:center; }
+body[data-design="lernatelier"] .nav-link { display:block; min-height:44px; }
+body[data-design="lernatelier"] .skip-link:focus {
+  position:fixed !important; z-index:100; top:1rem; left:1rem;
+  width:auto !important; height:auto !important; margin:0 !important; padding:.75rem 1rem !important; clip:auto !important;
+  overflow:visible !important; white-space:normal; background:var(--surface); color:var(--brand);
+}
+/* Long terms and enlarged type may reflow without shrinking the text. */
+body[data-design="lernatelier"] .atelier-main,
+body[data-design="lernatelier"] .atelier-sidebar { overflow-wrap:anywhere; }
+body[data-design="lernatelier"] .atelier-worksheet { container-type:inline-size; }
+body[data-design="lernatelier"] .atelier-quantity small { overflow-wrap:anywhere; }
+@container (max-width:12rem) {
+  body[data-design="lernatelier"] .atelier-equation { grid-template-columns:minmax(0,1fr); gap:.4rem; }
+  body[data-design="lernatelier"] .atelier-operator { text-align:center; }
+}
+/* Hidden tooltip boxes must not widen the page. On narrow screens the open
+   explanation sits within the viewport and remains available on keyboard focus. */
+body[data-design="lernatelier"] [data-tip]::after,
+body[data-design="lernatelier"] [data-tip]::before { display:none; }
+body[data-design="lernatelier"] [data-tip]:hover::after,
+body[data-design="lernatelier"] [data-tip]:focus-visible::after,
+body[data-design="lernatelier"] [data-tip]:hover::before,
+body[data-design="lernatelier"] [data-tip]:focus-visible::before { display:block; }
+@media (max-width:900px) {
+  body[data-design="lernatelier"] [data-tip]::after,
+  body[data-design="lernatelier"] [data-tip]:hover::after,
+  body[data-design="lernatelier"] [data-tip]:focus-visible::after {
+    position:fixed; left:1rem; right:1rem; bottom:1rem; width:auto; max-width:none;
+    transform:none; font-size:.85rem; line-height:1.5; overflow-wrap:anywhere;
+  }
+  body[data-design="lernatelier"] [data-tip]::before { display:none !important; }
+}

@@ -55,10 +55,11 @@ test('keyboard shortcuts, editable fields and button activation retain their eve
   api.set('2+3');
   const input = { tagName: 'INPUT', closest: () => null };
   const textarea = { tagName: 'TEXTAREA', closest: () => null };
-  const button = { tagName: 'BUTTON', closest: selector => selector === 'button, a' ? {} : null };
+  const button = { tagName: 'BUTTON', closest: selector => selector.split(', ').includes('button') ? {} : null };
+  const summary = { tagName: 'SUMMARY', closest: selector => selector.split(', ').includes('summary') ? {} : null };
   const calcInput = { tagName: 'INPUT', closest: selector => selector === '#calc-panel' ? {} : null };
   for (const [pressed, target, modifiers] of [
-    ['Enter', button], ['Enter', input], ['1', input], ['Backspace', textarea],
+    ['Enter', button], ['Enter', summary], ['Enter', input], ['1', input], ['Backspace', textarea],
     ['1', calcInput], ['Backspace', calcInput], ['ArrowLeft', calcInput],
     ['a', calcInput, { ctrlKey: true }], ['Enter', calcInput, { metaKey: true }],
     ['1', undefined, { altKey: true }],

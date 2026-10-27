@@ -2,11 +2,11 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Entwicklungsstand: lokal in Chromium geprüft; visuelle Nutzerabnahme und fachliche Inhaltsprüfung stehen noch aus.** Dieses Repository ist eine eigenständige Codeablage. Eine neue Bereitstellung der App ist damit nicht verbunden.
+**Entwicklungsstand: gewählte Designrichtung „Lernatelier“ lokal umgesetzt und in Chromium geprüft; visuelle Nutzerabnahme und fachliche Inhaltsprüfung stehen noch aus.** Dieses Repository ist eine eigenständige Codeablage. Eine neue Bereitstellung der App ist damit nicht verbunden.
 
 ## Aufbau
 
-- `index.html` / `dashboard.html`: Übersicht, Themenauswahl und Lernfortschritt.
+- `index.html` / `dashboard.html`: Übersicht, Trainingsempfehlung und Lernfortschritt.
 - `train.html`: Aufgaben, Lösungshinweise und Tastatur-Taschenrechner.
 - `achievements.html`: Fortschritts- und Trefferquotenstatistik.
 - `settings.html`: Darstellung und Themenauswahl.
@@ -48,7 +48,7 @@ Bei einer externen Installation kann `BWL_PLAYWRIGHT_MODULE` auf das vorhandene 
 
 ## Ziel und offene Schritte
 
-Langfristiges Ziel ist eine eigenständige, online nutzbare und visuell hochwertige BWL-Lernapp. Die aktuellen Gestaltungskorrekturen beheben konkrete Anzeigeprobleme im vorhandenen Stil. Ein größeres Gestaltungskonzept wird getrennt verglichen und abgenommen.
+Langfristiges Ziel ist eine eigenständige, online nutzbare und visuell hochwertige BWL-Lernapp. Nach dem sichtbaren Variantenvergleich hat der Nutzer „Lernatelier“ ausgewählt. Die lokale Umsetzung umfasst alle aktiven Seiten, helle und dunkle Darstellung und einen klaren Arbeitsbereich mit aufklappbarem Rechner. Auswahl, Umsetzung, technische Prüfung und visuelle Abnahme sind in [docs/LERNATELIER.md](docs/LERNATELIER.md) getrennt dokumentiert.
 
 - Visuelle Nutzerabnahme und Prüfung auf echten Geräten sowie in weiteren Browsern.
 - Fachliche Prüfung der Aufgaben und Lernregeln.

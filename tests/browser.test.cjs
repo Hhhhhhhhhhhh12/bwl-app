@@ -68,6 +68,9 @@ async function answerAll(page) {
     else await el.fill(answer.replace('.', ','));
   }
 }
+async function layoutState(page) {
+  return page.evaluate(() => ({width:innerWidth, scroll:document.documentElement.scrollWidth, overflow:[...document.querySelectorAll('body *')].map(el=>({tag:el.tagName, cls:el.className?.baseVal || el.className, text:el.textContent.slice(0,60), right:Math.round(el.getBoundingClientRect().right)})).filter(el=>el.right>innerWidth+1).slice(0,15)}));
+}
 async function snapshot(page, name) {
   if (!process.env.BWL_TEST_ARTIFACTS) return;
   await fs.mkdir(process.env.BWL_TEST_ARTIFACTS, { recursive: true });
@@ -212,6 +215,7 @@ test('desktop and narrow screens keep content inside the viewport', async t => {
 test('calculator uses editable input, caret selection and native clear-button activation', async t => {
   const { page } = await session(t, { selection: ['kostenarten'] });
   await page.goto(`${origin}/train.html`);
+  await page.locator('#calculator summary').click();
   const display = page.locator('#calc-display');
   await display.fill('-2+3'); await display.press('Enter');
   assert.equal(await display.inputValue(), '1');
@@ -279,4 +283,93 @@ test('partial selection write failure restores the previous choice', async t => 
   assert.equal(await page.locator('input[data-topic="kostenstellen"]').isChecked(), false);
   assert.deepEqual(await page.evaluate(() => window.BwlTopics.selected()), ['kostenarten']);
   await page.locator('#storage-warning').waitFor();
+});
+
+test('Lernatelier help and calculator disclosures preserve answer and keyboard behavior', async t => {
+  const { page, errors, violations } = await session(t, { selection: ['kostenarten'] });
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  const field = page.locator('#bab-wrapper [data-answer]').first();
+  const explanation = page.locator('[data-explain]').first();
+  const help = page.locator('#btn-help');
+  assert.equal(await explanation.isVisible(), false);
+  await field.fill('12'); await help.click();
+  assert.equal(await help.getAttribute('aria-expanded'), 'true');
+  assert.equal(await explanation.isVisible(), true);
+  assert.equal(await field.inputValue(), '12', 'reading the method does not overwrite an answer');
+  assert.equal(await page.evaluate(() => window.ensureProg().points), 0);
+  await help.click(); assert.equal(await explanation.isVisible(), false);
+  const summary = page.locator('#calculator summary');
+  await summary.focus(); await summary.press('Enter');
+  assert.equal(await page.locator('#calculator').evaluate(el => el.open), true);
+  assert.equal(await page.evaluate(() => window.ensureProg().topics.kostenarten.seen), 0, 'opening calculator does not check an answer');
+  await page.locator('#calc-display').fill('3*4'); await page.locator('#calc-display').press('Enter');
+  assert.equal(await page.locator('#calc-display').inputValue(), '12');
+  await summary.press('Enter');
+  assert.equal(await page.locator('#calculator').evaluate(el => el.open), false);
+  await page.locator('body').click({position:{x:3,y:3}}); await page.keyboard.press('9');
+  assert.equal(await page.locator('#calc-display').inputValue(), '12', 'closed calculator does not consume number keys');
+  await page.locator('#btn-reveal').click();
+  assert.equal(await field.inputValue(), await field.getAttribute('data-answer'));
+  assert.equal(await page.locator('[data-equation-result]').textContent(), await page.locator('[data-equation-result]').getAttribute('data-equation-answer'));
+  assert.equal(await help.getAttribute('aria-expanded'), 'true');
+  await page.locator('#btn-next').click();
+  assert.equal(await help.getAttribute('aria-expanded'), 'false');
+  assert.equal(await explanation.isVisible(), false);
+  assert.equal(await page.locator('#task-feedback').isVisible(), false);
+  assert.deepEqual(errors, []); assert.deepEqual(violations, []);
+});
+
+test('Lernatelier covers every view in both themes, reflow and reduced motion', async t => {
+  const { page, errors, violations } = await session(t, { selection: ['kostenarten'], progress: blank() });
+  for (const theme of ['light','dark']) {
+    await page.goto(`${origin}/settings.html`); await page.locator('#theme-select').selectOption(theme);
+    for (const width of [1440, 390, 320]) {
+      await page.setViewportSize({width, height:900});
+      for (const name of ['dashboard','train','achievements','settings']) {
+        await page.goto(`${origin}/${name}.html`);
+        assert.equal(await page.locator('html').getAttribute('data-design'), 'lernatelier');
+        assert.equal(await page.locator('body').getAttribute('data-theme'), theme);
+        assert.equal(await page.locator('h1').count(), 1);
+        assert.equal(await page.locator('nav [aria-current="page"]').count(), 1);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, `${name}/${theme}/${width}`);
+        if (width !== 320) await snapshot(page, `${name}-${theme}-${width}`);
+      }
+    }
+  }
+  await page.goto(`${origin}/settings.html`);
+  await page.keyboard.press('Tab');
+  assert.equal(await page.locator('.skip-link').evaluate(el=>document.activeElement===el),true);
+  assert.ok((await page.locator('.skip-link').boundingBox()).width>50,'skip link is visible on focus');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.locator('main').evaluate(el=>document.activeElement===el),true);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  await page.evaluate(() => document.documentElement.style.fontSize = '34px');
+  await snapshot(page, 'zoom-320');
+  const zoom = await layoutState(page);
+  assert.ok(zoom.scroll <= zoom.width + 1, JSON.stringify(zoom));
+  assert.deepEqual(errors, []); assert.deepEqual(violations, []);
+});
+
+test('all training topic layouts fit a 320px Lernatelier worksheet', async t => {
+  const { page, errors, violations } = await session(t, { selection: allTopics, progress: unlocked(), viewport: {width:320,height:900} });
+  for (const topic of allTopics) {
+    await page.goto(`${origin}/train.html?topic=${topic}&difficulty=4`);
+    await page.evaluate(topic => { const p=window.ensureProg(); p.topics[topic]={seen:0,correct:0,awarded:{}}; localStorage.setItem('bwl_prog_v2',JSON.stringify(p)); },topic);
+    await page.reload();
+    await snapshot(page, `topic-${topic}-320`);
+    const dimensions = await layoutState(page);
+    assert.ok(dimensions.scroll <= dimensions.width + 1, `${topic}: ${JSON.stringify(dimensions)}`);
+    const controls = await page.locator('#bab-wrapper [data-answer]').evaluateAll(fields => fields.map(el=>({left:el.getBoundingClientRect().left,right:el.getBoundingClientRect().right})));
+    assert.ok(controls.length>0,topic);
+    assert.ok(controls.every(box=>box.left>=0 && box.right<=321),`${topic}: ${JSON.stringify(controls)}`);
+    const tip = page.locator('#bab-wrapper [data-tip]').first();
+    if (await tip.count()) {
+      await tip.focus();
+      assert.equal(await tip.evaluate(el=>getComputedStyle(el,'::after').display),'block',topic+' keyboard tooltip');
+      const focused=await layoutState(page); assert.ok(focused.scroll<=321,topic+' open tooltip fits viewport');
+    }
+    if (['bab','zuschlag','kostenstellen'].includes(topic)) await snapshot(page, `table-${topic}-320`);
+  }
+  assert.deepEqual(errors, []); assert.deepEqual(violations, []);
 });

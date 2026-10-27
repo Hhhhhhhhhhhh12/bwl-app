@@ -1,80 +1,59 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-design="lernatelier">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>BWL-App</title>
+  <title>Training · BWL-App</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.base.css">
   <link rel="stylesheet" href="css/style.layout.css">
   <link rel="stylesheet" href="css/style.components.css">
   <link rel="stylesheet" href="css/style.accessibility.css">
   <link rel="stylesheet" href="css/style.animations.css">
-  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
+  <link rel="stylesheet" href="css/style.dashboard.css">
+  <link rel="stylesheet" href="css/style.atelier.css">
 </head>
-<body data-page="train">
-  <header class="app">
+<body data-page="train" data-design="lernatelier">
+  <a class="sr-only skip-link" href="#main-content">Zum Inhalt</a>
+  <header class="app atelier-header">
     <div class="container">
       <div class="brand">
+        <span class="atelier-brand-mark" aria-hidden="true">B</span>
         <strong class="brand-title">BWL-App</strong>
-        <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
+        <small class="muted brand-sub">Dein Lernatelier für Kostenrechnung</small>
       </div>
       <nav aria-label="Hauptnavigation">
         <ul class="nav">
-          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="dashboard.html">Übersicht</a></li>
+          <li><a class="nav-link" href="train.html">Training</a></li>
           <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
           <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
         </ul>
       </nav>
     </div>
   </header>
-
-
-<main class="container no-page-scroll">
-  <section class="card card-fit train-layout">
-    <div class="task-area">
-      <h2 id="session-pill" class="pill">Thema • Stufe 1</h2>
-      <p id="train-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
-      <div id="bab-wrapper" class="task-slot slim-scroll"></div>
-
-      <div class="task-controls">
-        <button class="btn" id="btn-check" data-action="check">Prüfen</button>
-        <button class="btn" id="btn-reveal" data-action="reveal">Lösung anzeigen</button>
-        <button class="btn" id="btn-next" data-action="next">Nächste</button>
-        <button class="btn" id="btn-change-topic">Thema wechseln!</button>
-        <button class="btn ghost" id="btn-skip-topic">Dieses Thema benötige ich nicht!</button>
-      </div>
-
-      <!-- calc.js creates and wires its own calculator panel here. -->
+  <main id="main-content" class="container atelier-container" tabindex="-1">
+    <div class="atelier-layout"><div class="atelier-main"><section class="task-area atelier-training" aria-labelledby="training-heading">
+    <div class="atelier-page-heading"><p class="atelier-kicker">Dein Arbeitsblatt</p><h1 id="training-heading">Kosten verstehen.</h1><p id="session-pill" class="atelier-session-meta">Thema · Stufe 1</p></div>
+    <p id="train-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div class="atelier-worksheet"><div id="bab-wrapper" class="task-slot atelier-task-slot"></div>
+      <div class="task-controls atelier-answer-actions"><button class="btn primary" id="btn-check" data-action="check" type="button">Antwort prüfen</button><p id="task-feedback" class="atelier-feedback" hidden></p></div>
     </div>
-
-    <aside class="sidebar">
-      <div class="mini-card">
-        <h4>Rang</h4>
-        <div class="rank-row"><span id="rank-badge" class="badge pill">BWL-Justus</span></div>
-        <div class="level">
-          <div class="bar"><i id="rank-level-fill"></i></div>
-          <small id="rank-level-label" class="muted">Level 1 → 2 · 0/100 XP</small>
-        </div>
-      </div>
-      <div class="mini-card slim-scroll">
-        <h3>Fortschritt</h3>
-        <div id="topic-progress-train" class="prog-list"></div>
-      </div>
-    </aside>
-  </section>
-</main>
-
-  <footer class="footer">
-    <div class="container">
-      <p class="muted version-text">Version <span id="app-version">–</span></p>
-    </div>
-  </footer>
-
-
-
+    <div class="atelier-tools"><button class="btn" id="btn-help" type="button" aria-expanded="false">Rechenweg</button><button class="btn" id="btn-reveal" data-action="reveal" type="button">Lösung anzeigen</button><button class="btn" id="btn-next" data-action="next" type="button">Nächste →</button></div>
+    <details class="atelier-calculator" id="calculator"><summary>Taschenrechner öffnen</summary><div id="calc-mount"></div></details>
+    <div class="atelier-secondary-actions"><button class="btn" id="btn-change-topic" type="button">Thema wechseln</button><button class="btn" id="btn-skip-topic" type="button">Thema aus meiner Auswahl nehmen</button></div>
+  </section></div>
+    <aside class="atelier-sidebar" aria-label="Lernbegleitung"><section class="atelier-side-block"><h3>Worum geht es hier?</h3><p id="topic-intro" class="muted atelier-topic-intro"></p></section><section class="atelier-side-block atelier-rank" aria-labelledby="rank-heading">
+      <h3 id="rank-heading">Dein Lernrang</h3>
+      <div class="rank-row"><span id="rank-badge" class="badge pill">BWL-Justus</span></div>
+      <div class="level"><div class="bar"><i id="rank-level-fill"></i></div>
+        <small id="rank-level-label" class="muted">Level 1 → 2 · 0/100 XP</small></div>
+    </section><section class="atelier-side-block"><h3>Deine Themen</h3><div id="topic-progress-train" class="prog-list"></div><p><a href="settings.html">Themen auswählen →</a></p></section></aside></div>
+  </main>
+  <footer class="footer"><div class="container">
+    <p class="muted version-text">BWL-App · Version <span id="app-version">–</span></p>
+  </div></footer>
   <script defer src="js/topics.js"></script>
   <script defer src="js/progress.js"></script>
   <script defer src="js/app-shell.js"></script>

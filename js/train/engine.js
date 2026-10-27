@@ -96,6 +96,8 @@
   }
 
   function updateLevelPill() {
+    const intro = document.getElementById('topic-intro');
+    if (intro) intro.textContent = TOPIC_INTRO[session.topic] || 'Wähle ein aktives Thema in den Einstellungen, um loszulegen.';
     const pill = document.getElementById("session-pill");
     if (!pill) return;
     if (!session.topic) { pill.textContent = 'Kein aktives Thema'; return; }
@@ -166,6 +168,7 @@
 
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
+    resetTaskSupport();
     document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = true; });
     announce(`${labelOf(session.topic)}: Alle Level abgeschlossen.`);
     wrap.innerHTML = `
@@ -269,6 +272,7 @@
   function renderTask() {
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
+    resetTaskSupport();
 
     clampLevel();
     if (session.index >= MAX_LEVELS_PER_TOPIC) {
@@ -309,14 +313,6 @@
       if (field.tagName === 'INPUT' && Number.isFinite(Number(field.dataset.answer))) field.inputMode = 'decimal';
     });
 
-    // Level‑1: fachliche Einordnung oben als Intro-Karte
-    if (session.index === 0) {
-      const intro = document.createElement('div');
-      intro.className = 'mini-card';
-      intro.innerHTML = `<strong>Worum geht’s hier?</strong><br><span class="muted">${TOPIC_INTRO[session.topic] || ''}</span>`;
-      wrap.prepend(intro);
-    }
-
     // Zentrale Glossarbegriffe automatisch markieren
     annotateTerms(wrap);
 
@@ -326,7 +322,13 @@
     // Starter-Hinweis ausblenden, Erklärungen verstecken, erstes Feld fokussieren
     const starter = document.getElementById('train-starter');
     hideEl(starter);
-    wrap.querySelectorAll('[data-explain]').forEach(x => hideEl(x));
+    const explanations = [...wrap.querySelectorAll('[data-explain]')];
+    explanations.forEach((x, i) => { x.id = `task-explanation-${i}`; hideEl(x); });
+    const help = document.getElementById('btn-help');
+    if (help) {
+      help.disabled = explanations.length === 0;
+      help.setAttribute('aria-controls', explanations.map(x => x.id).join(' '));
+    }
     const first = wrap.querySelector("input, select, textarea, button");
     if (first && typeof first.focus === "function") first.focus();
 
@@ -339,12 +341,31 @@
     updateLevelPill();
   }
 
+  function resetTaskSupport() {
+    const help = document.getElementById('btn-help');
+    if (help) { help.disabled = true; help.setAttribute('aria-expanded', 'false'); help.removeAttribute('aria-controls'); }
+    const feedback = document.getElementById('task-feedback');
+    if (feedback) { feedback.hidden = true; feedback.textContent = ''; }
+  }
+
+  function showEquationResult(wrap) {
+    wrap.querySelectorAll('[data-equation-result]').forEach(result => {
+      result.textContent = result.dataset.equationAnswer;
+    });
+  }
+
   function wireControls() {
     const wrap = document.getElementById("bab-wrapper");
     const btnCheck = document.querySelector('[data-action="check"]');
     const btnReveal = document.querySelector('[data-action="reveal"]');
     const btnNext = document.querySelector('[data-action="next"]');
     const btnChange = document.getElementById("btn-change-topic");
+    const btnHelp = document.getElementById('btn-help');
+    if (btnHelp) btnHelp.addEventListener('click', () => {
+      const expanded = btnHelp.getAttribute('aria-expanded') !== 'true';
+      wrap.querySelectorAll('[data-explain]').forEach(x => expanded ? showEl(x) : hideEl(x));
+      btnHelp.setAttribute('aria-expanded', String(expanded));
+    });
 
     // Prüfen
     if (btnCheck) btnCheck.addEventListener("click", () => {
@@ -400,11 +421,16 @@
 
         if (correct) { ok++; inp.classList.remove('err'); inp.classList.add('ok'); }
         else { inp.classList.remove('ok'); inp.classList.add('err'); }
+        inp.setAttribute('aria-invalid', String(!correct));
       });
 
       if (!total) return;
       const allCorrect = ok === total;
-      announce(allCorrect ? 'Richtig gelöst.' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`);
+      const message = allCorrect ? 'Richtig gelöst. Weiter zur nächsten Aufgabe …' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`;
+      announce(message);
+      const feedback = document.getElementById('task-feedback');
+      if (feedback) { feedback.textContent = message; feedback.hidden = false; }
+      if (allCorrect) showEquationResult(wrap);
       // Preserve D's automatic transition to the selected topic with least progress.
       if (allCorrect) {
         // 1) Persist result ONCE for current taskId (before index changes)
@@ -483,8 +509,12 @@
       wrap.querySelectorAll('input[data-answer], select[data-answer]').forEach(inp => {
         inp.value = inp.getAttribute("data-answer");
         inp.classList.remove("err"); inp.classList.add("ok");
+        inp.setAttribute('aria-invalid', 'false');
       });
       wrap.querySelectorAll('[data-explain]').forEach(x => showEl(x));
+      if (btnHelp && !btnHelp.disabled) btnHelp.setAttribute('aria-expanded', 'true');
+      showEquationResult(wrap);
+      announce('Lösung und Rechenweg angezeigt.');
       if (btnCheck) {
         btnCheck.classList.remove("err");
         btnCheck.classList.add("ok");
@@ -528,7 +558,7 @@
     let enterLock = false;
     document.addEventListener("keydown", (ev) => {
       if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.altKey) return;
-      if (ev.target.closest && ev.target.closest('button, a, select')) return;
+      if (ev.target.closest && ev.target.closest('button, a, select, summary')) return;
       if (enterLock) return;
       if (ev.key === "Enter") {
         enterLock = true;

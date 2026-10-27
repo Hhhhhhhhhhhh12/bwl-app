@@ -1,119 +1,65 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-design="lernatelier">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>BWL-App</title>
+  <title>Übersicht · BWL-App</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.base.css">
   <link rel="stylesheet" href="css/style.layout.css">
   <link rel="stylesheet" href="css/style.components.css">
   <link rel="stylesheet" href="css/style.accessibility.css">
   <link rel="stylesheet" href="css/style.animations.css">
-  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
+  <link rel="stylesheet" href="css/style.dashboard.css">
+  <link rel="stylesheet" href="css/style.atelier.css">
 </head>
-<body data-page="dashboard">
-  <header class="app">
+<body data-page="dashboard" data-design="lernatelier">
+  <a class="sr-only skip-link" href="#main-content">Zum Inhalt</a>
+  <header class="app atelier-header">
     <div class="container">
       <div class="brand">
+        <span class="atelier-brand-mark" aria-hidden="true">B</span>
         <strong class="brand-title">BWL-App</strong>
-        <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
+        <small class="muted brand-sub">Dein Lernatelier für Kostenrechnung</small>
       </div>
       <nav aria-label="Hauptnavigation">
         <ul class="nav">
-          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="dashboard.html">Übersicht</a></li>
+          <li><a class="nav-link" href="train.html">Training</a></li>
           <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
           <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
         </ul>
       </nav>
     </div>
   </header>
-  <main class="container no-page-scroll">
-  <section class="card card-fit">
-    <h2>Dashboard</h2>
-    <div id="notice-disabled" class="mini-card" hidden role="status">
-      <p id="notice-disabled-text"></p>
-      <button class="btn ghost" id="btn-notice-close" type="button">Schließen</button>
-    </div>
-
-
-    <div class="grid grid-2 clamp-gap">
-      <div class="mini-card">
-        <h3>Empfehlung</h3>
-        <p class="muted">Schwächster Bereich zuerst.</p>
-        <div class="flex gap-sm items-center">
-          <strong id="recommend-topic">–</strong>
-          <a class="btn" id="btn-start-recommend" href="train.html">Empfohlen starten</a>
-        </div>
-      </div>
-
-      <div class="mini-card">
-        <h3>Gesamtfortschritt</h3>
-        <div class="flex gap-md items-center">
-          <div class="donut" id="overall-progress-donut" role="img" aria-label="Gesamtfortschritt">
-            <svg viewBox="0 0 36 36" class="donut-svg" aria-hidden="true">
-              <circle class="donut-track" cx="18" cy="18" r="15.9155"></circle>
-              <circle class="donut-fill" id="overall-progress-arc" cx="18" cy="18" r="15.9155" stroke-dasharray="0 100"></circle>
-            </svg>
-            <span id="overall-progress-label" class="donut-label">0%</span>
-          </div>
-          <div class="flex-1">
-            <div class="bar bar-tall"><i id="overall-progress-bar" class="w-0"></i></div>
-            <small class="muted">Richtig: <span id="overall-correct">0</span>/<span id="overall-total">0</span></small>
-          </div>
-        </div>
-        <button id="btn-reset-progress" class="btn ghost small" type="button">Fortschritt zurücksetzen</button>
-      </div>
-    </div>
-
-    <div class="grid grid-2 clamp-gap">
-      <div class="mini-card">
-        <h3>Benötigte Themen</h3>
-        <p class="meta">Nicht ausgewählte Themen werden ausgeblendet.</p>
-        <ul id="topic-prefs" class="checklist slim-scroll">
-            <li><label><input type="checkbox" data-topic="break_even" checked> Break‑Even‑Point</label></li>
-            <li><label><input type="checkbox" data-topic="bab" checked> Betriebsabrechnungsbogen (BAB)</label></li>
-            <li><label><input type="checkbox" data-topic="kostenarten" checked> Kostenartenrechnung</label></li>
-            <li><label><input type="checkbox" data-topic="abgrenzung" checked> Abgrenzung</label></li>
-            <li><label><input type="checkbox" data-topic="kostenstellen" checked> Kostenstellenrechnung</label></li>
-            <li><label><input type="checkbox" data-topic="deckungsbeitrag" checked> Deckungsbeitrag & Preisuntergrenze</label></li>
-            <li><label><input type="checkbox" data-topic="aequivalenz" checked> Äquivalenzziffernrechnung</label></li>
-            <li><label><input type="checkbox" data-topic="zuschlag" checked> Zuschlagskalkulation</label></li>
-            <li><label><input type="checkbox" data-topic="prozesskosten" checked> Prozesskostenrechnung (light)</label></li>
-            <li><label><input type="checkbox" data-topic="kennzahlen" checked> Kennzahlen (Liquidität, EK‑Quote, Cashflow)</label></li>
-            <li><label><input type="checkbox" data-topic="investition" checked> Investitionsrechnung (Amortisation)</label></li>
-            <li><label><input type="checkbox" data-topic="lager" checked> Lagerkennziffern</label></li>
-          </ul>
-      </div>
-
-      <div class="mini-card">
-        <h3>Rang</h3>
-        <div class="rank-row"><span id="rank-badge-dashboard" class="badge pill">BWL-Justus</span></div>
-        <div class="level">
-          <div class="bar"><i id="rank-level-fill-dashboard"></i></div>
-          <small id="rank-level-label-dashboard" class="muted">Level 1 → 2 · 0/100 XP</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="mini-card slim-scroll">
-      <h3>Fortschritt je Thema</h3>
+  <main id="main-content" class="container atelier-container" tabindex="-1">
+    <div class="atelier-layout"><div class="atelier-main"><div class="atelier-page-heading"><p class="atelier-kicker">Dein Lernatelier</p><h1>Ein guter Moment zum Weiterlernen.</h1><p class="atelier-description">Eine Aufgabe nach der anderen. Hier siehst du, wo du stehst und womit du weitermachen kannst.</p></div>
+    <div id="notice-disabled" class="mini-card" hidden role="status"><p id="notice-disabled-text"></p><button class="btn ghost" id="btn-notice-close" type="button">Schließen</button></div>
+    <section class="atelier-recommendation" aria-labelledby="recommend-topic">
+      <p class="atelier-kicker">Dein nächster Schritt</p><h2 id="recommend-topic">–</h2>
+      <p>Ein passender Einstieg aus deinen aktiven Themen.</p>
+      <a class="btn primary" id="btn-start-recommend" href="train.html">Training starten →</a>
+    </section>
+    <section aria-labelledby="topics-heading"><div class="atelier-section-heading"><h2 id="topics-heading">Deine Themen</h2><a href="settings.html">Themen auswählen</a></div>
       <div id="topic-progress" class="prog-list"></div>
-    </div>
-  </section>
-</main>
-
-
-
-    <footer class="footer">
-    <div class="container">
-      <p class="muted version-text">Version <span id="app-version">–</span></p>
-    </div>
-  </footer>
-
-
+    </section></div>
+    <aside class="atelier-sidebar" aria-label="Lernbegleitung"><section class="atelier-side-block" aria-labelledby="overall-heading"><h3 id="overall-heading">Dein Gesamtfortschritt</h3>
+      <div class="donut" id="overall-progress-donut" role="img" aria-label="Gesamtfortschritt"><svg viewBox="0 0 36 36" class="donut-svg" aria-hidden="true">
+        <circle class="donut-track" cx="18" cy="18" r="15.9155"></circle><circle class="donut-fill" id="overall-progress-arc" cx="18" cy="18" r="15.9155" stroke-dasharray="0 100"></circle>
+      </svg><span id="overall-progress-label" class="donut-label">0%</span></div>
+      <div class="bar bar-tall"><i id="overall-progress-bar" class="w-0"></i></div>
+      <p class="muted"><span id="overall-correct">0</span> von <span id="overall-total">0</span> Leveln gelöst</p>
+    </section><section class="atelier-side-block atelier-rank" aria-labelledby="rank-heading">
+      <h3 id="rank-heading">Dein Lernrang</h3>
+      <div class="rank-row"><span id="rank-badge-dashboard" class="badge pill">BWL-Justus</span></div>
+      <div class="level"><div class="bar"><i id="rank-level-fill-dashboard"></i></div>
+        <small id="rank-level-label-dashboard" class="muted">Level 1 → 2 · 0/100 XP</small></div>
+    </section><section class="atelier-side-block"><h3>Dein Fortschritt bleibt hier</h3><p class="muted">Deine Ergebnisse werden in diesem Browser gespeichert. Du kannst jederzeit weiterlernen.</p></section><section class="atelier-side-block"><a href="achievements.html">Ergebnisse ansehen →</a><p><button id="btn-reset-progress" class="btn ghost small" type="button">Fortschritt zurücksetzen</button></p></section></aside></div>
+  </main>
+  <footer class="footer"><div class="container">
+    <p class="muted version-text">BWL-App · Version <span id="app-version">–</span></p>
+  </div></footer>
   <script defer src="js/topics.js"></script>
   <script defer src="js/progress.js"></script>
   <script defer src="js/app-shell.js"></script>

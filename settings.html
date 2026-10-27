@@ -1,56 +1,42 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-design="lernatelier">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>BWL-App</title>
+  <title>Einstellungen · BWL-App</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.base.css">
   <link rel="stylesheet" href="css/style.layout.css">
   <link rel="stylesheet" href="css/style.components.css">
   <link rel="stylesheet" href="css/style.accessibility.css">
   <link rel="stylesheet" href="css/style.animations.css">
-  <link rel="stylesheet" href="css/style.dashboard.css"><!-- optional je Seite -->
+  <link rel="stylesheet" href="css/style.dashboard.css">
+  <link rel="stylesheet" href="css/style.atelier.css">
 </head>
-<body data-page="settings">
-  <header class="app">
+<body data-page="settings" data-design="lernatelier">
+  <a class="sr-only skip-link" href="#main-content">Zum Inhalt</a>
+  <header class="app atelier-header">
     <div class="container">
       <div class="brand">
+        <span class="atelier-brand-mark" aria-hidden="true">B</span>
         <strong class="brand-title">BWL-App</strong>
-        <small class="muted brand-sub">Lernplattform für Kostenrechnung</small>
+        <small class="muted brand-sub">Dein Lernatelier für Kostenrechnung</small>
       </div>
       <nav aria-label="Hauptnavigation">
         <ul class="nav">
-          <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-          <li><a class="nav-link" href="train.html">Trainieren</a></li>
+          <li><a class="nav-link" href="dashboard.html">Übersicht</a></li>
+          <li><a class="nav-link" href="train.html">Training</a></li>
           <li><a class="nav-link" href="achievements.html">Erfolge</a></li>
           <li><a class="nav-link" href="settings.html">Einstellungen</a></li>
         </ul>
       </nav>
     </div>
   </header>
-
-  <main class="container no-page-scroll">
-    <section class="card card-fit">
-      <h2>Einstellungen</h2>
-
-      <div class="grid grid-2 clamp-gap">
-        <div class="mini-card">
-          <h3>Darstellung</h3>
-          <label for="theme-select" class="block">Theme</label>
-          <select id="theme-select" aria-label="Theme auswählen">
-            <option value="light">Hell</option>
-            <option value="dark">Dunkel</option>
-            <option value="auto">System (Auto)</option>
-          </select>
-          <p class="muted">Deine Auswahl wird gespeichert.</p>
-        </div>
-
-        <div class="mini-card">
-          <h3>Themenauswahl</h3>
-          <p class="meta">Nicht ausgewählte Themen werden im Training ausgeblendet.</p>
-          <ul id="topic-prefs" class="checklist slim-scroll">
+  <main id="main-content" class="container atelier-container" tabindex="-1">
+    <div class="atelier-layout"><div class="atelier-main"><div class="atelier-page-heading"><p class="atelier-kicker">So lernst du</p><h1>Dein Atelier, deine Auswahl.</h1><p class="atelier-description">Wähle die Themen und die Darstellung, die zu dir passen.</p></div>
+    <div class="atelier-settings-grid"><section class="mini-card"><h2>Darstellung</h2><label for="theme-select" class="block">Farbschema</label><select id="theme-select" aria-label="Farbschema auswählen"><option value="light">Hell</option><option value="dark">Dunkel</option><option value="auto">System</option></select><p class="muted">Deine Auswahl wird gespeichert.</p></section>
+    <section class="mini-card"><h2>Themenauswahl</h2><p class="muted">Nur ausgewählte und freigeschaltete Themen erscheinen im Training.</p><ul id="topic-prefs" class="checklist slim-scroll">
             <li><label><input type="checkbox" data-topic="break_even" checked> Break‑Even‑Point</label></li>
             <li><label><input type="checkbox" data-topic="bab" checked> Betriebsabrechnungsbogen (BAB)</label></li>
             <li><label><input type="checkbox" data-topic="kostenarten" checked> Kostenartenrechnung</label></li>
@@ -63,24 +49,13 @@
             <li><label><input type="checkbox" data-topic="kennzahlen" checked> Kennzahlen (Liquidität, EK‑Quote, Cashflow)</label></li>
             <li><label><input type="checkbox" data-topic="investition" checked> Investitionsrechnung (Amortisation)</label></li>
             <li><label><input type="checkbox" data-topic="lager" checked> Lagerkennziffern</label></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="mini-card">
-        <h3>Fortschritt</h3>
-        <button id="btn-reset-progress" class="btn ghost" type="button">Fortschritt zurücksetzen</button>
-        <p class="muted">Setzt XP, Ränge und Themenfortschritte zurück.</p>
-      </div>
-    </section>
+          </ul></section>
+    <section class="mini-card"><h2>Neu anfangen</h2><p class="muted">Setzt deine Punkte, Ränge und gelösten Level in diesem Browser zurück. Vorher wirst du noch einmal gefragt.</p><button id="btn-reset-progress" class="btn ghost" type="button">Fortschritt zurücksetzen</button></section></div></div>
+    <aside class="atelier-sidebar" aria-label="Lernbegleitung"><section class="atelier-side-block"><h3>Schritt für Schritt</h3><p class="muted">Weitere Themen werden freigeschaltet, sobald du in Deckungsbeitrag, Kostenarten, Kostenstellen und Zuschlagskalkulation jeweils 15 Level gelöst hast.</p></section><section class="atelier-side-block"><h3>Dein Fortschritt bleibt hier</h3><p class="muted">Deine Ergebnisse werden in diesem Browser gespeichert. Du kannst jederzeit weiterlernen.</p></section></aside></div>
   </main>
-  
-    <footer class="footer">
-    <div class="container">
-      <p class="muted version-text">Version <span id="app-version">–</span></p>
-    </div>
-  </footer>
-
+  <footer class="footer"><div class="container">
+    <p class="muted version-text">BWL-App · Version <span id="app-version">–</span></p>
+  </div></footer>
   <script defer src="js/topics.js"></script>
   <script defer src="js/progress.js"></script>
   <script defer src="js/app-shell.js"></script>

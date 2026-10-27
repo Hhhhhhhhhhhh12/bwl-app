@@ -112,7 +112,10 @@
     panel.appendChild(header);
     panel.appendChild(body);
 
-    if(controls && controls.parentNode){
+    const mount = document.getElementById('calc-mount');
+    if(mount){
+      mount.appendChild(panel);
+    } else if(controls && controls.parentNode){
       controls.parentNode.insertBefore(panel, controls.nextElementSibling);
     } else {
       document.body.appendChild(panel);
@@ -138,8 +141,10 @@
   function onKey(e){
     const panel = document.getElementById(PANEL_ID);
     if (!panel || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    const disclosure = panel.closest?.('details');
+    if (disclosure && !disclosure.open) return;
     if (e.target.isContentEditable || e.target.tagName === 'SELECT') return;
-    if (e.key === 'Enter' && e.target.closest('button, a')) return;
+    if (e.key === 'Enter' && e.target.closest('button, a, summary')) return;
 
     // Eingabefelder außerhalb des Rechners behalten ihre normale Tastaturbedienung.
     const target = e.target;
