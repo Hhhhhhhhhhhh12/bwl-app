@@ -4,7 +4,7 @@ Stand: 27. Oktober 2026. Ausgangspunkt: GitHub-Quellstand `d72f7c8`.
 
 ## Auftrag und langfristiges Ziel
 
-Ausdrücklich beauftragt waren lokale Tests der GitHub-Arbeitskopie und die Behebung gefundener Fehler. Bereitstellung und Hostingänderungen bleiben ausgeschlossen. Die Arbeit erfolgt im getrennten lokalen Zweig `work/bwl-lokale-pruefung-20261027`; die bisherige Hauptarbeitskopie und der öffentliche GitHub-Stand bleiben unverändert. Die Änderungen sind lokal versioniert, ohne Push oder Deployment.
+Ausdrücklich beauftragt waren zunächst lokale Tests der GitHub-Arbeitskopie und die Behebung gefundener Fehler. Diese Prüfung erfolgte im getrennten Zweig `work/bwl-lokale-pruefung-20261027`, während `main` und GitHub zunächst unverändert blieben. Danach gab der Nutzer am 27. Oktober 2026 ausdrücklich die Übernahme der getesteten Korrekturen in `main` und den Upload auf GitHub frei. Der getestete Quellstand `0e577bd` ist in dieser Fassung von `main` enthalten; die Dokumentation wurde auf diesen Übernahmestatus aktualisiert. Bereitstellung und Hostingänderungen bleiben ausgeschlossen.
 
 Langfristig soll die BWL-App eigenständig online nutzbar sein und hochwertig aussehen. Die jetzigen Änderungen beheben konkrete Funktions- und Darstellungsfehler im vorhandenen Stil. Eine größere Gestaltung wird später mit sichtbaren Varianten verglichen und vom Nutzer ausgewählt; aus diesen Korrekturen folgt keine visuelle Abnahme.
 
@@ -52,4 +52,4 @@ Die Prüfung der angegebenen Aufgabenlösungen belegt die Verbindung zwischen Au
 
 Die bestehende Freischaltregel (vier Grundthemen mit je 15 gutgeschriebenen Levels), der automatische Wechsel zum schwächeren Thema und die bisherige Behandlung angezeigter Lösungen wurden nicht neu gestaltet. Das Abwählen eines notwendigen Grundthemas kann Bereich 2 weiterhin sperren. Diese Lernregeln sollten vor einer größeren UX-Überarbeitung bewusst bewertet werden.
 
-Die `.htaccess` wurde nicht verändert. Apache-Weiterleitungen, TLS, Domainwechsel, Fortschrittsübernahme und ein neuer Online-Betrieb wurden nicht ausgeführt oder freigegeben. Quellcode-Integration in `main`, Veröffentlichung und visuelle Nutzerabnahme sind getrennte Zustände.
+Die `.htaccess` wurde nicht verändert. Apache-Weiterleitungen, TLS, Domainwechsel, Fortschrittsübernahme und ein neuer Online-Betrieb wurden nicht ausgeführt oder freigegeben. Die hier dokumentierten Korrekturen wurden nach ausdrücklicher Freigabe in `main` übernommen. Der freigegebene GitHub-Upload betrifft ausschließlich den Code. Bereitstellung und visuelle Nutzerabnahme bleiben getrennte, weiterhin offene Zustände.
