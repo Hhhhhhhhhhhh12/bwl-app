@@ -19,79 +19,52 @@
       .replace(/[×x]/g,'*')
       .replace(/[÷:]/g,'/');
   }
-  // Shunting-Yard parser: supports + - * / ( ) and ^.
+  // Recursive descent keeps unary signs and power precedence explicit.
   function safeEval(expr){
     const s = normalize(expr);
-    // allow digits, ops, dot, spaces and parentheses only
     if(!/^[-+*/().^\d\s]*$/.test(s)) return NaN;
-
-    // Tokenize
-    const tokens = [];
-    let i=0; const n=s.length;
-    while(i<n){
-      const ch = s[i];
-      if(ch===' '){ i++; continue; }
-      if(/[0-9.]/.test(ch)){
-        let j=i+1;
-        while(j<n && /[0-9.]/.test(s[j])) j++;
-        tokens.push({t:'num', v: parseFloat(s.slice(i,j))});
-        i=j; continue;
+    const tokens = s.match(/(?:\d+(?:\.\d*)?|\.\d+)|[^\s]/g) || [];
+    let pos = 0;
+    function primary(){
+      const token = tokens[pos++];
+      if(token === '('){
+        const value = sum();
+        if(tokens[pos++] !== ')') throw new Error('Missing parenthesis');
+        return value;
       }
-      if(/[+\-*/^()]/.test(ch)){
-        tokens.push({t:'op', v: ch}); i++; continue;
-      }
-      return NaN; // illegal char
+      if(!token || !/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(token)) throw new Error('Expected number');
+      return Number(token);
     }
-
-    // Shunting Yard → RPN
-    const prec = { '^':4, '*':3, '/':3, '+':2, '-':2 };
-    const rightAssoc = { '^': true };
-    const out = []; const stack = [];
-    for(const tk of tokens){
-      if(tk.t==='num'){ out.push(tk); continue; }
-      const op = tk.v;
-      if(op==='('){ stack.push(op); continue; }
-      if(op===')'){
-        while(stack.length && stack[stack.length-1] !== '('){ out.push({t:'op', v: stack.pop()}); }
-        if(!stack.length) return NaN; // mismatched
-        stack.pop(); // remove '('
-        continue;
-      }
-      // operator
-      while(stack.length){
-        const top = stack[stack.length-1];
-        if(top==='(') break;
-        const pTop = prec[top]||0, pOp = prec[op]||0;
-        if( (rightAssoc[op] && pOp < pTop) || (!rightAssoc[op] && pOp <= pTop) ){
-          out.push({t:'op', v: stack.pop()});
-        } else break;
-      }
-      stack.push(op);
+    function power(){
+      const value = primary();
+      if(tokens[pos] === '^') { pos++; return Math.pow(value, unary()); }
+      return value;
     }
-    while(stack.length){
-      const x = stack.pop();
-      if(x==='('||x===')') return NaN;
-      out.push({t:'op', v:x});
+    function unary(){
+      if(tokens[pos] === '+') { pos++; return unary(); }
+      if(tokens[pos] === '-') { pos++; return -unary(); }
+      return power();
     }
-
-    // Evaluate RPN
-    const st = [];
-    for(const tk of out){
-      if(tk.t==='num'){ st.push(tk.v); continue; }
-      const b = st.pop(); const a = st.pop();
-      if(a===undefined || b===undefined) return NaN;
-      let r;
-      switch(tk.v){
-        case '+': r = a + b; break;
-        case '-': r = a - b; break;
-        case '*': r = a * b; break;
-        case '/': r = b===0 ? NaN : a / b; break;
-        case '^': r = Math.pow(a, b); break;
-        default: return NaN;
+    function product(){
+      let value = unary();
+      while(tokens[pos] === '*' || tokens[pos] === '/'){
+        const op = tokens[pos++], right = unary();
+        value = op === '*' ? value * right : (right === 0 ? NaN : value / right);
       }
-      st.push(r);
+      return value;
     }
-    return (st.length===1 && Number.isFinite(st[0])) ? st[0] : NaN;
+    function sum(){
+      let value = product();
+      while(tokens[pos] === '+' || tokens[pos] === '-'){
+        const op = tokens[pos++], right = product();
+        value = op === '+' ? value + right : value - right;
+      }
+      return value;
+    }
+    try {
+      const result = sum();
+      return pos === tokens.length && Number.isFinite(result) ? result : NaN;
+    } catch(_e) { return NaN; }
   }
 
   // ——— Panel creation under task controls -------------------------------------
@@ -125,10 +98,9 @@
     body.className = 'calc-body';
     const out = document.createElement('input');
     out.id = DISPLAY_ID;
-    out.setAttribute('aria-label','Rechenergebnis');
-    out.setAttribute('inputmode','decimal');
+    out.setAttribute('aria-label','Rechenausdruck und Ergebnis');
+    out.setAttribute('inputmode','text');
     out.className = 'calc-output';
-    out.readOnly = true;
     out.value = '0';
     const hint = document.createElement('small');
     hint.className = 'muted calc-hint';
@@ -167,14 +139,15 @@
     const panel = document.getElementById(PANEL_ID);
     if (!panel || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.target.isContentEditable || e.target.tagName === 'SELECT') return;
-    if (e.key === 'Enter' && e.target.closest('button, a') && !panel.contains(e.target)) return;
+    if (e.key === 'Enter' && e.target.closest('button, a')) return;
 
-    // Wenn der Fokus im Lösungsbereich liegt (Trainings‑Eingabefeld), NICHT abfangen
+    // Eingabefelder außerhalb des Rechners behalten ihre normale Tastaturbedienung.
     const target = e.target;
     const isTextControl = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
-    const inTaskField = !!(isTextControl && target.closest && target.closest('.task-area'));
     const inCalc = !!(target && target.closest && target.closest('#'+PANEL_ID));
-    if (inTaskField && !inCalc) return;
+    if (isTextControl && !inCalc) return;
+    // Let the editable display keep normal caret, selection and deletion behavior.
+    if (isTextControl && inCalc && e.key !== 'Enter' && e.key !== '%') return;
 
     const key = e.key;
 
@@ -213,7 +186,11 @@
     if (key === '%'){
       e.preventDefault(); e.stopPropagation(); try{ e.stopImmediatePropagation(); }catch(_e){}
       const cur = getDisplay();
-      setDisplay(cur==='0' ? '1/100' : cur + '/100');
+      if (isTextControl && inCalc) {
+        const start = target.selectionStart ?? cur.length;
+        const end = target.selectionEnd ?? start;
+        target.setRangeText('/100', start, end, 'end');
+      } else setDisplay(cur==='0' ? '0' : cur + '/100');
       return;
     }
 
