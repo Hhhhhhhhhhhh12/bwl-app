@@ -1,0 +1,253 @@
+/* Lernmission layers the selected game identity over the existing app structure.
+   The page background stays deliberately plain in both themes. */
+html[data-design="lernatelier"][data-game-style="mission"],
+body[data-design="lernatelier"][data-game-style="mission"] {
+  --bg:#edf0f4;
+  --surface:#ffffff;
+  --ink:#16263e;
+  --text:var(--ink);
+  --muted:#51627b;
+  --line:#bacbdd;
+  --line-strong:#8aa3bd;
+  --brand:#285b3c;
+  --brand-ink:#ffffff;
+  --brand-soft:#dce9ce;
+  --mission-blue:#2158a3;
+  --ok:#285b3c;
+  --err:#a13032;
+  --bar:var(--brand);
+  --bar-bg:#dce3ec;
+  --shadow-sm:none;
+  --shadow:none;
+  --shadow-lg:none;
+}
+body[data-design="lernatelier"][data-game-style="mission"][data-theme="dark"] {
+  --bg:#101722;
+  --surface:#1b293e;
+  --ink:#edf3ff;
+  --muted:#a6b8d3;
+  --line:#354963;
+  --line-strong:#6985a8;
+  --brand:#c7f36b;
+  --brand-ink:#172515;
+  --brand-soft:#2c3c22;
+  --mission-blue:#80c7f2;
+  --ok:#c7f36b;
+  --err:#ffb6b3;
+  --bar-bg:#354963;
+}
+body[data-design="lernatelier"][data-game-style="mission"] {
+  background:var(--bg); background-image:none;
+  font-family:var(--font);
+}
+body[data-game-style="mission"] .atelier-header { background:var(--surface); }
+body[data-game-style="mission"] .atelier-header .container { gap:1rem; }
+body[data-game-style="mission"] .atelier-brand-mark {
+  border-radius:4px 12px 4px 4px;
+  font:800 1.5rem/1 var(--font);
+}
+body[data-game-style="mission"] .brand-title { font-weight:800; letter-spacing:-.035em; }
+body[data-game-style="mission"] .nav-link { font-weight:650; border-radius:5px; }
+body[data-game-style="mission"] .mission-header-xp {
+  display:flex; align-items:center; gap:.35rem; color:var(--brand);
+  font-size:.85rem; line-height:1.3; font-weight:750; white-space:nowrap;
+}
+body[data-game-style="mission"] .mission-header-xp svg { width:18px; height:18px; flex:0 0 auto; }
+body[data-game-style="mission"] h1 {
+  font:800 clamp(1.9rem,3.2vw,2.6rem)/1.08 var(--font);
+  letter-spacing:-.045em;
+}
+body[data-game-style="mission"] h2,
+body[data-game-style="mission"] h3 { font-weight:750; letter-spacing:-.025em; }
+body[data-game-style="mission"] .atelier-kicker {
+  display:flex; flex-wrap:wrap; align-items:center; gap:.5rem;
+  color:var(--mission-blue); font-weight:750; letter-spacing:.12em;
+}
+body[data-game-style="mission"] .atelier-kicker::before {
+  content:""; width:18px; height:3px; background:currentColor; flex:0 0 auto;
+}
+body[data-game-style="mission"] .atelier-main { padding-top:1.8rem; }
+body[data-game-style="mission"] .atelier-sidebar { padding-top:1.8rem; }
+body[data-game-style="mission"] .card,
+body[data-game-style="mission"] .mini-card,
+body[data-game-style="mission"] .atelier-worksheet,
+body[data-game-style="mission"] .atelier-recommendation {
+  border-radius:5px 20px 5px 5px; box-shadow:none;
+}
+body[data-game-style="mission"] .card:hover,
+body[data-game-style="mission"] .mini-card:hover { box-shadow:none; }
+body[data-game-style="mission"][data-page="train"] .atelier-layout {
+  grid-template-columns:230px minmax(0,1fr); gap:1.5rem;
+  align-items:start; padding-top:1.8rem; padding-bottom:2.2rem;
+}
+body[data-game-style="mission"][data-page="train"] .atelier-main {
+  grid-column:2; grid-row:1; padding:0; min-width:0;
+}
+body[data-game-style="mission"][data-page="train"] .atelier-sidebar {
+  grid-column:1; grid-row:1; padding:0; border:0;
+}
+body[data-game-style="mission"] .mission-hero {
+  position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto;
+  column-gap:1rem; align-items:start;
+  padding:1.35rem; margin:0 0 1.3rem;
+  border:1px solid var(--line); border-radius:5px 20px 5px 5px;
+  background:#17263c; color:#f0f5ff;
+}
+body[data-game-style="mission"] .mission-hero > * { grid-column:1; min-width:0; }
+body[data-game-style="mission"] .mission-hero h1 { margin:.6rem 0 .8rem; font-size:clamp(1.85rem,3vw,2.4rem); }
+body[data-game-style="mission"] .mission-hero .atelier-kicker { color:#9cceee; }
+body[data-game-style="mission"] .mission-hero .atelier-session-meta,
+body[data-game-style="mission"] .mission-hero .atelier-description {
+  color:#bacde4; margin:0; font-size:.8rem;
+}
+body[data-game-style="mission"] .mission-hero::after {
+  content:attr(data-level); grid-column:2; grid-row:1 / 4;
+  color:#7895b8; font:800 clamp(2.7rem,5vw,4rem)/1 var(--font);
+  letter-spacing:-.065em; align-self:start; margin-top:.15rem;
+}
+body[data-game-style="mission"] .atelier-worksheet {
+  border-top:4px solid var(--mission-blue); background:var(--surface);
+}
+body[data-game-style="mission"] #bab-wrapper h3 { font-weight:750; letter-spacing:-.025em; }
+body[data-game-style="mission"] .atelier-equation { align-items:stretch; gap:.5rem; }
+body[data-game-style="mission"] .atelier-quantity {
+  display:flex; flex-direction:column; justify-content:flex-end;
+  gap:.35rem; padding:.85rem .65rem;
+  background:var(--bg); border:0; border-radius:6px;
+}
+body[data-game-style="mission"] .atelier-quantity:first-child { color:var(--mission-blue); }
+body[data-game-style="mission"] .atelier-quantity strong {
+  font:800 clamp(1.4rem,3vw,2rem)/1.12 var(--font); letter-spacing:-.04em;
+}
+body[data-game-style="mission"] .atelier-quantity small { margin-top:0; font-size:.72rem; line-height:1.4; }
+body[data-game-style="mission"] .atelier-unknown { background:var(--brand-soft); color:var(--brand); }
+body[data-game-style="mission"] .atelier-operator { align-self:center; font-weight:600; }
+body[data-game-style="mission"] .mission-packages {
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:3px; width:100%; max-width:104px; margin:0 0 .55rem;
+  color:var(--mission-blue);
+}
+body[data-game-style="mission"] .mission-package {
+  display:block; position:relative; width:100%; aspect-ratio:1;
+  border:1.5px solid currentColor; border-radius:2px;
+  background:color-mix(in srgb,var(--mission-blue) 9%,var(--surface));
+}
+body[data-game-style="mission"] .mission-package::after {
+  content:""; position:absolute; top:0; left:42%; width:16%; height:40%;
+  border-left:1px solid currentColor; border-right:1px solid currentColor;
+}
+body[data-game-style="mission"] .atelier-answer-actions { gap:.7rem 1rem; }
+body[data-game-style="mission"] .mission-reward {
+  display:flex; align-items:center; gap:.35rem;
+  color:var(--muted); font-size:.75rem; font-weight:550;
+}
+body[data-game-style="mission"] .mission-reward svg { width:16px; height:16px; flex:0 0 auto; }
+body[data-game-style="mission"] #btn-check { margin-left:auto; border-radius:4px 12px 4px 4px; font-weight:750; padding:.75rem 1.1rem; }
+body[data-game-style="mission"] .atelier-feedback {
+  flex:1 1 100%; padding:.75rem .85rem;
+  background:var(--bg); border-radius:5px; color:var(--ink);
+}
+body[data-game-style="mission"] .atelier-feedback.ok { background:var(--brand-soft); color:var(--ok); }
+body[data-game-style="mission"] .atelier-feedback.err { color:var(--err); }
+body[data-game-style="mission"] .btn { border-radius:5px; font-weight:700; }
+body[data-game-style="mission"] .btn.primary { border-radius:4px 12px 4px 4px; }
+body[data-game-style="mission"] .btn.primary.ok,
+body[data-game-style="mission"] .btn.primary.ok:hover { color:var(--brand-ink); background:var(--ok); border-color:var(--ok); }
+body[data-game-style="mission"] .btn.primary.err,
+body[data-game-style="mission"] .btn.primary.err:hover { color:var(--surface); background:var(--err); border-color:var(--err); }
+body[data-game-style="mission"] .atelier-tools .btn,
+body[data-game-style="mission"] .atelier-calculator summary { color:var(--mission-blue); }
+body[data-game-style="mission"] input,
+body[data-game-style="mission"] select { border-radius:5px; font-weight:600; }
+body[data-game-style="mission"] .mission-route {
+  padding:1.15rem 1rem; border:1px solid var(--line);
+  border-radius:6px 20px 6px 6px; background:var(--surface);
+}
+body[data-game-style="mission"] .mission-route-kicker {
+  margin:0 0 .65rem; color:var(--mission-blue); text-transform:uppercase;
+  font-size:.7rem; font-weight:750; letter-spacing:.09em;
+}
+body[data-game-style="mission"] #mission-topic-label { font-size:1.3rem; line-height:1.2; margin:0; }
+body[data-game-style="mission"] .mission-map {
+  position:relative; isolation:isolate; display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(5,35px); gap:15px 0;
+  list-style:none; padding:0; margin:1.35rem 0 1.1rem;
+}
+body[data-game-style="mission"] .mission-map-lines {
+  position:absolute; inset:0; width:100%; height:100%;
+  color:var(--line); pointer-events:none; z-index:-1;
+}
+body[data-game-style="mission"] .mission-map-lines polyline {
+  fill:none; stroke:currentColor; stroke-width:1.5px;
+  vector-effect:non-scaling-stroke;
+}
+body[data-game-style="mission"] .mission-level {
+  display:grid; place-items:center; justify-self:center;
+  width:35px; height:35px; min-width:0;
+  border:1px solid var(--line); border-radius:50%;
+  background:var(--bg); color:var(--muted);
+  font:650 12px/1 var(--font);
+}
+body[data-game-style="mission"] .mission-col-1 { grid-column:1; }
+body[data-game-style="mission"] .mission-col-2 { grid-column:2; }
+body[data-game-style="mission"] .mission-col-3 { grid-column:3; }
+body[data-game-style="mission"] .mission-row-1 { grid-row:1; }
+body[data-game-style="mission"] .mission-row-2 { grid-row:2; }
+body[data-game-style="mission"] .mission-row-3 { grid-row:3; }
+body[data-game-style="mission"] .mission-row-4 { grid-row:4; }
+body[data-game-style="mission"] .mission-row-5 { grid-row:5; }
+body[data-game-style="mission"] .mission-level[data-complete="true"] {
+  background:var(--brand-soft); color:var(--brand); border-color:var(--brand-soft); font-weight:800;
+}
+body[data-game-style="mission"] .mission-level[aria-current="step"] {
+  background:var(--brand); color:var(--brand-ink); border-color:var(--brand);
+  font-weight:800; box-shadow:0 0 0 4px var(--brand-soft);
+}
+body[data-game-style="mission"] #mission-level-summary { margin:0; color:var(--muted); font-size:.75rem; }
+body[data-game-style="mission"] .mission-rank-emblem {
+  display:block; width:42px; height:48px; padding:8px; margin-bottom:.65rem;
+  color:var(--mission-blue); background:var(--surface);
+  border:1px solid var(--line); border-radius:6px 6px 18px 18px;
+}
+body[data-game-style="mission"] .mission-rank .rank-row { font-weight:750; }
+body[data-game-style="mission"] .mission-topics { margin-top:1.2rem; padding-top:1rem; border-top:1px solid var(--line); }
+body[data-game-style="mission"] .mission-topics summary {
+  width:fit-content; min-height:44px; padding:.4rem 0; font-size:.8rem;
+  cursor:pointer; color:var(--mission-blue); font-weight:700;
+}
+body[data-game-style="mission"] .mission-topics .progress .row { grid-template-columns:minmax(0,1fr) auto; }
+body[data-game-style="mission"] .mission-topics .progress .label { grid-column:1 / -1; }
+body[data-game-style="mission"] .mission-topics .progress .bar { grid-column:1; }
+body[data-game-style="mission"] .mission-topics .progress .value { grid-column:2; }
+body[data-game-style="mission"] .bar,
+body[data-game-style="mission"] .progress .track { border-radius:3px; }
+body[data-game-style="mission"] .atelier-recommendation { border:1px solid var(--line); border-top:4px solid var(--brand); background:var(--surface); }
+body[data-game-style="mission"] .atelier-recommendation h2 { font-weight:750; }
+body[data-game-style="mission"] #achievements-graphs .mini-card { border-radius:5px 14px 5px 5px; }
+body[data-game-style="mission"] #stats-head { border-top:4px solid var(--mission-blue); padding-top:1rem; }
+body[data-game-style="mission"] .atelier-settings-grid .mini-card { border-radius:0; }
+
+@media (max-width:900px) {
+  body[data-game-style="mission"] .atelier-header .container { justify-content:flex-start; }
+  body[data-game-style="mission"] .atelier-header nav { width:auto; flex:1 1 100%; order:3; }
+  body[data-game-style="mission"] .mission-header-xp { margin-left:auto; }
+  body[data-game-style="mission"][data-page="train"] .atelier-layout { grid-template-columns:minmax(0,1fr); gap:1.5rem; }
+  body[data-game-style="mission"][data-page="train"] .atelier-main { grid-column:1; grid-row:1; }
+  body[data-game-style="mission"][data-page="train"] .atelier-sidebar { grid-column:1; grid-row:2; }
+  body[data-game-style="mission"] .mission-route { max-width:24rem; }
+}
+@media (max-width:640px) {
+  body[data-game-style="mission"] .mission-hero { padding:1.1rem; column-gap:.6rem; }
+  body[data-game-style="mission"] .mission-hero::after { font-size:2.8rem; }
+  body[data-game-style="mission"] .atelier-quantity { padding:.75rem .45rem; }
+  body[data-game-style="mission"] .atelier-quantity strong { font-size:1.45rem; }
+  body[data-game-style="mission"] .atelier-worksheet { padding:1.1rem; }
+  body[data-game-style="mission"] .mission-header-xp { font-size:.8rem; }
+}
+/* Match the existing enlarged-type reflow instead of forcing a horizontal equation. */
+@container (max-width:12rem) {
+  body[data-game-style="mission"] .atelier-equation { grid-template-columns:minmax(0,1fr); gap:.4rem; }
+  body[data-game-style="mission"] .atelier-operator { text-align:center; }
+  body[data-game-style="mission"] .mission-packages { max-width:104px; }
+}
