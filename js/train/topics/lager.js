@@ -8,13 +8,14 @@
     const anfang  = r(5,30)*1000;
     const ende    = r(5,30)*1000;
     const dLB     = Math.round((anfang+ende)/2);
-    const umschl  = (dLB>0? Math.round(einsatz/dLB) : 0);
-    const dauer   = (umschl>0? Math.round(360/umschl) : 0);
+    const exactTurnover = einsatz / dLB;
+    const umschl = Math.round(exactTurnover * 100) / 100;
+    const dauer = Math.round(360 * dLB / einsatz);
 
     const markup = `
       <div class="card">
         <h3>Lagerkennziffern</h3>
-        <p class="muted">Einfach gerechnet: 360 Tage Jahr, glatte Werte.</p>
+        <p class="muted">Vereinfachter durchschnittlicher Bestand aus Anfangs- und Endbestand; alle Werte zu Einstandspreisen. Rechne hier mit einem kaufmännischen Jahr von 360 Tagen. Runde kaufmännisch den Umschlag auf zwei Nachkommastellen und die Lagerdauer auf ganze Tage. Für die Lagerdauer mit dem ungerundeten Umschlag weiterrechnen.</p>
         <ul>
           <li>Jahreswareneinsatz: <strong>${einsatz} €</strong></li>
           <li>Anfangsbestand: <strong>${anfang} €</strong>, Endbestand: <strong>${ende} €</strong></li>
@@ -29,7 +30,7 @@
           <label>durchschn. Lagerdauer (Tage):
             <input data-answer="${dauer}" placeholder="Tage" />
           </label>
-          <small data-explain>dLB≈(AB+EB)/2=${dLB}; Umschlag≈Einsatz/dLB=${umschl}×/Jahr; Dauer≈360/Umschlag≈${dauer} Tage.</small>
+          <small class="explain muted is-hidden" data-explain>Durchschnittlicher Lagerbestand = (${anfang} + ${ende}) ÷ 2 = ${dLB} €. Umschlag = ${einsatz} ÷ ${dLB} ≈ ${String(umschl).replace(".", ",")} mal/Jahr. Lagerdauer = 360 × ${dLB} ÷ ${einsatz} ≈ ${dauer} Tage. So vermeidest du einen Fehler durch den zuvor gerundeten Umschlag. In anderen Aufgaben können 365 Tage vorgegeben sein.</small>
         </div>
       </div>`;
     return { markup };

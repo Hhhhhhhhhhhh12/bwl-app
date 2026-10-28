@@ -6,6 +6,7 @@
   'use strict';
   const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
   const pick=a=>a[rnd(0,a.length-1)];
+  const fmt=n=>new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(n);
   const html=(s,...v)=>s.reduce((o,c,i)=>o+c+(i<v.length?String(v[i]):''),'');
   const info=t=>` <span class="i" title="${t}">i</span>`;
 
@@ -15,7 +16,7 @@
     const mgk = Math.round(em*zus/100);
     const markup = html`
       <div class="card">
-        <h3>BAB — Einsteiger</h3>
+        <h3>BAB — Einsteiger</h3><p>Ermittle den Materialgemeinkostenzuschlag aus der Kostenstellenabrechnung. Runde auf ganze Prozent.</p>
         <p>Einzelmaterial (EM)${info('Direkt zuordenbares Material')}: <strong>${em} €</strong> · Material-Gemeinkosten (MGK)${info('Gemeinkosten Materialbereich')}: <strong>${mgk} €</strong></p>
         <table class="bab-table"><tbody>
           <tr>
@@ -42,17 +43,17 @@
 
     const HK = EM + FL + MGK + FGK;
     const rateVwVt = pick([5,10,15,20]);
-    const sumVwVt = Math.round(HK*rateVwVt/100);
-    const VwGK = Math.floor(sumVwVt/2);
-    const VtGK = sumVwVt - VwGK;
+    const sumVwVt = HK*rateVwVt/100;
+    const VwGK = Math.round(sumVwVt*50)/100;
+    const VtGK = Math.round((sumVwVt - VwGK)*100)/100;
 
     const markup = html`
       <div class="card">
-        <h3>BAB — Aufgabe</h3>
+        <h3>BAB — Aufgabe</h3><p>Einzelmaterial (EM), Fertigungslöhne (FL) und die zugehörigen Gemeinkosten (MGK, FGK, Verwaltung VwGK, Vertrieb VtGK) gehören zur selben Periode. Es gibt keine Bestandsänderungen und keine Sondereinzelkosten. Die Herstellkosten der Erzeugung entsprechen damit den Herstellkosten des Umsatzes. Runde die Zuschläge auf ganze Prozent.</p>
         <p>
           EM: <strong>${EM} €</strong>, MGK: <strong>${MGK} €</strong>,
           FL: <strong>${FL} €</strong>, FGK: <strong>${FGK} €</strong>,
-          VwGK: <strong>${VwGK} €</strong>, VtGK: <strong>${VtGK} €</strong>
+          VwGK: <strong>${fmt(VwGK)} €</strong>, VtGK: <strong>${fmt(VtGK)} €</strong>
         </p>
         <table class="bab-table"><tbody>
           <tr><th>MGK-Zuschlag${info('MGK ÷ EM × 100')}</th>
@@ -66,7 +67,7 @@
           1) MGK-Zuschlag = <strong>${MGK} ÷ ${EM} × 100 ≈ ${rateMGK}%</strong>
           <br>2) FGK-Zuschlag = <strong>${FGK} ÷ ${FL} × 100 ≈ ${rateFGK}%</strong>
           <br>3) HK = EM + FL + MGK + FGK = <strong>${HK} €</strong>
-          <br>4) Vw/Vt-Zuschlag = <strong>(${VwGK}+${VtGK}) ÷ ${HK} × 100 ≈ ${rateVwVt}%</strong>
+          <br>4) Vw/Vt-Zuschlag = <strong>(${fmt(VwGK)}+${fmt(VtGK)}) ÷ ${HK} × 100 ≈ ${rateVwVt}%</strong>
         </div>
       </div>`;
     return {markup};
