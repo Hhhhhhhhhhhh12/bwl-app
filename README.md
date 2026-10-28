@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Version 1.5.0: Lernmission mit ruhigem Hintergrund, lokal in Chromium geprüft.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Eine separate visuelle Nutzerabnahme, weitere Geräteprüfungen und fachliche Inhaltsprüfung bleiben gesonderte Zustände.
+**Version 1.5.1: Lernmission mit ruhigem Hintergrund, lokal in Chromium geprüft.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Eine separate visuelle Nutzerabnahme, weitere Geräteprüfungen und fachliche Inhaltsprüfung bleiben gesonderte Zustände.
 
 ## Aufbau
 
@@ -17,6 +17,10 @@ Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter and
 - `css/`, `assets/`: Styles, Symbole und lokale Schriftdatei.
 
 Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallation und keinen Build-Schritt. Die Dateien sind für die Auslieferung über einen Webserver vorgesehen; die Versionsdatei wird relativ per HTTP abgerufen. Als Hosting ist GitHub Pages aus `main` und dem Repository-Hauptordner ausgewählt; `.nojekyll` hält die statischen Dateien unverändert.
+
+## Korrekturen in 1.5.1
+
+Enter prüft Antworten, statt die Lösung einzublenden. Eingeblendete Lösungen und vollständige Rechenwege zählen als Übungen ohne XP und Levelabschluss; „Neu selbst lösen“ erzeugt eine neue Aufgabe desselben Levels. Die Themenauswahl wird erst nach vollständiger Initialisierung freigegeben. Vorhandene Ergebnisse bleiben erhalten.
 
 ## Lernfortschritt
 

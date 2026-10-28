@@ -1,6 +1,6 @@
 # Veröffentlichung über GitHub Pages
 
-Stand: 27. Oktober 2026. Version 1.5.0 (Lernmission).
+Stand: 28. Oktober 2026. Version 1.5.1 (Lernmission).
 
 ## Auftrag und Ziel
 
@@ -37,3 +37,7 @@ Die Lernmission besitzt 25 bestandene lokale Prüffälle. Die Pages-Anpassung wi
 - Believe in Me, dessen Webspace und DNS wurden bei diesem Auftrag nicht verändert.
 
 Die Online-Quellenprüfung führt keine Lernaktionen aus und liest keine persönlichen Browserdaten. Der frühere lokale Prüfnachweis mit 25 bestandenen Fällen bleibt davon getrennt.
+
+## Release 1.5.1
+
+Am 28. Oktober 2026 wurden Übernahme und Veröffentlichung der lokal geprüften Trainings- und Startkorrekturen ausdrücklich bestätigt. Der geprüfte Quellstand besitzt 30 bestandene lokale Prüffälle und einen gezielten Nachlauf der Hilfeansicht bei 320 Pixeln. Die Veröffentlichung nutzt weiterhin `main`; Domain und Browser-Speicherschlüssel bleiben gleich. Bereits gespeicherte Ergebnisse werden nicht rückwirkend geändert. Details: [KORREKTUREN_2026_10_28.md](KORREKTUREN_2026_10_28.md).

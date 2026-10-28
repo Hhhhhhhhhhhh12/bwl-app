@@ -5,7 +5,7 @@ Zweig: `work/bwl-training-fixes-20261028`.
 
 ## Bestätigter Auftrag und Lernregel
 
-Der Nutzer hat die lokale Korrektur der zwei im Online-Praxistest gefundenen Punkte und anschließende lokale Prüfungen mit frischen Daten ausdrücklich freigegeben. Für eingeblendete Lösungen wurde bestätigt: keine XP, kein Levelabschluss, später erneut selbst lösen. Ein Upload oder eine Bereitstellung dieser Korrekturen ist nicht beauftragt.
+Der Nutzer hat die lokale Korrektur der zwei im Online-Praxistest gefundenen Punkte und anschließende lokale Prüfungen mit frischen Daten ausdrücklich freigegeben. Für eingeblendete Lösungen wurde bestätigt: keine XP, kein Levelabschluss, später erneut selbst lösen. Die Übernahme in `main`, der GitHub-Upload und die Aktualisierung der Online-App wurden anschließend ausdrücklich bestätigt.
 
 ## Umsetzung
 
@@ -25,8 +25,8 @@ Die Prüfungen belegen den technischen Ablauf, keine unabhängige fachliche Abna
 
 ## Integrationsstatus
 
-Lokal umgesetzt und geprüft. `main`, GitHub Pages und die veröffentlichte Version bleiben unverändert bei `7318a77`.
+Lokal umgesetzt und geprüft; die bestätigte Veröffentlichung erfolgt als Version 1.5.1 über `main` und GitHub Pages.
 
 ## Vorbereiteter Release
 
-Der lokale Releasekandidat ist als Version 1.5.1 gekennzeichnet. Der veröffentlichte Stand bleibt 1.5.0 (`7318a77`). Für Übernahme in `main`, GitHub-Upload und die dadurch automatisch ausgelöste Pages-Veröffentlichung steht eine eindeutige Freigabe noch aus. Der geprüfte Anwendungscode bleibt unverändert gegenüber `689f69a`.
+Version 1.5.1 wurde zur Übernahme, zum Upload und zur automatischen Pages-Veröffentlichung ausdrücklich freigegeben. Der geprüfte Anwendungscode bleibt unverändert gegenüber `689f69a`; hinzu kommen ausschließlich Versions- und Dokumentationsangaben.
