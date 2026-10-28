@@ -454,3 +454,79 @@ test('published HTML enforces its own CSP without Apache settings', async t => {
   assert.equal(blocked.directive,'script-src-elem');
   assert.ok(await page.locator('#bab-wrapper [data-answer]').count()>0);
 });
+
+test('Enter checks a typed answer without revealing or replacing it', async t => {
+  const {page}=await session(t,{selection:['kostenarten']});
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  const field=page.locator('#bab-wrapper [data-answer]').first();
+  await field.fill('-999');await field.press('Enter');
+  assert.equal(await field.inputValue(),'-999');
+  assert.equal(await field.getAttribute('aria-invalid'),'true');
+  assert.equal(await page.locator('[data-explain]').first().isVisible(),false);
+  assert.equal((await saved(page)).topics.kostenarten.seen,1);
+  await page.reload();await answerAll(page);
+  await page.locator('#bab-wrapper [data-answer]').first().press('Enter');
+  assert.equal((await saved(page)).points,14);
+});
+
+test('Revealed solutions and complete methods do not award XP or finish a level', async t => {
+  for (const action of ['btn-reveal','btn-help']) {
+    const {page}=await session(t,{selection:['kostenarten']});
+    await page.goto(`${origin}/train.html?topic=kostenarten`);
+    await page.setViewportSize({width:320,height:900});
+    if (action === 'btn-help') {
+      await page.goto(`${origin}/settings.html`);await page.locator('#theme-select').selectOption('dark');
+      await page.goto(`${origin}/train.html?topic=kostenarten`);
+    }
+    await page.locator('#'+action).click();
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
+    await snapshot(page, 'assisted-'+action+'-320');
+    assert.match(await page.locator('#mission-reward-text').textContent(),/ohne XP/);
+    if(action==='btn-help')await page.locator('#btn-help').click();
+    await answerAll(page);await page.locator('#btn-check').click();
+    await page.waitForTimeout(850);
+    const progress=await page.evaluate(()=>window.ensureProg());
+    assert.equal(progress.points,0);assert.equal(progress.topics.kostenarten.correct,0);assert.equal(progress.topics.kostenarten.seen,0);
+    assert.deepEqual(progress.topics.kostenarten.awarded,{});
+    assert.equal(await page.locator('#mission-level-map [aria-current="step"]').getAttribute('data-level'),'1');
+    assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(),0);
+    await page.locator('#btn-retry-task').click();
+    assert.equal(await page.locator('#btn-retry-task').isVisible(),false);
+    assert.equal(await page.locator('#bab-wrapper [data-answer]').first().inputValue(),'');
+    assert.equal(await page.locator('[data-explain]').first().isVisible(),false);
+    assert.match(await page.locator('#mission-reward-text').textContent(),/20 XP/);
+    await answerAll(page);await page.locator('#btn-check').click();
+    assert.equal((await saved(page)).points,20);assert.equal((await saved(page)).topics.kostenarten.correct,1);
+  }
+});
+
+test('An assisted unfinished level remains open after next and reload', async t => {
+  const {page}=await session(t,{selection:['kostenarten']});
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  await page.locator('#btn-reveal').click();await page.locator('#btn-check').click();await page.locator('#btn-next').click();
+  await answerAll(page);await page.locator('#btn-check').click();
+  assert.equal((await saved(page)).points,20);
+  await page.reload();
+  assert.equal(await page.locator('#mission-level-map [aria-current="step"]').getAttribute('data-level'),'1');
+  assert.equal(await page.locator('#mission-level-map li[data-level="1"]').getAttribute('data-complete'),'false');
+  assert.equal(await page.locator('#mission-level-map li[data-level="2"]').getAttribute('data-complete'),'true');
+  assert.equal(await page.locator('#btn-retry-task').isVisible(),false);
+});
+
+test('Topic selection stays disabled until initialized, then persists the first change', async t => {
+  const {page}=await session(t,{selection:['kostenarten']});
+  let release;const gate=new Promise(resolve=>{release=resolve;});
+  await page.route('**/*.js',async route=>{await gate;await route.continue();});
+  try {
+    await page.goto(`${origin}/settings.html`,{waitUntil:'commit'});
+    const field=page.locator('input[data-topic="kostenarten"]');await field.waitFor({state:'attached'});
+    assert.equal(await field.isDisabled(),true);
+    assert.equal(await page.locator('#topic-prefs-status').isVisible(),true);
+    release();await page.waitForLoadState('load');
+    assert.equal(await field.isEnabled(),true);assert.equal(await field.isChecked(),true);
+    assert.equal(await page.locator('#topic-prefs-status').isVisible(),false);
+    await field.uncheck();await page.reload();
+    assert.equal(await field.isChecked(),false);
+    assert.deepEqual(await page.evaluate(()=>window.BwlTopics.selected()),[]);
+  } finally {release();}
+});

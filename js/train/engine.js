@@ -97,7 +97,7 @@
 
   function updateLevelPill() {
     document.dispatchEvent(new CustomEvent('bwl:task-state', { detail: {
-      topic: session.topic, index: session.index, difficulty: session.difficulty, max: MAX_LEVELS_PER_TOPIC
+      topic: session.topic, index: session.index, difficulty: session.difficulty, max: MAX_LEVELS_PER_TOPIC, assisted: assistedTask
     } }));
     const intro = document.getElementById('topic-intro');
     if (intro) intro.textContent = TOPIC_INTRO[session.topic] || 'Wähle ein aktives Thema in den Einstellungen, um loszulegen.';
@@ -135,6 +135,7 @@
   }
 
   let pendingAdvance = null;
+  let assistedTask = false;
   let generation = 0;
   let initialized = false;
   function cancelAdvance() {
@@ -346,10 +347,24 @@
   }
 
   function resetTaskSupport() {
+    assistedTask = false;
+    const retry = document.getElementById('btn-retry-task');
+    if (retry) retry.hidden = true;
     const help = document.getElementById('btn-help');
     if (help) { help.disabled = true; help.setAttribute('aria-expanded', 'false'); help.removeAttribute('aria-controls'); }
     const feedback = document.getElementById('task-feedback');
     if (feedback) { feedback.hidden = true; feedback.textContent = ''; }
+  }
+
+  function markAssistedTask() {
+    assistedTask = true;
+    const retry = document.getElementById('btn-retry-task');
+    if (retry) retry.hidden = false;
+    const message = 'Lösungshilfe aktiv: keine XP und kein Levelabschluss. Mit „Neu selbst lösen“ bekommst du eine neue Aufgabe dieses Levels.';
+    const feedback = document.getElementById('task-feedback');
+    if (feedback) { feedback.textContent = message; feedback.hidden = false; }
+    announce(message);
+    updateLevelPill();
   }
 
   function showEquationResult(wrap) {
@@ -367,8 +382,16 @@
     const btnHelp = document.getElementById('btn-help');
     if (btnHelp) btnHelp.addEventListener('click', () => {
       const expanded = btnHelp.getAttribute('aria-expanded') !== 'true';
+      if (expanded) markAssistedTask();
       wrap.querySelectorAll('[data-explain]').forEach(x => expanded ? showEl(x) : hideEl(x));
       btnHelp.setAttribute('aria-expanded', String(expanded));
+    });
+
+    const retry = document.getElementById('btn-retry-task');
+    if (retry) retry.addEventListener('click', () => {
+      cancelAdvance();
+      if (window.calc) window.calc.clear();
+      renderTask();
     });
 
     // Prüfen
@@ -430,6 +453,16 @@
 
       if (!total) return;
       const allCorrect = ok === total;
+      if (assistedTask) {
+        const message = allCorrect
+          ? 'Mit Lösungshilfe richtig geübt. Keine XP und kein Levelabschluss. Zum Abschließen bitte neu selbst lösen.'
+          : `${ok} von ${total} Antworten richtig. Lösungshilfe aktiv: keine XP und kein Levelabschluss.`;
+        announce(message);
+        const feedback = document.getElementById('task-feedback');
+        if (feedback) { feedback.textContent = message; feedback.hidden = false; }
+        if (allCorrect) showEquationResult(wrap);
+        return;
+      }
       const message = allCorrect ? 'Richtig gelöst. Weiter zur nächsten Aufgabe …' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`;
       const feedback = document.getElementById('task-feedback');
       if (!allCorrect) {
@@ -517,6 +550,7 @@
     // Lösung zeigen
     if (btnReveal) btnReveal.addEventListener("click", () => {
       if (pendingAdvance !== null) return;
+      markAssistedTask();
       wrap.querySelectorAll('input[data-answer], select[data-answer]').forEach(inp => {
         inp.value = inp.getAttribute("data-answer");
         inp.classList.remove("err"); inp.classList.add("ok");
@@ -525,7 +559,6 @@
       wrap.querySelectorAll('[data-explain]').forEach(x => showEl(x));
       if (btnHelp && !btnHelp.disabled) btnHelp.setAttribute('aria-expanded', 'true');
       showEquationResult(wrap);
-      announce('Lösung und Rechenweg angezeigt.');
       if (btnCheck) {
         btnCheck.classList.remove("err");
         btnCheck.classList.add("ok");
@@ -560,12 +593,7 @@
       renderTask();
     });
 
-    // Enter-Flow (Training):
-    // - Wenn Fokus im Rechner → calc.js behandelt Enter.
-    // - Wenn Fokus in Aufgaben-Input:
-    //     leer  → graues Pulse, NICHT prüfen
-    //     befüllt → Lösung anzeigen (statt prüfen)
-    // - Sonst: Prüfen
+    // Enter checks task answers; calculator, native controls and textareas keep their own handling.
     let enterLock = false;
     document.addEventListener("keydown", (ev) => {
       if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.altKey) return;
@@ -596,13 +624,6 @@
           setTimeout(()=> active && active.classList && active.classList.remove('hint'), 180);
           ev.preventDefault();
           ev.stopPropagation();
-          return;
-        }
-        // Nicht leer → Lösung anzeigen statt prüfen
-        const btnSol = btnReveal;
-        if (btnSol){
-          ev.preventDefault(); ev.stopPropagation();
-          btnSol.click();
           return;
         }
       }

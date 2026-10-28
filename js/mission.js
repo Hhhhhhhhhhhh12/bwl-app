@@ -55,7 +55,7 @@
     document.getElementById('mission-level-summary').textContent = `${completed} von ${task.max} Leveln gelöst`;
     if (reward) {
       const amount = task.index < task.max ? window.progNextTaskReward(task.topic, `${task.topic}_${task.index}`) : 0;
-      reward.textContent = amount ? `+${amount} XP beim Lösen` : 'Bereits gutgeschrieben';
+      reward.textContent = task.assisted ? 'Lösungshilfe · ohne XP' : amount ? `+${amount} XP beim Lösen` : 'Bereits gutgeschrieben';
     }
   }
 

@@ -45,6 +45,9 @@
       });
     }
     refreshSelection();
+    document.querySelectorAll('#topic-prefs input[data-topic]').forEach(input => { input.disabled = false; });
+    const status = document.getElementById('topic-prefs-status');
+    if (status) status.hidden = true;
   }
   window.BwlNavigation = Object.freeze({ start });
   window.initQuickstart = init;
