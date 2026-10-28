@@ -26,3 +26,7 @@ Die Prüfungen belegen den technischen Ablauf, keine unabhängige fachliche Abna
 ## Integrationsstatus
 
 Lokal umgesetzt und geprüft. `main`, GitHub Pages und die veröffentlichte Version bleiben unverändert bei `7318a77`.
+
+## Vorbereiteter Release
+
+Der lokale Releasekandidat ist als Version 1.5.1 gekennzeichnet. Der veröffentlichte Stand bleibt 1.5.0 (`7318a77`). Für Übernahme in `main`, GitHub-Upload und die dadurch automatisch ausgelöste Pages-Veröffentlichung steht eine eindeutige Freigabe noch aus. Der geprüfte Anwendungscode bleibt unverändert gegenüber `689f69a`.

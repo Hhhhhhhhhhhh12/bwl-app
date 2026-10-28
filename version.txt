@@ -1,3 +1,3 @@
-version=1.5.0
+version=1.5.1
 base=1.4.4
 status=github-pages
