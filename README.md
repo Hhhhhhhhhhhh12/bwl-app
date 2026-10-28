@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Version 1.5.1: Lernmission mit ruhigem Hintergrund, lokal in Chromium geprüft.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Eine separate visuelle Nutzerabnahme, weitere Geräteprüfungen und fachliche Inhaltsprüfung bleiben gesonderte Zustände.
+**Veröffentlichter Stand: Version 1.5.1, Lernmission mit ruhigem Hintergrund.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Dieser lokale Arbeitsbranch ergänzt gestufte Hilfen, einen ausdrücklichen Weiter-Schritt und fachlich korrigierte Aufgaben. Er ist noch nicht in `main` übernommen oder veröffentlicht. Einzelheiten stehen in [docs/LERNFUEHRUNG_2026_10_28.md](docs/LERNFUEHRUNG_2026_10_28.md). Visuelle Nutzerabnahme und Prüfungen auf weiteren Geräten und Browsern bleiben offen.
 
 ## Aufbau
 
@@ -22,6 +22,12 @@ Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallat
 
 Enter prüft Antworten, statt die Lösung einzublenden. Eingeblendete Lösungen und vollständige Rechenwege zählen als Übungen ohne XP und Levelabschluss; „Neu selbst lösen“ erzeugt eine neue Aufgabe desselben Levels. Die Themenauswahl wird erst nach vollständiger Initialisierung freigegeben. Vorhandene Ergebnisse bleiben erhalten.
 
+## Lokale Weiterentwicklung
+
+„Hinweis“ und „Rechenansatz“ zeigen begriffliche Unterstützung ohne ausgefüllte Ergebnisse; die normale Punktevergabe bleibt möglich. „Vollständige Lösung · ohne XP“ zeigt Ergebnis und Rechenweg und nimmt diese Aufgabe aus der Wertung. „Neu selbst lösen“ startet eine neue Aufgabe desselben Levels. Richtige Antworten werden sofort einmalig gespeichert; Erklärung und Ergebnis bleiben bis „Weiter“ sichtbar. „Aufgabe überspringen“ vergibt keine Punkte.
+
+Die zwölf aktiven Aufgabenmodule wurden anhand ihrer Modellannahmen und mit unabhängigen Referenzrechnungen geprüft und korrigiert. Die Aufgaben nennen Einheiten und Rundung ausdrücklich; die Antwortprüfung akzeptiert keine falschen Centbeträge oder pauschalen Abweichungen von einem Prozentpunkt mehr. Quellen, Änderungen und Grenzen stehen in [docs/FACHPRUEFUNG_2026_10_28.md](docs/FACHPRUEFUNG_2026_10_28.md).
+
 ## Lernfortschritt
 
 Die App speichert Fortschritte und Einstellungen lokal im jeweiligen Browser. Es gibt keine Konten, Cloud-Synchronisierung oder reguläre Export-/Importfunktion. Bei einem Wechsel von Domain, Protokoll oder Port werden vorhandene Browserdaten nicht automatisch übernommen. Dieses Repository enthält keine persönlichen Lernfortschrittsdaten.
@@ -36,10 +42,10 @@ Die enthaltene `.htaccess` stammt unverändert aus der Referenzfassung und besch
 
 Die Regressionstests decken App-Start, Training, Punkte/Fortschritt, Einstellungen, Speicherung, Rechner und Darstellungsfehler ab. Umfang, behobene Fehler und Grenzen stehen in [docs/LOKALE_PRUEFUNG.md](docs/LOKALE_PRUEFUNG.md).
 
-Rechnerprüfungen benötigen nur Node.js:
+Rechner- und fachliche Referenzprüfungen benötigen nur Node.js:
 
 ```sh
-node --test tests/calculator.test.cjs
+node --test tests/calculator.test.cjs tests/content.test.cjs
 ```
 
 Für die Browsertests wird eine bereits vorhandene Playwright-/Chromium-Installation verwendet:
@@ -55,8 +61,8 @@ Bei einer externen Installation kann `BWL_PLAYWRIGHT_MODULE` auf das vorhandene 
 Langfristiges Ziel ist eine eigenständige, online nutzbare und visuell hochwertige BWL-Lernapp. Nach dem sichtbaren Variantenvergleich und der Rückmeldung zur Spielidentität hat der Nutzer „Lernmission“ mit ruhigem Hintergrund ausgewählt. Die lokale Umsetzung umfasst alle aktiven Seiten, helle und dunkle Darstellung, einen Levelpfad aus gespeicherten Abschlüssen, Punkteanzeigen und einen klaren Arbeitsbereich mit aufklappbarem Rechner. Auswahl, Umsetzung, technische Prüfung und visuelle Abnahme sind in [docs/LERNATELIER.md](docs/LERNATELIER.md) getrennt dokumentiert.
 
 - Visuelle Nutzerabnahme und Prüfung auf echten Geräten sowie in weiteren Browsern.
-- Fachliche Prüfung der Aufgaben und Lernregeln.
+- Zusätzliche externe Fachabnahme und Ausbau der bisher vereinfachten Aufgabenmodelle.
 - Datenübernahme für vorhandene Lernstände.
 - Weitere Geräte- und Browserprüfung des veröffentlichten Stands.
 
-Historische Dateien wie `js/router.js`, `js/train-engine.js`, `style.css` und `js/dev/selftest.js` bleiben nachvollziehbar erhalten, werden von den aktiven HTML-Seiten jedoch nicht geladen. Der Selftest enthält Schreibcode und ist keine nachgewiesen schreibfreie Prüfroutine. Es ist kein automatischer Test- oder Deployment-Workflow eingerichtet.
+Historische Dateien wie `js/router.js`, `js/train-engine.js`, `style.css` und `js/dev/selftest.js` bleiben nachvollziehbar erhalten, werden von den aktiven HTML-Seiten jedoch nicht geladen. Der Selftest enthält Schreibcode und ist keine nachgewiesen schreibfreie Prüfroutine. Im Repository ist kein eigener Test- oder Deployment-Workflow definiert; GitHub Pages veröffentlicht `main` automatisch.

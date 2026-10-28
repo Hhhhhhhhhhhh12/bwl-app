@@ -39,7 +39,7 @@ before(async () => {
   browser = await chromium.launch({ headless: true, executablePath: process.env.BWL_CHROMIUM_PATH || undefined, timeout: 10000 });
   if (process.env.BWL_TEST_ARTIFACTS) {
     await fs.mkdir(process.env.BWL_TEST_ARTIFACTS, { recursive: true });
-    await fs.writeFile(path.join(process.env.BWL_TEST_ARTIFACTS, 'runtime.json'), JSON.stringify({ browser: await browser.version(), node: process.version, binding: '127.0.0.1', csp: 'from reference .htaccess', personal_browser_profile: false }, null, 2));
+    await fs.writeFile(path.join(process.env.BWL_TEST_ARTIFACTS, 'runtime.json'), JSON.stringify({ browser: await browser.version(), node: process.version, binding: '127.0.0.1', csp: process.env.BWL_TEST_HOSTING === 'github-pages' ? 'HTML meta policy; no Apache header' : 'HTML meta policy and reference .htaccess header', personal_browser_profile: false }, null, 2));
   }
 });
 after(async () => { if (browser) await browser.close(); if (server && server.listening) await new Promise(resolve => server.close(resolve)); });
@@ -68,6 +68,25 @@ async function answerAll(page) {
     const el = fields.nth(i), answer = await el.getAttribute('data-answer');
     if (await el.evaluate(e => e.tagName) === 'SELECT') await el.selectOption(answer);
     else await el.fill(answer.replace('.', ','));
+  }
+}
+async function checkPartialHelp(page) {
+  const fields = page.locator('#bab-wrapper [data-answer]');
+  const beforeValues = await fields.evaluateAll(els => els.map(el => el.value));
+  const beforeProgress = await saved(page);
+  for (const [id, heading] of [['btn-hint', 'Hinweis'], ['btn-help', 'Rechenansatz']]) {
+    const button = page.locator('#' + id);
+    await button.focus(); await button.press('Enter');
+    assert.equal(await page.locator('#task-guidance').isVisible(), true);
+    assert.equal(await page.locator('#task-guidance-heading').textContent(), heading);
+    assert.ok((await page.locator('#task-guidance-text').textContent()).length > 30);
+    assert.equal(await button.getAttribute('aria-expanded'), 'true');
+    assert.equal(await page.locator('[data-explain]:visible').count(), 0, 'partial help keeps complete calculations hidden');
+    assert.deepEqual(await fields.evaluateAll(els => els.map(el => el.value)), beforeValues, 'partial help preserves typed answers');
+    assert.deepEqual(await saved(page), beforeProgress, 'partial help does not change attempts or XP');
+    assert.equal(await page.locator('#btn-retry-task').isVisible(), false, 'partial help does not mark task assisted');
+    await button.press('Enter');
+    assert.equal(await page.locator('#task-guidance').isVisible(), false);
   }
 }
 async function layoutState(page) {
@@ -99,7 +118,7 @@ test('training task stays visible and keyboard reachable', async t => {
   await page.locator('#bab-wrapper [data-answer]').first().focus();
   assert.equal(await page.evaluate(() => document.activeElement.hasAttribute('data-answer')), true);
 });
-test('wrong/correct answers save once, advance and resume after reload', async t => {
+test('wrong/correct answers save once, continue on request and resume after reload', async t => {
   const { page } = await session(t, { selection: ['kostenarten'] });
   await page.goto(`${origin}/train.html?topic=kostenarten`);
   const field = page.locator('#bab-wrapper [data-answer]').first();
@@ -107,6 +126,7 @@ test('wrong/correct answers save once, advance and resume after reload', async t
   assert.equal((await saved(page)).topics.kostenarten.seen, 1);
   await answerAll(page); await page.locator('#btn-check').click();
   assert.equal((await saved(page)).points, 14);
+  await page.locator('#btn-next').click();
   await page.waitForFunction(() => document.getElementById('session-pill').textContent.includes('Level 2/15'));
   await page.reload();
   assert.match(await page.locator('#session-pill').textContent(), /Level 2\/15/);
@@ -132,7 +152,9 @@ test('all Kostenarten levels complete and remain complete', async t => {
   await page.goto(`${origin}/train.html?topic=kostenarten`);
   for (let level = 0; level < 15; level++) {
     await page.waitForFunction(n => document.getElementById('session-pill').textContent.includes(`Level ${n}/15`), level + 1);
+    await checkPartialHelp(page);
     await answerAll(page); await page.locator('#btn-check').click();
+    await page.locator('#btn-next').click();
     if (level < 14) await page.waitForFunction(n => document.getElementById('session-pill').textContent.includes(`Level ${n}/15`), level + 2);
   }
   await page.locator('#bab-wrapper h3').filter({ hasText: 'Alle Level abgeschlossen' }).waitFor();
@@ -146,25 +168,17 @@ test('all Kostenarten levels complete and remain complete', async t => {
 });
 test('all registered topics render and accept exact solutions at all four difficulties', async t => {
   const { page, errors, violations } = await session(t, { selection: allTopics, progress: unlocked() });
+  await page.goto(`${origin}/settings.html`);
   for (const topic of allTopics) for (const difficulty of [1, 2, 3, 4]) {
-    // Clear only the synthetic current topic while keeping the four prerequisite topics complete.
+    const progress=unlocked(); progress.topics[topic]=blank().topics[topic];
+    await page.evaluate(progress => localStorage.setItem('bwl_prog_v2',JSON.stringify(progress)),progress);
     await page.goto(`${origin}/train.html?topic=${topic}&difficulty=${difficulty}`);
-    await page.evaluate(topic => {
-      const p = window.ensureProg(); p.topics[topic] = { seen: 0, correct: 0, correctIds: [], wrongIds: [], awarded: {} };
-    }, topic);
-    await page.evaluate(({ topic, difficulty }) => { window.Train.prime(topic, difficulty); }, { topic, difficulty });
-    // Page reload seeds a clean candidate without making DOM-only fabricated exercises.
-    await page.evaluate(({ topic }) => {
-      const p = window.ensureProg();
-      for (const key of ['deckungsbeitrag','kostenarten','kostenstellen','zuschlag']) if (key !== topic) {
-        p.topics[key].correct = 15;
-      }
-      localStorage.setItem('bwl_prog_v2', JSON.stringify(p));
-    }, { topic });
-    await page.reload();
+    const expectedLabel=await page.evaluate(topic=>window.BwlTopics.labels[topic],topic);
+    assert.equal(await page.locator('#mission-topic-label').textContent(),expectedLabel, `actual topic: ${topic}/${difficulty}`);
     assert.ok(await page.locator('#bab-wrapper [data-answer]').count() > 0, `${topic}/${difficulty}`);
     const unnamed = await page.locator('#bab-wrapper [data-answer]').evaluateAll(fields => fields.filter(el => !el.labels?.length && !el.getAttribute('aria-label') && !el.getAttribute('aria-labelledby')).length);
     assert.equal(unnamed, 0, `answer names: ${topic}/${difficulty}`);
+    await checkPartialHelp(page);
     await answerAll(page); await page.locator('#btn-check').click();
     const state = await saved(page);
     assert.equal(state.topics[topic].correct, 1, `${topic}/${difficulty}`);
@@ -302,10 +316,11 @@ test('Lernatelier help and calculator disclosures preserve answer and keyboard b
   assert.equal(await explanation.isVisible(), false);
   await field.fill('12'); await help.click();
   assert.equal(await help.getAttribute('aria-expanded'), 'true');
-  assert.equal(await explanation.isVisible(), true);
+  assert.equal(await explanation.isVisible(), false);
+  assert.equal(await page.locator('#task-guidance').isVisible(), true);
   assert.equal(await field.inputValue(), '12', 'reading the method does not overwrite an answer');
   assert.equal(await page.evaluate(() => window.ensureProg().points), 0);
-  await help.click(); assert.equal(await explanation.isVisible(), false);
+  await help.click(); assert.equal(await page.locator('#task-guidance').isVisible(), false);
   const summary = page.locator('#calculator summary');
   await summary.focus(); await summary.press('Enter');
   assert.equal(await page.locator('#calculator').evaluate(el => el.open), true);
@@ -319,7 +334,8 @@ test('Lernatelier help and calculator disclosures preserve answer and keyboard b
   await page.locator('#btn-reveal').click();
   assert.equal(await field.inputValue(), await field.getAttribute('data-answer'));
   assert.equal(await page.locator('[data-equation-result]').textContent(), await page.locator('[data-equation-result]').getAttribute('data-equation-answer'));
-  assert.equal(await help.getAttribute('aria-expanded'), 'true');
+  assert.equal(await help.getAttribute('aria-expanded'), 'false');
+  assert.equal(await page.locator('#btn-reveal').getAttribute('aria-expanded'), 'true');
   await page.locator('#btn-next').click();
   assert.equal(await help.getAttribute('aria-expanded'), 'false');
   assert.equal(await explanation.isVisible(), false);
@@ -363,10 +379,13 @@ test('Lernatelier covers every view in both themes, reflow and reduced motion', 
 
 test('all training topic layouts fit a 320px Lernatelier worksheet', async t => {
   const { page, errors, violations } = await session(t, { selection: allTopics, progress: unlocked(), viewport: {width:320,height:900} });
+  await page.goto(`${origin}/settings.html`);
   for (const topic of allTopics) {
+    const progress=unlocked(); progress.topics[topic]=blank().topics[topic];
+    await page.evaluate(progress=>localStorage.setItem('bwl_prog_v2',JSON.stringify(progress)),progress);
     await page.goto(`${origin}/train.html?topic=${topic}&difficulty=4`);
-    await page.evaluate(topic => { const p=window.ensureProg(); p.topics[topic]={seen:0,correct:0,awarded:{}}; localStorage.setItem('bwl_prog_v2',JSON.stringify(p)); },topic);
-    await page.reload();
+    const expectedLabel=await page.evaluate(topic=>window.BwlTopics.labels[topic],topic);
+    assert.equal(await page.locator('#mission-topic-label').textContent(),expectedLabel, `actual narrow-screen topic: ${topic}`);
     await snapshot(page, `topic-${topic}-320`);
     const dimensions = await layoutState(page);
     assert.ok(dimensions.scroll <= dimensions.width + 1, `${topic}: ${JSON.stringify(dimensions)}`);
@@ -398,6 +417,7 @@ test('mission path and XP follow actual awards, retry amounts and resume', async
   assert.match(await page.locator('#task-feedback').textContent(),/\+14 XP/);
   assert.equal(await page.locator('#mission-total-xp').textContent(),'14');
   assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(),1);
+  await page.locator('#btn-next').click();
   await page.waitForFunction(()=>document.querySelector('#mission-level-map [aria-current="step"]')?.dataset.level==='2');
   await page.reload();
   assert.equal(await page.locator('#mission-total-xp').textContent(),'14');
@@ -415,10 +435,12 @@ test('mission path and XP follow actual awards, retry amounts and resume', async
   assert.deepEqual(errors,[]);assert.deepEqual(violations,[]);
 });
 
-test('mission map follows automatic topic changes and hides for empty selection', async t => {
+test('mission map changes to the weaker topic on Weiter and hides for empty selection', async t => {
   const { page }=await session(t,{selection:['kostenarten','kostenstellen']});
   await page.goto(`${origin}/train.html?topic=kostenarten`);
   await answerAll(page);await page.locator('#btn-check').click();
+  assert.equal(await page.locator('#mission-topic-label').textContent(), 'Kostenarten');
+  await page.locator('#btn-next').click();
   await page.waitForFunction(()=>document.getElementById('mission-topic-label').textContent==='Kostenstellen');
   assert.equal(await page.locator('#mission-level-map li[data-complete="true"]').count(),0,'new topic has its own path');
   assert.equal(await page.locator('#mission-total-xp').textContent(),'20');
@@ -469,20 +491,22 @@ test('Enter checks a typed answer without revealing or replacing it', async t =>
   assert.equal((await saved(page)).points,14);
 });
 
-test('Revealed solutions and complete methods do not award XP or finish a level', async t => {
-  for (const action of ['btn-reveal','btn-help']) {
+test('Full solutions do not award XP or finish a level in either theme', async t => {
+  for (const theme of ['light','dark']) {
+    const action = 'btn-reveal';
     const {page}=await session(t,{selection:['kostenarten']});
     await page.goto(`${origin}/train.html?topic=kostenarten`);
     await page.setViewportSize({width:320,height:900});
-    if (action === 'btn-help') {
+    if (theme === 'dark') {
       await page.goto(`${origin}/settings.html`);await page.locator('#theme-select').selectOption('dark');
       await page.goto(`${origin}/train.html?topic=kostenarten`);
     }
     await page.locator('#'+action).click();
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
-    await snapshot(page, 'assisted-'+action+'-320');
+    await snapshot(page, 'assisted-'+theme+'-320');
     assert.match(await page.locator('#mission-reward-text').textContent(),/ohne XP/);
-    if(action==='btn-help')await page.locator('#btn-help').click();
+    await page.locator('#btn-help').click(); await page.locator('#btn-help').click();
+    assert.equal(await page.locator('#btn-reveal').getAttribute('aria-expanded'), 'true', 'closing partial help cannot undo full assistance');
     await answerAll(page);await page.locator('#btn-check').click();
     await page.waitForTimeout(850);
     const progress=await page.evaluate(()=>window.ensureProg());
@@ -529,4 +553,122 @@ test('Topic selection stays disabled until initialized, then persists the first 
     assert.equal(await field.isChecked(),false);
     assert.deepEqual(await page.evaluate(()=>window.BwlTopics.selected()),[]);
   } finally {release();}
+});
+
+test('a correct result and worked explanation stay visible until explicit Weiter', async t => {
+  const {page, errors, violations} = await session(t, {selection:['kostenarten','kostenstellen']});
+  await page.goto(`${origin}/train.html?topic=kostenarten`);
+  await answerAll(page);
+  const originalTask = await page.locator('#bab-wrapper').innerHTML();
+  await page.locator('#bab-wrapper [data-answer]').first().press('Enter');
+  assert.equal((await saved(page)).points, 20);
+  assert.equal(await page.locator('[data-explain]').first().isVisible(), true);
+  assert.equal(await page.locator('#task-reason').isVisible(), true);
+  assert.equal(await page.locator('#btn-check').isDisabled(), true);
+  assert.equal(await page.locator('#btn-next').textContent(), 'Weiter →');
+  await page.locator('#btn-next').evaluate(async el => { await Promise.all(el.getAnimations().map(animation => animation.finished)); });
+  assert.equal(await page.locator('#btn-next').evaluate(el => { const css=getComputedStyle(el); return css.color !== css.backgroundColor && css.backgroundColor !== 'rgba(0, 0, 0, 0)'; }), true, 'Weiter is the visible primary action after its color transition');
+  assert.equal(await page.locator('#bab-wrapper input[data-answer]').first().evaluate(el => el.readOnly), true, 'solved inputs retain the reviewed result');
+  await page.waitForTimeout(1050);
+  assert.match(await page.locator('#session-pill').textContent(), /Kostenarten.*Level 1\/15/);
+  assert.equal(await page.locator('#bab-wrapper [data-answer]').first().getAttribute('aria-invalid'), 'false');
+  assert.equal(await page.locator('[data-explain]').first().isVisible(), true);
+  await page.locator('#bab-wrapper [data-answer]').first().press('Enter');
+  assert.equal((await saved(page)).points, 20, 'repeat Enter cannot score twice or advance');
+  assert.equal((await saved(page)).topics.kostenarten.seen, 1);
+  assert.match(await page.locator('#session-pill').textContent(), /Kostenarten.*Level 1\/15/);
+  await page.locator('#btn-next').focus(); await page.locator('#btn-next').press('Enter');
+  assert.match(await page.locator('#session-pill').textContent(), /Kostenstellen.*Level 1\/15/);
+  assert.notEqual(await page.locator('#bab-wrapper').innerHTML(), originalTask);
+  assert.equal(await page.locator('#task-reason').isVisible(), false);
+  assert.equal(await page.locator('#btn-check').isDisabled(), false);
+  assert.equal(await page.locator('#btn-reveal').getAttribute('aria-expanded'), 'false');
+  assert.deepEqual(errors, []); assert.deepEqual(violations, []);
+});
+
+test('all Kostenarten help variants retain XP and preserve existing input', async t => {
+  const {page} = await session(t, {selection:['kostenarten']});
+  await page.goto(`${origin}/train.html?topic=kostenarten&difficulty=4`);
+  for (let index=0; index<15; index++) {
+    const first = page.locator('#bab-wrapper [data-answer]').first();
+    if (await first.evaluate(el => el.tagName) === 'INPUT') await first.fill('12');
+    await checkPartialHelp(page);
+    if (index < 14) await page.locator('#btn-next').click();
+  }
+  assert.equal(await page.evaluate(() => window.ensureProg().points), 0);
+  await answerAll(page); await page.locator('#btn-check').click();
+  assert.equal((await saved(page)).points, 20, 'both partial help stages retain full first-attempt XP');
+});
+
+test('wrong cents and percentage points are rejected, exact locale answers accepted', async t => {
+  for (const topic of ['kostenstellen','bab']) {
+    const {page} = await session(t, {selection:allTopics, progress:unlocked()});
+    await page.goto(`${origin}/train.html?topic=${topic}&difficulty=4`);
+    await page.evaluate(topic => {
+      const p=window.ensureProg(); p.topics[topic]={seen:0,correct:0,correctIds:[],wrongIds:[],awarded:{}};
+      localStorage.setItem('bwl_prog_v2',JSON.stringify(p));
+    }, topic);
+    await page.reload();
+    await answerAll(page);
+    const first=page.locator('#bab-wrapper [data-answer]').first();
+    const expected=Number(await first.getAttribute('data-answer'));
+    for (const delta of [0.01, 0.5]) {
+      await first.fill((expected + delta).toFixed(2).replace('.',','));
+      await page.locator('#btn-check').click();
+      assert.equal(await first.getAttribute('aria-invalid'),'true', `${topic}: wrong by ${delta}`);
+      assert.equal((await saved(page)).topics[topic].correct,0);
+    }
+    await answerAll(page);
+    if (topic === 'bab') await first.fill((await first.inputValue()) + '%');
+    await page.locator('#btn-check').click();
+    assert.equal((await saved(page)).topics[topic].correct,1);
+    assert.equal(await first.getAttribute('aria-invalid'),'false');
+  }
+});
+
+test('help and success states reflow at 320px in both themes and at 200 percent text size', async t => {
+  const {page, errors, violations}=await session(t,{selection:['kostenarten'],viewport:{width:320,height:900}});
+  for (const theme of ['light','dark']) {
+    await page.goto(`${origin}/settings.html`); await page.locator('#theme-select').selectOption(theme);
+    await page.goto(`${origin}/train.html?topic=kostenarten`);
+    await page.locator('#btn-help').focus(); await page.locator('#btn-help').press('Enter');
+    assert.equal(await page.locator('#task-guidance').isVisible(),true);
+    let dimensions=await layoutState(page); assert.ok(dimensions.scroll<=321,JSON.stringify(dimensions));
+    await snapshot(page, `guidance-${theme}-320`);
+    await answerAll(page); await page.locator('#btn-check').click();
+    assert.equal(await page.locator('#task-reason').isVisible(),true);
+    dimensions=await layoutState(page); assert.ok(dimensions.scroll<=321,JSON.stringify(dimensions));
+    await snapshot(page, `success-${theme}-320`);
+    await page.evaluate(() => document.documentElement.style.fontSize='34px');
+    dimensions=await layoutState(page); assert.ok(dimensions.scroll<=321,JSON.stringify(dimensions));
+    await snapshot(page, `success-${theme}-zoom-320`);
+    await page.evaluate(() => document.documentElement.style.fontSize='');
+  }
+  assert.deepEqual(errors,[]); assert.deepEqual(violations,[]);
+});
+
+test('complete solutions stay uncredited across all active modules and variants', async t => {
+  for (const topic of allTopics) {
+    const progress=unlocked(); progress.topics[topic]=blank().topics[topic];
+    const {page,context,errors,violations}=await session(t,{selection:allTopics,progress});
+    for (const difficulty of [1,2,3,4]) {
+      await page.goto(`${origin}/train.html?topic=${topic}&difficulty=${difficulty}`);
+      const expectedLabel=await page.evaluate(topic=>window.BwlTopics.labels[topic],topic);
+      assert.equal(await page.locator('#mission-topic-label').textContent(),expectedLabel, `actual revealed topic: ${topic}/${difficulty}`);
+      const level=await page.locator('#session-pill').textContent();
+      const before=await saved(page);
+      await page.locator('#btn-reveal').focus(); await page.locator('#btn-reveal').press('Enter');
+      assert.equal(await page.locator('[data-explain]:visible').count()>0,true, `${topic}/${difficulty} worked solution`);
+      await page.locator('#btn-check').click();
+      assert.deepEqual(await saved(page),before, `${topic}/${difficulty} reveal stays uncredited`);
+      assert.equal(await page.locator('#session-pill').textContent(),level);
+      assert.match(await page.locator('#task-feedback').textContent(),/Keine XP/);
+      await page.locator('#btn-retry-task').click();
+      assert.equal(await page.locator('[data-explain]:visible').count(),0);
+      assert.equal(await page.locator('#btn-reveal').getAttribute('aria-expanded'),'false');
+      assert.equal(await page.locator('#btn-retry-task').isVisible(),false);
+    }
+    assert.deepEqual(errors,[]); assert.deepEqual(violations,[]);
+    await context.close();
+  }
 });

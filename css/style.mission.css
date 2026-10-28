@@ -251,3 +251,9 @@ body[data-game-style="mission"] .atelier-settings-grid .mini-card { border-radiu
   body[data-game-style="mission"] .atelier-operator { text-align:center; }
   body[data-game-style="mission"] .mission-packages { max-width:104px; }
 }
+
+body[data-game-style="mission"] .task-guidance { margin-top:1rem; padding:1rem; border-left:3px solid var(--mission-blue); background:var(--bg); border-radius:5px; }
+body[data-game-style="mission"] .task-guidance h2 { font-size:.9rem; margin:0 0 .4rem; }
+body[data-game-style="mission"] .task-guidance p, body[data-game-style="mission"] .task-reason { font-size:.88rem; margin:.5rem 0; }
+body[data-game-style="mission"] .task-reason { padding:1rem 0 0; color:var(--ink); }
+body[data-game-style="mission"] .atelier-tools #btn-next.primary { padding:.65rem 1rem; color:var(--brand-ink); background:var(--brand); }
