@@ -1,86 +1,28 @@
-/* =========================================================================
-   Topic: Kostenstellen — liefert { markup } abhängig von difficulty (1..4)
-   Registrierung: window.Train.registerTopic('kostenstellen', maker)
-   ========================================================================= */
-(function(){
+/* Kostenstellen: mengenbezogene Verrechnung mit Maschinenstunden. */
+(function () {
   'use strict';
-
-  const rnd  = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
-  const pick = (arr) => arr[rnd(0, arr.length-1)];
-  const html = (s,...v)=>s.reduce((o,chunk,i)=>o+chunk+(i<v.length?String(v[i]):''),'');
-  const info = (t)=>` <span class="i" title="${t}">i</span>`;
-
-  function makeEasy(){
-    const gk = rnd(1000, 4000);     // Gemeinkosten
-    const b  = rnd(10, 50);         // Verteilungsschlüssel (z. B. Maschinenstunden)
-    const satz = Math.round((gk / b) * 100); // %
-    const markup = html`
-      <div class="card">
-        <h3>Kostenstellen — Einsteiger</h3>
-        <p>Gemeinkosten (GK)${info('Kosten, die nicht direkt zuordenbar sind')}: <strong>${gk} €</strong> · Verteilungsschlüssel (V)${info('z. B. Maschinenstunden oder Flächenanteile')}: <strong>${b}</strong></p>
-        <table class="bab-table"><tbody>
-          <tr>
-            <th>Zuschlagssatz${info('GK ÷ Verteilungsschlüssel × 100')}</th>
-            <td><input type="text" inputmode="numeric" data-answer="${satz}"></td>
-            <td class="muted">%</td>
-          </tr>
-        </tbody></table>
-        <div class="explain muted is-hidden" data-explain="1">
-          Rechenweg: <strong>${gk} ÷ ${b} × 100 ≈ ${satz}%</strong>.
-        </div>
-      </div>`;
-    return { markup };
+  const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+  function maker(difficulty) {
+    const hours = rnd(50, 150);
+    const rate = rnd(20, 60);
+    const overhead = hours * rate;
+    const orderHours = rnd(5, 40);
+    return { markup: `<div class="card">
+      <h3>Kostenstellen — ${(difficulty | 0) === 1 ? 'Einsteiger' : 'Aufgabe'}</h3>
+      <p>Die Gemeinkosten dieser Kostenstelle werden vollständig nach Maschinenstunden verrechnet.
+        Gemeinkosten der Periode: <strong>${overhead} €</strong>; Maschinenstunden der Periode: <strong>${hours} h</strong>.
+        ${(difficulty | 0) === 1 ? '' : `Auftrag A beansprucht davon <strong>${orderHours} h</strong>.`}</p>
+      <div class="task-fields">
+        <label>Verrechnungssatz je Maschinenstunde:
+          <input data-answer="${rate}" inputmode="decimal" placeholder="€/h" /></label>
+        ${(difficulty | 0) === 1 ? '' : `<label>Gemeinkosten für Auftrag A:
+          <input data-answer="${rate * orderHours}" inputmode="decimal" placeholder="€" /></label>`}
+      </div>
+      <p class="explain muted is-hidden" data-explain>
+        Der Verrechnungssatz ist ${overhead} € ÷ ${hours} h = ${rate} €/h.
+        ${(difficulty | 0) === 1 ? '' : `Auftrag A erhält ${rate} €/h × ${orderHours} h = ${rate * orderHours} € Gemeinkosten.`}
+        Euro geteilt durch Stunden ergibt €/h. Ein prozentualer Zuschlag würde eine Bezugsbasis in Euro benötigen.
+      </p></div>` };
   }
-
-  function makeNormal(){
-    // Wähle kopfrechenfreundliche Werte
-    const b = pick([50, 60, 80, 100, 120, 150]);
-    const gkProE = pick([2, 3, 4, 5]); // € je Einheit
-    const gk = gkProE * b;             // exakt teilbar
-    const a = pick([20, 25, 30, 40, 50, 60]);
-    const gkAuftrag = gkProE * a;      // glatt
-    const zuschlag = Math.round((gk / b) * 100); // = gkProE*100 (%-Satz)
-
-    const markup = html`
-      <div class="card">
-        <h3>Kostenstellen — Aufgabe</h3>
-        <p>Gegeben: Gemeinkosten (GK)${info('Nicht direkt zuordenbare Kosten')}: <strong>${gk} €</strong>, Verteilungsschlüssel (V)${info('z. B. Maschinenstunden oder Flächenanteile')}: <strong>${b}</strong>, Auftragsmenge A${info('Menge, auf die verrechnet wird')}: <strong>${a}</strong>.</p>
-        <table class="bab-table"><tbody>
-          <tr>
-            <th>Zuschlagssatz${info('GK ÷ Verteilungsschlüssel × 100')}</th>
-            <td><input type="text" inputmode="numeric" data-answer="${zuschlag}"></td>
-            <td class="muted">%</td>
-          </tr>
-          <tr>
-            <th>GK pro Einheit${info('GK ÷ Verteilungsschlüssel')}</th>
-            <td><input type="text" inputmode="numeric" data-answer="${gkProE}"></td>
-            <td class="muted">€</td>
-          </tr>
-          <tr>
-            <th>GK für Auftrag A${info('GK je Einheit × A')}</th>
-            <td><input type="text" inputmode="numeric" data-answer="${gkAuftrag}"></td>
-            <td class="muted">€</td>
-          </tr>
-        </tbody></table>
-        <div class="explain muted is-hidden" data-explain="1">
-          1) Zuschlagssatz = <strong>${gk} ÷ ${b} × 100 = ${zuschlag}%</strong>
-          <br>2) GK/Einheit = <strong>${gk} ÷ ${b} = ${gkProE} €</strong>
-          <br>3) GK für Auftrag = <strong>${gkProE} × ${a} = ${gkAuftrag} €</strong>
-        </div>
-      </div>`;
-    return { markup };
-  }
-
-  function maker(difficulty){
-    return (difficulty|0) === 1 ? makeEasy() : makeNormal();
-  }
-
-  // Registrierung (sofort oder nach DOMReady)
-  if (window.Train && typeof window.Train.registerTopic === 'function'){
-    window.Train.registerTopic('kostenstellen', maker);
-  } else {
-    window.addEventListener('DOMContentLoaded', ()=>{
-      window.Train && window.Train.registerTopic && window.Train.registerTopic('kostenstellen', maker);
-    });
-  }
+  window.Train.registerTopic('kostenstellen', maker);
 })();

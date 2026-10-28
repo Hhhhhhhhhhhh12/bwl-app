@@ -1,37 +1,33 @@
-(function(){
-  const topic = 'aequivalenz';
-  function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-
-  function make(d){
-    // Produkte A,B,(C) mit ÄZ; Basispreis für ÄZ=1
-    const base = r(10,20); // € für ÄZ=1
-    const zA=1, zB=r(2,4), zC=(d>=3? r(3,6):null);
-    const pA = base*zA, pB = base*zB, pC = zC? base*zC : null;
-
-    const markup = `
-      <div class="card">
-        <h3>Äquivalenzziffernrechnung</h3>
-        <p class="muted">Preis je Produkt auf Basis einer Äquivalenzziffer.</p>
-        <ul>
-          <li>Basis (ÄZ = 1): <strong>${base} €</strong></li>
-          <li>ÄZ(A)=1, ÄZ(B)=${zB}${zC?`, ÄZ(C)=${zC}`:''}</li>
-        </ul>
-        <div class="bab-table task-fields">
-          <label>Preis A:
-            <input data-answer="${pA}" placeholder="€" />
-            <span class="i" title="Preis = Basis × ÄZ"></span>
-          </label>
-          <label>Preis B:
-            <input data-answer="${pB}" placeholder="€" />
-          </label>
-          ${zC?`<label>Preis C:
-            <input data-answer="${pC}" placeholder="€" />
-          </label>`:''}
-          <small data-explain>Preis = Basis × ÄZ. A=${base}×1=${pA}; B=${base}×${zB}=${pB}${zC?`; C=${base}×${zC}=${pC}`:''}.</small>
-        </div>
-      </div>`;
-    return { markup };
+/* Einstufige Äquivalenzziffernkalkulation einer Sortenfertigung. */
+(function () {
+  'use strict';
+  const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+  function maker(difficulty) {
+    const products = [
+      { name: 'A', quantity: rnd(5, 15) * 10, factor: 1 },
+      { name: 'B', quantity: rnd(5, 15) * 10, factor: rnd(2, 4) },
+    ];
+    if (difficulty >= 3) products.push({ name: 'C', quantity: rnd(5, 15) * 10, factor: rnd(3, 6) });
+    const units = products.reduce((total, p) => total + p.quantity * p.factor, 0);
+    const unitCost = rnd(10, 20);
+    const totalCosts = units * unitCost;
+    return { markup: `<div class="card">
+      <h3>Äquivalenzziffernrechnung</h3>
+      <p>Verteile die gesamten Herstellkosten von <strong>${totalCosts} €</strong> auf verwandte Produktsorten.
+        Die Äquivalenzziffer (ÄZ) beschreibt das konstante Kostenverhältnis je Stück zur Sorte A.
+        Alle angegebenen Stückzahlen wurden in derselben Periode hergestellt.</p>
+      <ul>${products.map(p => `<li>Sorte ${p.name}: Menge <strong>${p.quantity} Stück</strong>; ÄZ <strong>${p.factor}</strong></li>`).join('')}</ul>
+      <div class="task-fields">
+        <label>Summe der Recheneinheiten:<input data-answer="${units}" inputmode="decimal" placeholder="RE" /></label>
+        <label>Herstellkosten je Recheneinheit:<input data-answer="${unitCost}" inputmode="decimal" placeholder="€/RE" /></label>
+        ${products.map(p => `<label>Herstellkosten je Stück ${p.name}:<input data-answer="${unitCost * p.factor}" inputmode="decimal" placeholder="€/Stück" /></label>`).join('')}
+      </div>
+      <p class="explain muted is-hidden" data-explain>
+        Recheneinheiten = ${products.map(p => `${p.quantity} × ${p.factor}`).join(' + ')} = ${units} RE.
+        Herstellkosten je RE = ${totalCosts} ÷ ${units} = ${unitCost} €/RE.
+        Stückkosten = Kosten je RE × ÄZ: ${products.map(p => `${p.name}: ${unitCost} × ${p.factor} = ${unitCost * p.factor} €/Stück`).join('; ')}.
+        Die Summe aus Stückkosten × Stückzahl aller Sorten ergibt wieder ${totalCosts} €.
+      </p></div>` };
   }
-
-  window.Train && window.Train.registerTopic(topic, make);
+  window.Train.registerTopic('aequivalenz', maker);
 })();

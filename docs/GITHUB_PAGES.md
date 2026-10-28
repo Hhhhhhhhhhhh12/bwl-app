@@ -1,6 +1,6 @@
 # Veröffentlichung über GitHub Pages
 
-Stand: 28. Oktober 2026. Version 1.5.1 (Lernmission).
+Stand: 28. Oktober 2026. Version 1.6.0 (Lernmission).
 
 ## Auftrag und Ziel
 
@@ -41,3 +41,7 @@ Die Online-Quellenprüfung führt keine Lernaktionen aus und liest keine persön
 ## Release 1.5.1
 
 Am 28. Oktober 2026 wurden Übernahme und Veröffentlichung der lokal geprüften Trainings- und Startkorrekturen ausdrücklich bestätigt. Der geprüfte Quellstand besitzt 30 bestandene lokale Prüffälle und einen gezielten Nachlauf der Hilfeansicht bei 320 Pixeln. Die Veröffentlichung nutzt weiterhin `main`; Domain und Browser-Speicherschlüssel bleiben gleich. Bereits gespeicherte Ergebnisse werden nicht rückwirkend geändert. Details: [KORREKTUREN_2026_10_28.md](KORREKTUREN_2026_10_28.md).
+
+## Release 1.6.0
+
+Am 28. Oktober 2026 wurden Integration, Push und Merge der lokal geprüften Lernführung und fachlichen Aufgaben-Korrekturen ausdrücklich beauftragt. Veröffentlicht werden gestufte Hilfen, ein ausdrücklicher Weiter-Schritt und korrigierte Rechenmodelle für alle zwölf aktiven Themen. Grundlage sind 52 bestandene lokale Prüffälle, einschließlich unabhängiger Fachrechnungen für 3.640 erzeugte Aufgaben plus Randfälle. Der Veröffentlichungsschritt verändert ausschließlich Release-Metadaten zusätzlich zum geprüften Anwendungscode. Die bestehende Pages-Konfiguration aus `main` bleibt erhalten. Es werden keine neuen Browser- oder Online-Lernprüfungen durchgeführt. Details: [LERNFUEHRUNG_2026_10_28.md](LERNFUEHRUNG_2026_10_28.md).

@@ -31,7 +31,7 @@
   // CSS helper classes to avoid inline styles (CSP safe)
   const HIDDEN_CLS = 'is-hidden';
   function hideEl(el){ if (el && el.classList) el.classList.add(HIDDEN_CLS); }
-  function showEl(el){ if (el && el.classList) el.classList.remove(HIDDEN_CLS); }
+  function showEl(el){ if (el && el.classList) el.classList.remove(HIDDEN_CLS, 'hidden'); }
 
   const readEnabledTopics = () => window.BwlTopics.selected();
   const topicAllowed = topic => window.BwlTopics.allowed(topic);
@@ -134,15 +134,10 @@
     topics[name] = makerFn;
   }
 
-  let pendingAdvance = null;
+  let solvedTask = false;
   let assistedTask = false;
-  let generation = 0;
   let initialized = false;
-  function cancelAdvance() {
-    if (pendingAdvance !== null) clearTimeout(pendingAdvance);
-    pendingAdvance = null;
-    generation++;
-  }
+  function resetAnswerState() { solvedTask = false; }
   function firstUnawardedLevel(topic) {
     const awarded = ensureProg().topics[topic]?.awarded || {};
     for (let index = 0; index < MAX_LEVELS_PER_TOPIC; index++) {
@@ -151,7 +146,7 @@
     return MAX_LEVELS_PER_TOPIC;
   }
   function prime(topic, difficulty) {
-    cancelAdvance();
+    resetAnswerState();
     const candidates = enabledRegisteredTopics();
     session.topic = candidates.includes(topic) ? topic : firstAvailableTopic();
     session.difficulty = Math.max(1, Math.min(4, parseInt(difficulty, 10) || 1));
@@ -329,11 +324,10 @@
     hideEl(starter);
     const explanations = [...wrap.querySelectorAll('[data-explain]')];
     explanations.forEach((x, i) => { x.id = `task-explanation-${i}`; hideEl(x); });
-    const help = document.getElementById('btn-help');
-    if (help) {
-      help.disabled = explanations.length === 0;
-      help.setAttribute('aria-controls', explanations.map(x => x.id).join(' '));
-    }
+    const guidance = window.BwlGuidance?.forTask(session.topic, session.index, session.difficulty);
+    ['btn-hint', 'btn-help'].forEach(id => { const button = document.getElementById(id); if (button) button.disabled = !guidance; });
+    const reveal = document.getElementById('btn-reveal');
+    if (reveal) reveal.setAttribute('aria-controls', explanations.map(x => x.id).join(' '));
     const first = wrap.querySelector("input, select, textarea, button");
     if (first && typeof first.focus === "function") first.focus();
 
@@ -347,13 +341,44 @@
   }
 
   function resetTaskSupport() {
+    solvedTask = false;
     assistedTask = false;
     const retry = document.getElementById('btn-retry-task');
     if (retry) retry.hidden = true;
-    const help = document.getElementById('btn-help');
-    if (help) { help.disabled = true; help.setAttribute('aria-expanded', 'false'); help.removeAttribute('aria-controls'); }
+    ['btn-hint', 'btn-help', 'btn-reveal'].forEach(id => {
+      const button = document.getElementById(id);
+      if (button) { button.disabled = true; button.setAttribute('aria-expanded', 'false'); }
+    });
+    const guidance = document.getElementById('task-guidance');
+    if (guidance) guidance.hidden = true;
+    const reason = document.getElementById('task-reason');
+    if (reason) { reason.hidden = true; reason.textContent = ''; }
+    const next = document.getElementById('btn-next');
+    if (next) { next.textContent = 'Aufgabe überspringen →'; next.classList.remove('primary'); }
     const feedback = document.getElementById('task-feedback');
     if (feedback) { feedback.hidden = true; feedback.textContent = ''; }
+  }
+
+  function closeGuidance() {
+    const panel = document.getElementById('task-guidance');
+    if (panel) panel.hidden = true;
+    ['btn-hint', 'btn-help'].forEach(id => document.getElementById(id)?.setAttribute('aria-expanded', 'false'));
+  }
+
+  function showGuidance(button, stage) {
+    if (solvedTask) return;
+    const guidance = window.BwlGuidance?.forTask(session.topic, session.index, session.difficulty);
+    const panel = document.getElementById('task-guidance');
+    if (!guidance || !panel) return;
+    const expanded = button.getAttribute('aria-expanded') !== 'true';
+    closeGuidance();
+    if (expanded) {
+      document.getElementById('task-guidance-heading').textContent = stage === 'hint' ? 'Hinweis' : 'Rechenansatz';
+      document.getElementById('task-guidance-text').textContent = guidance[stage];
+      panel.hidden = false;
+      button.setAttribute('aria-expanded', 'true');
+      announce(guidance[stage]);
+    }
   }
 
   function markAssistedTask() {
@@ -380,35 +405,23 @@
     const btnNext = document.querySelector('[data-action="next"]');
     const btnChange = document.getElementById("btn-change-topic");
     const btnHelp = document.getElementById('btn-help');
-    if (btnHelp) btnHelp.addEventListener('click', () => {
-      const expanded = btnHelp.getAttribute('aria-expanded') !== 'true';
-      if (expanded) markAssistedTask();
-      wrap.querySelectorAll('[data-explain]').forEach(x => expanded ? showEl(x) : hideEl(x));
-      btnHelp.setAttribute('aria-expanded', String(expanded));
-    });
+    const btnHint = document.getElementById('btn-hint');
+    if (btnHint) btnHint.addEventListener('click', () => showGuidance(btnHint, 'hint'));
+    if (btnHelp) btnHelp.addEventListener('click', () => showGuidance(btnHelp, 'approach'));
 
     const retry = document.getElementById('btn-retry-task');
     if (retry) retry.addEventListener('click', () => {
-      cancelAdvance();
+      resetAnswerState();
       if (window.calc) window.calc.clear();
       renderTask();
     });
 
     // Prüfen
     if (btnCheck) btnCheck.addEventListener("click", () => {
-      if (!wrap || !session.topic || pendingAdvance !== null) return;
+      if (!wrap || !session.topic || solvedTask) return;
       let total = 0, ok = 0;
-      // tolerant parsing: decimal comma/point, thousands, percent off-by-one
-      const EPS_NUM = 0.5;   // numeric tolerance
-      const EPS_PCT = 1.0;   // percentage: allow ±1 %-Punkt
-
-      function isPercentInput(el){
-        const ph = (el.getAttribute('placeholder')||'').trim();
-        if (/%/.test(ph)) return true;
-        const unit = (el.getAttribute('data-unit')||'').trim();
-        if (unit === '%') return true;
-        return false;
-      }
+      // Accept locale decimal notation, but require the requested rounded result.
+      const EPS_NUM = 1e-6;
       function parseFlexible(s){
         if (s == null) return { num: NaN, raw: '' };
         let raw = String(s).trim();
@@ -438,9 +451,7 @@
 
         let correct;
         if (!Number.isNaN(want.num) && !Number.isNaN(got.num)){
-          const isPct = isPercentInput(inp) || want.pct || /%$/.test(wantStr) || /%$/.test(gotStr);
-          const eps = isPct ? EPS_PCT : EPS_NUM;
-          correct = Math.abs(want.num - got.num) <= eps;
+          correct = Math.abs(want.num - got.num) <= EPS_NUM;
         } else {
           // fallback: case-insensitive exact match (e.g., Textantworten)
           correct = gotStr.toLowerCase() === wantStr.toLowerCase();
@@ -463,14 +474,14 @@
         if (allCorrect) showEquationResult(wrap);
         return;
       }
-      const message = allCorrect ? 'Richtig gelöst. Weiter zur nächsten Aufgabe …' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`;
+      const message = allCorrect ? 'Richtig gelöst. Lies den Rechenweg und wähle dann „Weiter“.' : `${ok} von ${total} Antworten richtig. Prüfe die markierten Felder.`;
       const feedback = document.getElementById('task-feedback');
       if (!allCorrect) {
         announce(message);
         if (feedback) { feedback.textContent = message; feedback.hidden = false; }
       }
       if (allCorrect) showEquationResult(wrap);
-      // Preserve D's automatic transition to the selected topic with least progress.
+      // Persist now; leave the result visible until the learner chooses Weiter.
       if (allCorrect) {
         const previousPoints = ensureProg().points;
         // 1) Persist result ONCE for current taskId (before index changes)
@@ -481,7 +492,7 @@
           }
         } catch {}
         const gained = ensureProg().points - previousPoints;
-        const success = gained > 0 ? `Level gelöst! +${gained} XP. Weiter zur nächsten Aufgabe …` : message;
+        const success = gained > 0 ? `Level gelöst! +${gained} XP. Mit „Weiter“ geht es zur nächsten Aufgabe.` : message;
         announce(success);
         if (feedback) { feedback.textContent = success; feedback.hidden = false; }
 
@@ -494,33 +505,20 @@
         // 3) Track the current correct-answer streak.
         session.correctStreak = (session.correctStreak | 0) + 1;
 
-        // 4) After a short pause, clear calc & advance
-        const currentGeneration = generation;
-        pendingAdvance = setTimeout(() => {
-          pendingAdvance = null;
-          if (generation !== currentGeneration) return;
-          // Rechner leeren beim Themen-/Levelwechsel
-          try { if (window.calc && typeof window.calc.clear === 'function') window.calc.clear(); } catch {}
+        solvedTask = true;
+        closeGuidance();
+        const reason = document.getElementById('task-reason');
+        const guidance = window.BwlGuidance?.forTask(session.topic, session.index, session.difficulty);
+        if (reason && guidance) { reason.textContent = guidance.why; reason.hidden = false; }
+        [btnHint, btnHelp, btnReveal].forEach(button => { if (button) button.disabled = true; });
+        if (btnReveal) btnReveal.setAttribute('aria-expanded', 'true');
+        if (btnNext) { btnNext.textContent = 'Weiter →'; btnNext.classList.add('primary'); }
+        wrap.querySelectorAll('input[data-answer]').forEach(field => { field.readOnly = true; });
+        wrap.querySelectorAll('select[data-answer]').forEach(field => { field.disabled = true; });
+        if (typeof window.renderRank === 'function') window.renderRank();
+        if (typeof window.renderTopicProgress === 'function') window.renderTopicProgress();
+        return;
 
-          // Level increment
-          session.index = Math.min(session.index + 1, MAX_LEVELS_PER_TOPIC);
-
-          const target = getLowestCorrectTopic();
-          if (target !== session.topic) prime(target, session.difficulty);
-          else if (session.index >= MAX_LEVELS_PER_TOPIC) session.index = firstUnawardedLevel(session.topic);
-
-          if (session.index >= MAX_LEVELS_PER_TOPIC) {
-            renderFinished();
-          } else {
-            renderTask();
-          }
-
-          // Refresh rank/progress UI
-          if (typeof window.renderRank === 'function') window.renderRank();
-          if (typeof window.renderTopicProgress === 'function') window.renderTopicProgress();
-        }, 700);
-
-        return; // stop immediate navigation on correct; handled by timeout
       }
 
       if (typeof window.progMarkResult === 'function') {
@@ -549,15 +547,16 @@
 
     // Lösung zeigen
     if (btnReveal) btnReveal.addEventListener("click", () => {
-      if (pendingAdvance !== null) return;
+      if (solvedTask) return;
+      closeGuidance();
       markAssistedTask();
+      btnReveal.setAttribute('aria-expanded', 'true');
       wrap.querySelectorAll('input[data-answer], select[data-answer]').forEach(inp => {
         inp.value = inp.getAttribute("data-answer");
         inp.classList.remove("err"); inp.classList.add("ok");
         inp.setAttribute('aria-invalid', 'false');
       });
       wrap.querySelectorAll('[data-explain]').forEach(x => showEl(x));
-      if (btnHelp && !btnHelp.disabled) btnHelp.setAttribute('aria-expanded', 'true');
       showEquationResult(wrap);
       if (btnCheck) {
         btnCheck.classList.remove("err");
@@ -565,26 +564,28 @@
       }
     });
 
-    // Nächste
-    if (btnNext) btnNext.addEventListener("click", () => {
-      cancelAdvance();
-      if (session.index + 1 >= MAX_LEVELS_PER_TOPIC) {
-        session.index = MAX_LEVELS_PER_TOPIC;
-        updateLevelPill();
-        renderFinished();
-        const c = document.getElementById("btn-change-topic"); c && c.classList.remove("hidden");
-        return;
-      }
+    // Continue only on explicit activation; unsolved tasks can still be skipped.
+    if (btnNext) btnNext.addEventListener('click', () => {
+      if (!session.topic) return;
+      const wasSolved = solvedTask;
+      resetAnswerState();
+      if (window.calc) window.calc.clear();
       session.index = Math.min(session.index + 1, MAX_LEVELS_PER_TOPIC);
-      updateLevelPill();
-      const c = document.getElementById("btn-change-topic"); if ((session.index % 3 === 0) && c) c.classList.remove("hidden");
-      if (btnCheck) btnCheck.classList.remove("ok", "err");
-      renderTask();
+      if (wasSolved) {
+        const target = getLowestCorrectTopic();
+        if (target !== session.topic) prime(target, session.difficulty);
+        else if (session.index >= MAX_LEVELS_PER_TOPIC) session.index = firstUnawardedLevel(session.topic);
+      }
+      const change = document.getElementById('btn-change-topic');
+      if ((session.index % 3 === 0) && change) change.classList.remove('hidden');
+      if (btnCheck) btnCheck.classList.remove('ok', 'err');
+      if (session.index >= MAX_LEVELS_PER_TOPIC) renderFinished();
+      else renderTask();
     });
 
     // Thema wechseln
     if (btnChange) btnChange.addEventListener("click", () => {
-      cancelAdvance();
+      resetAnswerState();
       const names = enabledRegisteredTopics().filter(t => t !== session.topic);
       const pick = names.length ? names[rnd(0, names.length - 1)] : session.topic;
       prime(pick, session.difficulty);
@@ -644,7 +645,7 @@
           setTopicEnabled(session.topic, false);
           localStorage.setItem('bwl_last_disabled', session.topic);
         }catch(_e){}
-        cancelAdvance();
+        resetAnswerState();
         location.href = 'dashboard.html';
       });
     }
@@ -658,7 +659,6 @@
     updateLevelPill();
     renderTask();
     wireControls();
-    window.addEventListener('pagehide', cancelAdvance);
     window.addEventListener('storage', event => {
       if (event.key === null || ['bwl_topics_enabled', 'bwl_enabled_topics_v1'].includes(event.key)) {
         prime(session.topic, session.difficulty);

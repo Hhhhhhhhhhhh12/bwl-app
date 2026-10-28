@@ -42,9 +42,11 @@
     <div class="atelier-page-heading mission-hero" data-level="01"><p class="atelier-kicker">Deine Lernmission</p><h1 id="training-heading">Kosten im Griff.</h1><p id="session-pill" class="atelier-session-meta">Thema · Stufe 1</p></div>
     <p id="train-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
     <div class="atelier-worksheet"><div id="bab-wrapper" class="task-slot atelier-task-slot"></div>
+      <section id="task-guidance" class="task-guidance" hidden aria-labelledby="task-guidance-heading"><h2 id="task-guidance-heading">Hinweis</h2><p id="task-guidance-text"></p></section>
+      <p id="task-reason" class="task-reason" hidden></p>
       <div class="task-controls atelier-answer-actions"><span class="mission-reward" id="mission-reward-text"></span><button class="btn primary" id="btn-check" data-action="check" type="button">Antwort prüfen</button><p id="task-feedback" class="atelier-feedback" hidden></p></div>
     </div>
-    <div class="atelier-tools"><button class="btn" id="btn-help" type="button" aria-expanded="false">Rechenweg</button><button class="btn" id="btn-reveal" data-action="reveal" type="button">Lösung anzeigen</button><button class="btn" id="btn-retry-task" type="button" hidden>Neu selbst lösen</button><button class="btn" id="btn-next" data-action="next" type="button">Nächste →</button></div>
+    <div class="atelier-tools"><button class="btn" id="btn-hint" type="button" aria-expanded="false" aria-controls="task-guidance">Hinweis</button><button class="btn" id="btn-help" type="button" aria-expanded="false" aria-controls="task-guidance">Rechenansatz</button><button class="btn" id="btn-reveal" data-action="reveal" type="button" aria-expanded="false">Vollständige Lösung · ohne XP</button><button class="btn" id="btn-retry-task" type="button" hidden>Neu selbst lösen</button><button class="btn" id="btn-next" data-action="next" type="button">Aufgabe überspringen →</button></div>
     <details class="atelier-calculator" id="calculator"><summary>Taschenrechner öffnen</summary><div id="calc-mount"></div></details>
     <div class="atelier-secondary-actions"><button class="btn" id="btn-change-topic" type="button">Thema wechseln</button><button class="btn" id="btn-skip-topic" type="button">Thema aus meiner Auswahl nehmen</button></div>
   </section></div>
@@ -72,6 +74,7 @@
   <script defer src="js/mission.js"></script>
   <script defer src="js/app-shell.js"></script>
   <script defer src="js/quickstart.js"></script>
+  <script defer src="js/train/guidance.js"></script>
   <script defer src="js/train/engine.js"></script>
   <script defer src="js/train/topics/break-even.js"></script>
   <script defer src="js/train/topics/bab.js"></script>
