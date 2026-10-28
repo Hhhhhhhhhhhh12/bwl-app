@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Veröffentlichter Stand: Version 1.5.1, Lernmission mit ruhigem Hintergrund.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Dieser lokale Arbeitsbranch ergänzt gestufte Hilfen, einen ausdrücklichen Weiter-Schritt und fachlich korrigierte Aufgaben. Er ist noch nicht in `main` übernommen oder veröffentlicht. Einzelheiten stehen in [docs/LERNFUEHRUNG_2026_10_28.md](docs/LERNFUEHRUNG_2026_10_28.md). Visuelle Nutzerabnahme und Prüfungen auf weiteren Geräten und Browsern bleiben offen.
+**Version 1.6.0: Lernmission mit gestuften Hilfen und ausdrücklichem Weiter-Schritt.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Dieser Release ergänzt gestufte Hilfen, einen ausdrücklichen Weiter-Schritt und fachlich korrigierte Aufgaben in allen zwölf aktiven Themen. Der Nutzer hat Integration, Push und Merge ausdrücklich freigegeben. Einzelheiten stehen in [docs/LERNFUEHRUNG_2026_10_28.md](docs/LERNFUEHRUNG_2026_10_28.md). Visuelle Nutzerabnahme und Prüfungen auf weiteren Geräten und Browsern bleiben offen.
 
 ## Aufbau
 
@@ -22,7 +22,7 @@ Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallat
 
 Enter prüft Antworten, statt die Lösung einzublenden. Eingeblendete Lösungen und vollständige Rechenwege zählen als Übungen ohne XP und Levelabschluss; „Neu selbst lösen“ erzeugt eine neue Aufgabe desselben Levels. Die Themenauswahl wird erst nach vollständiger Initialisierung freigegeben. Vorhandene Ergebnisse bleiben erhalten.
 
-## Lokale Weiterentwicklung
+## Neuerungen in 1.6.0
 
 „Hinweis“ und „Rechenansatz“ zeigen begriffliche Unterstützung ohne ausgefüllte Ergebnisse; die normale Punktevergabe bleibt möglich. „Vollständige Lösung · ohne XP“ zeigt Ergebnis und Rechenweg und nimmt diese Aufgabe aus der Wertung. „Neu selbst lösen“ startet eine neue Aufgabe desselben Levels. Richtige Antworten werden sofort einmalig gespeichert; Erklärung und Ergebnis bleiben bis „Weiter“ sichtbar. „Aufgabe überspringen“ vergibt keine Punkte.
 

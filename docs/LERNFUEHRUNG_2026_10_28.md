@@ -4,7 +4,7 @@
 
 Die drei beauftragten Schritte sind gestufte Hilfen, ein ausdrücklicher Weiter-Schritt nach einer richtigen Lösung und eine fachliche Prüfung aller zwölf aktiven Aufgabenmodule. Die lokalen Prüfungen mit frischen Testdaten wurden ausdrücklich freigegeben, einschließlich Hilfestufen, Punkte, Weiter, Wiederaufnahme und aktiver Module.
 
-Die Arbeit erfolgt isoliert auf `work/bwl-learning-flow-20261028`, ausgehend vom veröffentlichten Stand `2a9a250` (1.5.1). Dieser Arbeitsstand ist kein neuer Release. Übernahme nach `main`, Upload und Hostingänderungen sind für diesen Auftrag nicht freigegeben. Bestehende Sicherungen und persönliche Browserprofile werden nicht verändert.
+Die Umsetzung erfolgte zunächst isoliert auf `work/bwl-learning-flow-20261028`, ausgehend vom veröffentlichten Stand `2a9a250` (1.5.1). Die erste Freigabe umfasste Umsetzung und lokale Prüfung. Anschließend hat der Nutzer mit „integrieren pushen mergen und archivieren“ die Übernahme nach `main`, den GitHub-Upload, Merge und die Chat-Archivierung ausdrücklich beauftragt. Die automatische Veröffentlichung über die bestehende GitHub-Pages-Konfiguration gehört zu diesem Schritt. Bestehende Sicherungen und persönliche Browserprofile bleiben erhalten.
 
 ## Lernregeln
 
@@ -48,3 +48,7 @@ BWL_TEST_HOSTING=github-pages node --test tests/calculator.test.cjs tests/conten
 ```
 
 Bei externer Laufzeit `BWL_PLAYWRIGHT_MODULE` und `BWL_CHROMIUM_PATH` setzen; `BWL_TEST_ARTIFACTS` und `BWL_SNAPSHOT_LABEL` steuern ausschließlich die lokalen Nachweise. Technische Prüfungen bleiben auf den ausdrücklich freigegebenen Umfang begrenzt.
+
+## Freigegebener Release 1.6.0
+
+Geprüfter Anwendungscode: `eddc276`, einschließlich der fachlichen Korrekturen aus `9c9c290`. Für die Veröffentlichung werden ausschließlich Versions- und Dokumentationsangaben ergänzt. Die 52 lokalen Prüffälle beziehen sich auf diesen unveränderten Anwendungscode; für den Veröffentlichungsauftrag werden keine erneuten technischen Tests gestartet. Der Merge erfolgt über einen Pull Request nach `main`. Bestehende Domain, Pages-Quelle und Browser-Speicherschlüssel bleiben erhalten. Die vorübergehende Arbeitskopie wird nach gesicherter Integration entfernt; Quellgeschichte und Prüfnachweise bleiben verfügbar.
