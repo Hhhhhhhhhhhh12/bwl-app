@@ -162,7 +162,7 @@ body[data-design="lernatelier"] .atelier-secondary-actions .btn { color:var(--mu
 body[data-design="lernatelier"] .atelier-calculator { margin-top:1rem; border-top:1px solid var(--line); padding-top:.85rem; }
 body[data-design="lernatelier"] .atelier-calculator summary { width:fit-content; cursor:pointer; color:var(--brand); font-size:.84rem; padding:.4rem 0; }
 body[data-design="lernatelier"] #calc-panel { padding:1rem; box-shadow:none; }
-body[data-design="lernatelier"] .explain { padding:1rem; background:var(--brand-soft); border-radius:8px; font-size:.87rem; }
+body[data-design="lernatelier"] .explain { display:block; padding:1rem; background:var(--brand-soft); border-radius:8px; font-size:.87rem; }
 body[data-design="lernatelier"] .btn {
   display:inline-block; min-height:44px; max-width:100%; border-radius:8px;
   padding:.65rem 1rem; font-size:.88rem; line-height:1.4; font-weight:600;

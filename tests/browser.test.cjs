@@ -43,16 +43,21 @@ before(async () => {
   }
 });
 after(async () => { if (browser) await browser.close(); if (server && server.listening) await new Promise(resolve => server.close(resolve)); });
-async function session(t, { selection, progress, viewport } = {}) {
+async function session(t, { selection, progress, viewport, theme, randomSeed } = {}) {
   const context = await browser.newContext({ viewport: viewport || { width: 1440, height: 1000 } });
   t.after(() => context.close());
   await context.route('**/*', route => route.request().url().startsWith(origin + '/') ? route.continue() : route.abort());
-  await context.addInitScript(({ selection, progress }) => {
+  await context.addInitScript(({ selection, progress, theme, randomSeed }) => {
+    if (randomSeed !== undefined) {
+      let seed = randomSeed >>> 0;
+      Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+    }
     if (sessionStorage.getItem('bwl_test_seeded')) return;
     sessionStorage.setItem('bwl_test_seeded', '1');
     if (selection) localStorage.setItem('bwl_enabled_topics_v1', JSON.stringify(selection));
     if (progress) localStorage.setItem('bwl_prog_v2', JSON.stringify(progress));
-  }, { selection, progress });
+    if (theme) localStorage.setItem('bwl_theme', theme);
+  }, { selection, progress, theme, randomSeed });
   const page = await context.newPage();
   page.setDefaultTimeout(3500);
   const errors = [], violations = [];
@@ -672,3 +677,106 @@ test('complete solutions stay uncredited across all active modules and variants'
     await context.close();
   }
 });
+
+// These cases check readable content inside the worksheet, not just page width.
+async function mobileWorksheet(page, name, capture) {
+  await page.evaluate(async () => { await document.fonts.ready; });
+  const metrics = await page.evaluate(() => {
+    const box = el => { const r=el.getBoundingClientRect(); return {left:r.left,top:r.top,right:r.right,bottom:r.bottom}; };
+    return {
+      viewport:innerWidth, scroll:document.documentElement.scrollWidth,
+      fields:[...document.querySelectorAll('#bab-wrapper [data-answer]')].map(el => {
+        const css=getComputedStyle(el), ctx=document.createElement('canvas').getContext('2d');
+        ctx.font=css.font;
+        return {box:box(el), value:el.value, textWidth:el.tagName==='INPUT'?ctx.measureText(el.value).width:0,
+          available:el.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight)};
+      }),
+      explanations:[...document.querySelectorAll('#bab-wrapper [data-explain]')].filter(el=>el.getClientRects().length).map(el => {
+        const range=document.createRange(); range.selectNodeContents(el);
+        return {box:box(el), fragments:el.getClientRects().length,
+          previousBottom:el.previousElementSibling?.getBoundingClientRect().bottom,
+          text:[...range.getClientRects()].map(r=>({left:r.left,top:r.top,right:r.right,bottom:r.bottom}))};
+      })
+    };
+  });
+  if (process.env.BWL_TEST_ARTIFACTS) {
+    const prefix=path.join(process.env.BWL_TEST_ARTIFACTS, `${process.env.BWL_SNAPSHOT_LABEL || 'current'}-${name}`);
+    await fs.writeFile(prefix+'.json', JSON.stringify(metrics,null,2));
+    if (capture) {
+      await snapshot(page,name);
+      await page.locator('.atelier-worksheet').screenshot({path:prefix+'-worksheet.png',animations:'disabled'});
+    }
+  }
+  assert.ok(metrics.scroll<=metrics.viewport+1, name+': page overflow');
+  for (const field of metrics.fields) {
+    assert.ok(field.box.left>=0 && field.box.right<=metrics.viewport+1, name+': answer field outside viewport');
+    assert.ok(field.textWidth<=field.available+1, name+': answer value clipped '+JSON.stringify(field));
+  }
+  for (const explanation of metrics.explanations) {
+    assert.equal(explanation.fragments,1,name+': worked explanation must form one containing panel');
+    assert.ok(explanation.previousBottom===undefined || explanation.box.top>=explanation.previousBottom-1,name+': explanation overlaps preceding content');
+    assert.ok(explanation.text.every(r=>r.left>=explanation.box.left-1 && r.right<=explanation.box.right+1 && r.top>=explanation.box.top-1 && r.bottom<=explanation.box.bottom+1),name+': worked text outside its panel');
+  }
+}
+
+for (const width of [320,390]) for (const theme of ['light','dark']) for (const topic of allTopics) {
+  const difficulties=['bab','zuschlag'].includes(topic)?[1,2,3,4]:[4];
+  for (const difficulty of difficulties) test(`mobile learning flow ${topic}/${difficulty}/${theme}/${width}`, async t => {
+    const progress=unlocked(); progress.topics[topic]=blank().topics[topic];
+    const {page,context,errors,violations}=await session(t,{selection:[topic],progress,theme,randomSeed:781,viewport:{width,height:844}});
+    const name=`mobile-${topic}-${difficulty}-${theme}-${width}`;
+    const capture=['bab','zuschlag'].includes(topic) && difficulty===4;
+    await page.goto(`${origin}/train.html?topic=${topic}&difficulty=${difficulty}`);
+    assert.equal(await page.locator('#mission-topic-label').textContent(),await page.evaluate(topic=>window.BwlTopics.labels[topic],topic),name+': requested topic really loaded');
+    assert.equal(await page.locator('body').getAttribute('data-theme'),theme);
+    const level=await page.locator('#session-pill').textContent();
+    const before=await saved(page);
+    const first=page.locator('#bab-wrapper [data-answer]').first();
+    if (await first.evaluate(el=>el.tagName)==='INPUT') await first.fill('12');
+    await mobileWorksheet(page,name+'-task',capture);
+    // Click the actual mobile controls; the existing helper separately covers Enter.
+    const values=await page.locator('#bab-wrapper [data-answer]').evaluateAll(els=>els.map(el=>el.value));
+    for (const [id,heading] of [['btn-hint','Hinweis'],['btn-help','Rechenansatz']]) {
+      await page.locator('#'+id).click();
+      assert.equal(await page.locator('#task-guidance-heading').textContent(),heading);
+      assert.equal(await page.locator('#task-guidance').isVisible(),true);
+      assert.equal(await page.locator('[data-explain]:visible').count(),0);
+      assert.deepEqual(await page.locator('#bab-wrapper [data-answer]').evaluateAll(els=>els.map(el=>el.value)),values);
+      assert.deepEqual(await saved(page),before);
+      await mobileWorksheet(page,name+'-'+id,capture);
+    }
+    await answerAll(page); await page.locator('#btn-check').click();
+    assert.equal((await saved(page)).points,before.points+20,'partial help retains normal XP');
+    assert.equal((await saved(page)).topics[topic].correct,1);
+    assert.equal(await page.locator('#task-reason').isVisible(),true);
+    assert.equal(await page.locator('[data-explain]:visible').count()>0,true);
+    assert.equal(await page.locator('#btn-next').textContent(),'Weiter →');
+    assert.equal(await page.locator('#bab-wrapper [data-answer]').evaluateAll(els=>els.every(el=>el.tagName==='SELECT'?el.disabled:el.readOnly)),true);
+    if (await first.evaluate(el=>el.tagName)==='INPUT') await first.press('Enter');
+    await page.waitForTimeout(1100); // Guards against the old delayed automatic advance.
+    assert.equal(await page.locator('#session-pill').textContent(),level);
+    assert.equal((await saved(page)).points,before.points+20,'repeat Enter does not score twice');
+    await mobileWorksheet(page,name+'-correct',capture);
+    await page.locator('#btn-next').focus(); await page.locator('#btn-next').press('Enter');
+    assert.match(await page.locator('#session-pill').textContent(),/Level 2\/15/);
+    assert.equal(await page.locator('[data-explain]:visible').count(),0);
+    assert.equal(await page.locator('#task-reason').isVisible(),false);
+    const afterCorrect=await saved(page);
+    await page.locator('#btn-reveal').click();
+    assert.equal(await page.locator('[data-explain]:visible').count()>0,true);
+    await mobileWorksheet(page,name+'-revealed',capture);
+    await page.locator('#btn-help').click(); await page.locator('#btn-help').click();
+    await page.locator('#btn-check').click();
+    assert.deepEqual(await saved(page),afterCorrect,'revealed solution never awards XP, attempts or completion');
+    assert.equal(await page.locator('#btn-reveal').getAttribute('aria-expanded'),'true');
+    await page.locator('#btn-retry-task').click();
+    assert.match(await page.locator('#session-pill').textContent(),/Level 2\/15/);
+    assert.equal(await page.locator('[data-explain]:visible').count(),0);
+    assert.equal(await page.locator('#btn-retry-task').isVisible(),false);
+    assert.deepEqual(await saved(page),afterCorrect);
+    await answerAll(page); await page.locator('#btn-check').click();
+    assert.equal((await saved(page)).points,before.points+40,'fresh unassisted task restores normal XP');
+    assert.deepEqual(errors,[]); assert.deepEqual(violations,[]);
+    await context.close();
+  });
+}
