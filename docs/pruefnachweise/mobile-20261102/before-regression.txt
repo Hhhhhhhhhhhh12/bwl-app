@@ -1,0 +1,370 @@
+✔ mobile learning flow break_even/4/light/320 (3143.006334ms)
+✔ mobile learning flow bab/1/light/320 (1676.115917ms)
+✔ mobile learning flow bab/2/light/320 (1682.184084ms)
+✔ mobile learning flow bab/3/light/320 (1683.784833ms)
+✔ mobile learning flow bab/4/light/320 (2416.059417ms)
+✔ mobile learning flow kostenarten/4/light/320 (1642.256708ms)
+✔ mobile learning flow abgrenzung/4/light/320 (1628.062375ms)
+✔ mobile learning flow kostenstellen/4/light/320 (1663.063208ms)
+✔ mobile learning flow deckungsbeitrag/4/light/320 (1715.820833ms)
+✔ mobile learning flow aequivalenz/4/light/320 (2491.387958ms)
+✖ mobile learning flow zuschlag/1/light/320 (1464.168416ms)
+✖ mobile learning flow zuschlag/2/light/320 (1464.878792ms)
+✖ mobile learning flow zuschlag/3/light/320 (1771.186333ms)
+✖ mobile learning flow zuschlag/4/light/320 (2063.764083ms)
+✔ mobile learning flow prozesskosten/4/light/320 (1779.708667ms)
+✔ mobile learning flow kennzahlen/4/light/320 (1738.085833ms)
+✔ mobile learning flow investition/4/light/320 (1660.672208ms)
+✔ mobile learning flow lager/4/light/320 (1684.351375ms)
+✔ mobile learning flow break_even/4/dark/320 (1698.5005ms)
+✔ mobile learning flow bab/1/dark/320 (1654.679417ms)
+✔ mobile learning flow bab/2/dark/320 (1945.8335ms)
+✔ mobile learning flow bab/3/dark/320 (1647.3ms)
+✔ mobile learning flow bab/4/dark/320 (2369.566542ms)
+✔ mobile learning flow kostenarten/4/dark/320 (1695.949084ms)
+✔ mobile learning flow abgrenzung/4/dark/320 (2208.974583ms)
+✔ mobile learning flow kostenstellen/4/dark/320 (1678.368ms)
+✔ mobile learning flow deckungsbeitrag/4/dark/320 (1715.274375ms)
+✔ mobile learning flow aequivalenz/4/dark/320 (1693.185916ms)
+✖ mobile learning flow zuschlag/1/dark/320 (1437.7595ms)
+✖ mobile learning flow zuschlag/2/dark/320 (1464.762042ms)
+✖ mobile learning flow zuschlag/3/dark/320 (1456.65075ms)
+✖ mobile learning flow zuschlag/4/dark/320 (2221.771208ms)
+✔ mobile learning flow prozesskosten/4/dark/320 (1666.068833ms)
+✔ mobile learning flow kennzahlen/4/dark/320 (1678.92675ms)
+✔ mobile learning flow investition/4/dark/320 (1682.774208ms)
+✔ mobile learning flow lager/4/dark/320 (1684.305583ms)
+✔ mobile learning flow break_even/4/light/390 (2108.589167ms)
+✔ mobile learning flow bab/1/light/390 (1726.483542ms)
+✔ mobile learning flow bab/2/light/390 (1678.380166ms)
+✔ mobile learning flow bab/3/light/390 (1670.22925ms)
+✔ mobile learning flow bab/4/light/390 (2385.225541ms)
+✔ mobile learning flow kostenarten/4/light/390 (1640.979417ms)
+✔ mobile learning flow abgrenzung/4/light/390 (1955.289125ms)
+✔ mobile learning flow kostenstellen/4/light/390 (2210.485708ms)
+✔ mobile learning flow deckungsbeitrag/4/light/390 (1748.3ms)
+✔ mobile learning flow aequivalenz/4/light/390 (1664.564083ms)
+✖ mobile learning flow zuschlag/1/light/390 (1463.005417ms)
+✖ mobile learning flow zuschlag/2/light/390 (1591.979542ms)
+✖ mobile learning flow zuschlag/3/light/390 (1437.617875ms)
+✖ mobile learning flow zuschlag/4/light/390 (2261.660375ms)
+✔ mobile learning flow prozesskosten/4/light/390 (1761.10275ms)
+✔ mobile learning flow kennzahlen/4/light/390 (1808.312084ms)
+✔ mobile learning flow investition/4/light/390 (1706.470417ms)
+✔ mobile learning flow lager/4/light/390 (1628.035333ms)
+✔ mobile learning flow break_even/4/dark/390 (1641.368458ms)
+✔ mobile learning flow bab/1/dark/390 (1697.805833ms)
+✔ mobile learning flow bab/2/dark/390 (1729.758708ms)
+✔ mobile learning flow bab/3/dark/390 (1699.491167ms)
+✔ mobile learning flow bab/4/dark/390 (2807.543167ms)
+✔ mobile learning flow kostenarten/4/dark/390 (1839.666ms)
+✔ mobile learning flow abgrenzung/4/dark/390 (1654.067292ms)
+✔ mobile learning flow kostenstellen/4/dark/390 (1635.874667ms)
+✔ mobile learning flow deckungsbeitrag/4/dark/390 (1714.893ms)
+✔ mobile learning flow aequivalenz/4/dark/390 (1859.835417ms)
+✖ mobile learning flow zuschlag/1/dark/390 (2681.218417ms)
+✖ mobile learning flow zuschlag/2/dark/390 (1492.988667ms)
+✖ mobile learning flow zuschlag/3/dark/390 (1514.286917ms)
+✖ mobile learning flow zuschlag/4/dark/390 (2207.077209ms)
+✔ mobile learning flow prozesskosten/4/dark/390 (2067.903125ms)
+✔ mobile learning flow kennzahlen/4/dark/390 (2081.02625ms)
+✔ mobile learning flow investition/4/dark/390 (1664.182083ms)
+✔ mobile learning flow lager/4/dark/390 (1777.793625ms)
+ℹ tests 72
+ℹ suites 0
+ℹ pass 56
+ℹ fail 16
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 131475.342667
+
+✖ failing tests:
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/1/light/320 (1464.168416ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-1-light-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/2/light/320 (1464.878792ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-2-light-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/3/light/320 (1771.186333ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-3-light-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/4/light/320 (2063.764083ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-4-light-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/1/dark/320 (1437.7595ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-1-dark-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/2/dark/320 (1464.762042ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-2-dark-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/3/dark/320 (1456.65075ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-3-dark-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/4/dark/320 (2221.771208ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-4-dark-320-correct: worked explanation must form one containing panel
+
+  9 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/1/light/390 (1463.005417ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-1-light-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/2/light/390 (1591.979542ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-2-light-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/3/light/390 (1437.617875ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-3-light-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/4/light/390 (2261.660375ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-4-light-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/1/dark/390 (2681.218417ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-1-dark-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/2/dark/390 (1492.988667ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-2-dark-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/3/dark/390 (1514.286917ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-3-dark-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser.test.cjs:724:42
+✖ mobile learning flow zuschlag/4/dark/390 (2207.077209ms)
+  AssertionError [ERR_ASSERTION]: mobile-zuschlag-4-dark-390-correct: worked explanation must form one containing panel
+
+  8 !== 1
+
+      at mobileWorksheet (<repo>/tests/browser.test.cjs:716:12)
+      at async TestContext.<anonymous> (<repo>/tests/browser.test.cjs:759:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 8,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -123,9 +123,9 @@ Nach diesem Lauf werden nur Dokumentation und Nachweise ergänzt.
 
 | Lauf | Ergebnis | Protokoll |
 |---|---|---|
-| Vorhandene Browsertests auf 481239a | 31 bestanden, 0 fehlgeschlagen | [Baseline](pruefnachweise/mobile-20261102/baseline-browser.log) |
-| Neue mobile Regressionen vor der CSS-Korrektur | 56 bestanden, 16 fehlgeschlagen; ausschließlich U1 in Zuschlag | [Fehlernachweis](pruefnachweise/mobile-20261102/before-regression.log) |
-| Vollständiger Abschlusslauf nach Korrektur | **124 bestanden, 0 fehlgeschlagen**, 223,86 s | [Abschlusslauf](pruefnachweise/mobile-20261102/final-full.log) |
+| Vorhandene Browsertests auf 481239a | 31 bestanden, 0 fehlgeschlagen | [Baseline](pruefnachweise/mobile-20261102/baseline-browser.txt) |
+| Neue mobile Regressionen vor der CSS-Korrektur | 56 bestanden, 16 fehlgeschlagen; ausschließlich U1 in Zuschlag | [Fehlernachweis](pruefnachweise/mobile-20261102/before-regression.txt) |
+| Vollständiger Abschlusslauf nach Korrektur | **124 bestanden, 0 fehlgeschlagen**, 223,86 s | [Abschlusslauf](pruefnachweise/mobile-20261102/final-full.txt) |
 
 Der Abschlusslauf enthält **103 Chromium-Prüffälle** (31 bestehende + 72 neue)
 sowie 4 Rechner- und 17 Fachreferenzprüfungen. Die mobile Matrix protokolliert
