@@ -2,6 +2,10 @@
 (function () {
   'use strict';
   const guide = (hint, approach, why) => Object.freeze({hint, approach, why});
+  const babIntro = guide(
+    'Setze die Materialgemeinkosten ins Verhältnis zu den Materialeinzelkosten.',
+    'Materialgemeinkostenzuschlag = Materialgemeinkosten ÷ Materialeinzelkosten × 100. Runde auf ganze Prozent.',
+    'Der Satz gibt an, wie viel Materialgemeinkosten pro 100 Euro Materialeinzelkosten anfallen.');
   const topics = Object.freeze({
     break_even: guide(
       'Welcher Betrag bleibt von einem verkauften Stück nach seinen variablen Kosten übrig?',
@@ -9,7 +13,7 @@
       'Jedes verkaufte Stück trägt seinen Deckungsbeitrag zur Deckung der Fixkosten bei. Am Break-even sind diese gerade gedeckt.'),
     bab: guide(
       'Ein Zuschlag vergleicht Gemeinkosten mit ihrer jeweiligen Bezugsgröße. Welche Einzelkosten gehören zum Material- und zum Fertigungsbereich?',
-      'MGK-Zuschlag = MGK ÷ Materialeinzelkosten × 100; FGK-Zuschlag = FGK ÷ Fertigungslöhne × 100. Für Verwaltung/Vertrieb bilden Material, Löhne und beide Gemeinkosten zusammen die Herstellkosten als Bezugsbasis.',
+      'MGK-Zuschlag = MGK ÷ Materialeinzelkosten × 100. FGK-Zuschlag = FGK ÷ Fertigungslöhne × 100. Herstellkosten = Materialeinzelkosten + Fertigungslöhne + MGK + FGK. Gemeinsamer Verwaltungs- und Vertriebszuschlag = (VwGK + VtGK) ÷ Herstellkosten × 100. Runde die Zuschläge auf ganze Prozent.',
       'Die Zuschläge machen Gemeinkosten im Verhältnis zur passenden Bezugsbasis vergleichbar. Ein Wechsel der Bezugsbasis verändert den Prozentsatz.'),
     abgrenzung: guide(
       'Nicht jeder Aufwand ist eine betriebliche Kostenposition. Welche Posten gehören nicht zur eigentlichen betrieblichen Leistung?',
@@ -17,7 +21,7 @@
       'Neutraler Aufwand gehört nicht zu den betrieblichen Kosten. Zusatzkosten ergänzen dagegen betrieblichen Werteverzehr ohne entsprechenden Aufwand.'),
     kostenstellen: guide(
       'Verteile die Kosten zuerst auf eine einzelne Einheit der angegebenen Bezugsgröße. Achte dabei auf die Einheit: Geld je Stunde ist kein Prozentsatz.',
-      'Verrechnungssatz = Gemeinkosten ÷ gesamte Maschinenstunden. Kosten des Auftrags = ungerundeter Verrechnungssatz × Auftragsstunden. Beachte die verlangte Endrundung.',
+      'Verrechnungssatz = Gemeinkosten ÷ gesamte Maschinenstunden. Falls Auftragskosten gefragt sind, multipliziere den Verrechnungssatz mit den Stunden des Auftrags.',
       'Ein Verrechnungssatz ordnet dem Auftrag die Kosten entsprechend seinen beanspruchten Maschinenstunden zu.'),
     deckungsbeitrag: guide(
       'Trenne zunächst die Kosten je Stück von den Kosten für die gesamte Menge. Welche Kosten müssen kurzfristig beziehungsweise langfristig gedeckt werden?',
@@ -41,7 +45,7 @@
       'Die Bezugsgrößen bestimmen die Aussage: Liquidität vergleicht verfügbare Mittel mit kurzfristigen Verpflichtungen, die EK-Quote dagegen Eigenkapital mit dem gesamten Kapital.'),
     investition: guide(
       'Welche jährlichen Zahlungen fließen aus der Investition netto zurück? Zähle eine zusätzliche Ersparnis nur einmal.',
-      'Jährlicher Nettozufluss = genannter Rückfluss + zusätzlich genannte zahlungswirksame Ersparnis. Teile die Anschaffungsauszahlung durch diesen Zufluss. Bei Zahlungen am Jahresende und gesuchten vollen Jahren runde auf.',
+      'Zum genannten Rückfluss kommt eine Ersparnis nur hinzu, wenn sie darin noch nicht enthalten ist. Teile die Anschaffungsauszahlung durch den jährlichen Nettozufluss. Bei Zahlungen am Jahresende und gesuchten vollen Jahren runde auf.',
       'Amortisation bedeutet, dass die Rückflüsse die anfängliche Auszahlung ausgleichen. Bei Zahlungen nur am Jahresende erfolgt dieser Ausgleich erst mit einer vollständigen Jahreszahlung.'),
     lager: guide(
       'Ein Anfangs- und ein Endbestand werden zunächst zu einem vereinfachten Durchschnitt zusammengefasst. Häufigerer Umschlag bedeutet kürzere Lagerdauer.',
@@ -71,6 +75,7 @@
   window.BwlGuidance = Object.freeze({
     forTask(topic, index, difficulty) {
       if (topic === 'kostenarten') return kostenarten(index, difficulty);
+      if (topic === 'bab' && difficulty === 1) return babIntro;
       return topics[topic];
     }
   });

@@ -168,6 +168,7 @@
 
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
+    const moveFocus = document.activeElement !== document.body;
     resetTaskSupport();
     document.querySelectorAll('[data-action="check"], [data-action="reveal"], [data-action="next"]').forEach(button => { button.disabled = true; });
     announce(`${labelOf(session.topic)}: Alle Level abgeschlossen.`);
@@ -180,6 +181,8 @@
         </div>
         <p class="muted small">Deine gutgeschriebenen Level bleiben gespeichert.</p>
       </div>`;
+    document.getElementById('main-content').scrollTop = 0;
+    if (moveFocus) wrap.focus({ preventScroll: true });
     const btn = document.getElementById("btn-finish-change");
     if (btn) {
       btn.addEventListener("click", () => {
@@ -272,6 +275,8 @@
   function renderTask() {
     const wrap = document.getElementById("bab-wrapper");
     if (!wrap) return;
+    const moveFocus = document.activeElement !== document.body;
+    document.getElementById('main-content').scrollTop = 0;
     resetTaskSupport();
 
     clampLevel();
@@ -319,7 +324,7 @@
     // Tooltips für i-Buttons initialisieren
     initInlineTooltips(wrap);
 
-    // Starter-Hinweis ausblenden, Erklärungen verstecken, erstes Feld fokussieren
+    // Neue Aufgaben beginnen bei der Aufgabenstellung.
     const starter = document.getElementById('train-starter');
     hideEl(starter);
     const explanations = [...wrap.querySelectorAll('[data-explain]')];
@@ -328,8 +333,7 @@
     ['btn-hint', 'btn-help'].forEach(id => { const button = document.getElementById(id); if (button) button.disabled = !guidance; });
     const reveal = document.getElementById('btn-reveal');
     if (reveal) reveal.setAttribute('aria-controls', explanations.map(x => x.id).join(' '));
-    const first = wrap.querySelector("input, select, textarea, button");
-    if (first && typeof first.focus === "function") first.focus();
+    if (moveFocus) wrap.focus({ preventScroll: true });
 
     // Prüfen-Button neutralisieren
     try {
@@ -354,7 +358,7 @@
     const reason = document.getElementById('task-reason');
     if (reason) { reason.hidden = true; reason.textContent = ''; }
     const next = document.getElementById('btn-next');
-    if (next) { next.textContent = 'Aufgabe überspringen →'; next.classList.remove('primary'); }
+    if (next) { next.textContent = 'Überspringen →'; next.classList.remove('primary'); }
     const feedback = document.getElementById('task-feedback');
     if (feedback) { feedback.hidden = true; feedback.textContent = ''; }
   }
@@ -378,6 +382,7 @@
       panel.hidden = false;
       button.setAttribute('aria-expanded', 'true');
       announce(guidance[stage]);
+      panel.scrollIntoView({ block: 'nearest' });
     }
   }
 
@@ -517,6 +522,7 @@
         wrap.querySelectorAll('select[data-answer]').forEach(field => { field.disabled = true; });
         if (typeof window.renderRank === 'function') window.renderRank();
         if (typeof window.renderTopicProgress === 'function') window.renderTopicProgress();
+        wrap.querySelector('[data-explain]')?.scrollIntoView({ block: 'start' });
         return;
 
       }
@@ -562,6 +568,7 @@
         btnCheck.classList.remove("err");
         btnCheck.classList.add("ok");
       }
+      wrap.querySelector('[data-explain]')?.scrollIntoView({ block: 'start' });
     });
 
     // Continue only on explicit activation; unsolved tasks can still be skipped.
