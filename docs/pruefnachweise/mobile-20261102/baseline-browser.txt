@@ -1,0 +1,39 @@
+✔ all five entry pages load with local assets and strict CSP (3605.574375ms)
+✔ training task stays visible and keyboard reachable (1063.411917ms)
+✔ wrong/correct answers save once, continue on request and resume after reload (755.103917ms)
+✔ correct answer after manually revisiting an awarded level does not lower accuracy (529.197416ms)
+✔ all Kostenarten levels complete and remain complete (1887.883ms)
+✔ all registered topics render and accept exact solutions at all four difficulties (7201.433084ms)
+✔ empty selection, settings, reset and legacy link behave consistently (572.915083ms)
+✔ damaged saved topic data recovers without losing valid points (225.354416ms)
+✔ highest rank stays visually full (166.124458ms)
+✔ desktop and narrow screens keep content inside the viewport (3272.287125ms)
+✔ calculator uses editable input, caret selection and native clear-button activation (283.752208ms)
+✔ dark theme survives page navigation and progress controls stay readable (397.137583ms)
+✔ locked or unselected topic cannot be started by a URL parameter (248.2055ms)
+✔ a second tab receives progress and reset without reloading (376.190708ms)
+✔ unavailable storage reports a warning and retains the in-session result (224.700792ms)
+✔ partial selection write failure restores the previous choice (207.25275ms)
+✔ Lernatelier help and calculator disclosures preserve answer and keyboard behavior (349.897417ms)
+✔ Lernatelier covers every view in both themes, reflow and reduced motion (3339.866625ms)
+✔ all training topic layouts fit a 320px Lernatelier worksheet (2443.799084ms)
+✔ mission path and XP follow actual awards, retry amounts and resume (466.140208ms)
+✔ mission map changes to the weaker topic on Weiter and hides for empty selection (422.525458ms)
+✔ published HTML enforces its own CSP without Apache settings (186.762042ms)
+✔ Enter checks a typed answer without revealing or replacing it (296.279958ms)
+✔ Full solutions do not award XP or finish a level in either theme (2868.204208ms)
+✔ An assisted unfinished level remains open after next and reload (692.691375ms)
+✔ Topic selection stays disabled until initialized, then persists the first change (267.087084ms)
+✔ a correct result and worked explanation stay visible until explicit Weiter (1425.780875ms)
+✔ all Kostenarten help variants retain XP and preserve existing input (876.405958ms)
+✔ wrong cents and percentage points are rejected, exact locale answers accepted (744.681ms)
+✔ help and success states reflow at 320px in both themes and at 200 percent text size (1033.381792ms)
+✔ complete solutions stay uncredited across all active modules and variants (8117.079458ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44826.453542

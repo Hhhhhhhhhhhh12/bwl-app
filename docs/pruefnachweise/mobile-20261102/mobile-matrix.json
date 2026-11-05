@@ -1,0 +1,1447 @@
+{
+  "application_and_test_commit": "803fbca84ae054ad9f3da95b7027815c3965e294",
+  "mobile_cases": 72,
+  "states_recorded": 360,
+  "cases": [
+    {
+      "topic": "abgrenzung",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "abgrenzung",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "abgrenzung",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "abgrenzung",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "aequivalenz",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "aequivalenz",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "aequivalenz",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "aequivalenz",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 1,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 1,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 1,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 1,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 2,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 2,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 2,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 2,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 3,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 3,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 3,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 3,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "bab",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "break_even",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "break_even",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "break_even",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "break_even",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "deckungsbeitrag",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "deckungsbeitrag",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "deckungsbeitrag",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "deckungsbeitrag",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "investition",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "investition",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "investition",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "investition",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kennzahlen",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kennzahlen",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kennzahlen",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kennzahlen",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenarten",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenarten",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenarten",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenarten",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenstellen",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenstellen",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenstellen",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "kostenstellen",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "lager",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "lager",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "lager",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "lager",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "prozesskosten",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "prozesskosten",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "prozesskosten",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "prozesskosten",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 1,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 1,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 1,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 1,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 2,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 2,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 2,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 2,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 3,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 3,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 3,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 3,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 4,
+      "theme": "dark",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 320,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    },
+    {
+      "topic": "zuschlag",
+      "difficulty": 4,
+      "theme": "light",
+      "width": 390,
+      "states": [
+        "btn-help",
+        "btn-hint",
+        "correct",
+        "revealed",
+        "task"
+      ],
+      "max_page_overflow_px": 0,
+      "max_answer_clipping_px": 0,
+      "explanation_fragments": [
+        1,
+        1
+      ],
+      "max_preceding_overlap_px": 0
+    }
+  ]
+}
