@@ -152,7 +152,6 @@ body[data-design="lernatelier"] .atelier-operator { color:var(--muted); font-siz
 body[data-design="lernatelier"] .atelier-answer-actions { margin-top:1.2rem; padding-top:1rem; border-top:1px solid var(--line); }
 body[data-design="lernatelier"] .atelier-tools,
 body[data-design="lernatelier"] .atelier-secondary-actions { display:flex; align-items:center; flex-wrap:wrap; gap:.6rem 1rem; margin-top:1rem; }
-body[data-design="lernatelier"] .atelier-tools #btn-next { margin-left:auto; }
 body[data-design="lernatelier"] .atelier-tools .btn,
 body[data-design="lernatelier"] .atelier-secondary-actions .btn {
   border-color:transparent; padding:.45rem 0; background:transparent; color:var(--brand); box-shadow:none; font-size:.82rem;

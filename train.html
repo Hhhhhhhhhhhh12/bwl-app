@@ -41,12 +41,12 @@
     <div class="atelier-layout"><div class="atelier-main"><section class="task-area atelier-training" aria-labelledby="training-heading">
     <div class="atelier-page-heading mission-hero" data-level="01"><p class="atelier-kicker">Deine Lernmission</p><h1 id="training-heading">Kosten im Griff.</h1><p id="session-pill" class="atelier-session-meta">Thema · Stufe 1</p></div>
     <p id="train-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
-    <div class="atelier-worksheet"><div id="bab-wrapper" class="task-slot atelier-task-slot"></div>
+    <div class="atelier-worksheet"><div id="bab-wrapper" class="task-slot atelier-task-slot" tabindex="-1"></div>
       <section id="task-guidance" class="task-guidance" hidden aria-labelledby="task-guidance-heading"><h2 id="task-guidance-heading">Hinweis</h2><p id="task-guidance-text"></p></section>
       <p id="task-reason" class="task-reason" hidden></p>
-      <div class="task-controls atelier-answer-actions"><span class="mission-reward" id="mission-reward-text"></span><button class="btn primary" id="btn-check" data-action="check" type="button">Antwort prüfen</button><p id="task-feedback" class="atelier-feedback" hidden></p></div>
+      <div class="task-controls atelier-answer-actions"><span class="mission-reward" id="mission-reward-text"></span><p id="task-feedback" class="atelier-feedback" hidden></p></div>
     </div>
-    <div class="atelier-tools"><button class="btn" id="btn-hint" type="button" aria-expanded="false" aria-controls="task-guidance">Hinweis</button><button class="btn" id="btn-help" type="button" aria-expanded="false" aria-controls="task-guidance">Rechenansatz</button><button class="btn" id="btn-reveal" data-action="reveal" type="button" aria-expanded="false">Vollständige Lösung · ohne XP</button><button class="btn" id="btn-retry-task" type="button" hidden>Neu selbst lösen</button><button class="btn" id="btn-next" data-action="next" type="button">Aufgabe überspringen →</button></div>
+    <div class="atelier-tools"><button class="btn" id="btn-hint" type="button" aria-expanded="false" aria-controls="task-guidance">Hinweis</button><button class="btn" id="btn-help" type="button" aria-expanded="false" aria-controls="task-guidance">Rechenansatz</button><button class="btn" id="btn-reveal" data-action="reveal" type="button" aria-expanded="false">Vollständige Lösung · ohne XP</button><button class="btn" id="btn-retry-task" type="button" hidden>Neu selbst lösen</button></div>
     <details class="atelier-calculator" id="calculator"><summary>Taschenrechner öffnen</summary><div id="calc-mount"></div></details>
     <div class="atelier-secondary-actions"><button class="btn" id="btn-change-topic" type="button">Thema wechseln</button><button class="btn" id="btn-skip-topic" type="button">Thema aus meiner Auswahl nehmen</button></div>
   </section></div>
@@ -66,6 +66,12 @@
       <section class="atelier-side-block"><h3>Worum geht es hier?</h3><p id="topic-intro" class="muted atelier-topic-intro"></p></section>
     </aside></div>
   </main>
+  <div class="training-actions" role="group" aria-label="Aufgabe abschließen">
+    <div class="container">
+      <button class="btn primary" id="btn-check" data-action="check" type="button">Antwort prüfen</button>
+      <button class="btn" id="btn-next" data-action="next" type="button">Überspringen →</button>
+    </div>
+  </div>
   <footer class="footer"><div class="container">
     <p class="muted version-text">BWL-App · Version <span id="app-version">–</span></p>
   </div></footer>

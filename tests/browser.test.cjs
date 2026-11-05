@@ -123,6 +123,69 @@ test('training task stays visible and keyboard reachable', async t => {
   await page.locator('#bab-wrapper [data-answer]').first().focus();
   assert.equal(await page.evaluate(() => document.activeElement.hasAttribute('data-answer')), true);
 });
+test('the app frame stays fixed across all entry pages and long content remains reachable', async t => {
+  const { page } = await session(t, { selection: allTopics, progress: unlocked() });
+  for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 667, height: 375 }, { width: 1440, height: 900 }]) {
+    await page.setViewportSize(viewport);
+    for (const name of ['index', 'dashboard', 'train', 'achievements', 'settings']) {
+      await page.goto(`${origin}/${name}.html?topic=bab&difficulty=4`);
+      const shell = await page.evaluate(() => {
+        const main = document.querySelector('main');
+        const header = document.querySelector('header');
+        const footer = document.querySelector('footer');
+        const before = [header.getBoundingClientRect().top, footer.getBoundingClientRect().bottom];
+        main.scrollTop = main.scrollHeight;
+        window.scrollTo(200, 200);
+        return {
+          before,
+          after: [header.getBoundingClientRect().top, footer.getBoundingClientRect().bottom],
+          pageScroll: [window.scrollX, window.scrollY],
+          rootSize: [document.documentElement.scrollWidth, document.documentElement.scrollHeight],
+          contentHeight: main.clientHeight,
+          contentScroll: main.scrollTop,
+          expectedContentScroll: main.scrollHeight - main.clientHeight,
+        };
+      });
+      const context = `${name} at ${viewport.width}×${viewport.height}`;
+      assert.deepEqual(shell.pageScroll, [0, 0], context);
+      assert.deepEqual(shell.rootSize, [viewport.width, viewport.height], context);
+      assert.deepEqual(shell.before, [0, viewport.height], context);
+      assert.deepEqual(shell.after, shell.before, context);
+      assert.ok(shell.contentHeight >= 120, context);
+      assert.ok(Math.abs(shell.contentScroll - shell.expectedContentScroll) <= 1, context);
+      if (viewport.width === 320) assert.ok(shell.contentScroll > 0, context);
+    }
+  }
+});
+
+test('on a short phone training keeps its actions in view and Weiter returns to the next prompt', async t => {
+  const { page } = await session(t, { selection: ['zuschlag'], viewport: { width: 320, height: 568 } });
+  await page.goto(`${origin}/train.html?topic=zuschlag&difficulty=4`);
+  const bounds = async selector => {
+    const box = await page.locator(selector).boundingBox();
+    assert.ok(box && box.y >= 0 && box.y + box.height <= 568, selector);
+  };
+  assert.equal(await page.locator('main').evaluate(main => main.scrollTop), 0);
+  await bounds('#btn-check');
+  await bounds('#btn-next');
+  await answerAll(page);
+  await page.locator('#btn-check').click();
+  const explanation = page.locator('[data-explain]');
+  const visibleSolution = await explanation.evaluate(el => {
+    const main = el.closest('main').getBoundingClientRect();
+    const solution = el.getBoundingClientRect();
+    return solution.top >= main.top && solution.top < main.bottom;
+  });
+  assert.ok(visibleSolution, 'the start of the worked solution is inside the scroll area');
+  await bounds('#btn-next');
+  await snapshot(page, 'scroll-frame-solution-320');
+  await page.locator('#btn-next').click();
+  assert.match(await page.locator('#session-pill').textContent(), /Level 2\/15/);
+  assert.equal(await page.locator('main').evaluate(main => main.scrollTop), 0);
+  assert.equal(await page.locator('#bab-wrapper').evaluate(wrap => wrap === document.activeElement), true);
+  assert.equal((await saved(page)).points, 20);
+});
+
 test('wrong/correct answers save once, continue on request and resume after reload', async t => {
   const { page } = await session(t, { selection: ['kostenarten'] });
   await page.goto(`${origin}/train.html?topic=kostenarten`);

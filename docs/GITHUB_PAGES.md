@@ -1,4 +1,6 @@
-# Veröffentlichung über GitHub Pages
+# Frühere Veröffentlichung über GitHub Pages
+
+Diese Dokumentation beschreibt die bisherige Pages-Bereitstellung. Für den lokalen Start gilt die Anleitung in der [README](../README.md).
 
 Stand: 28. Oktober 2026. Version 1.6.0 (Lernmission).
 

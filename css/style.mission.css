@@ -256,4 +256,48 @@ body[data-game-style="mission"] .task-guidance { margin-top:1rem; padding:1rem; 
 body[data-game-style="mission"] .task-guidance h2 { font-size:.9rem; margin:0 0 .4rem; }
 body[data-game-style="mission"] .task-guidance p, body[data-game-style="mission"] .task-reason { font-size:.88rem; margin:.5rem 0; }
 body[data-game-style="mission"] .task-reason { padding:1rem 0 0; color:var(--ink); }
-body[data-game-style="mission"] .atelier-tools #btn-next.primary { padding:.65rem 1rem; color:var(--brand-ink); background:var(--brand); }
+
+/* The navigation and actions stay in view. Only the main landmark scrolls. */
+html[data-game-style="mission"] { overflow:hidden; }
+body[data-game-style="mission"] {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr) auto auto;
+  height:100vh;
+  height:100dvh;
+}
+body[data-game-style="mission"] main.atelier-container {
+  overflow:auto;
+  overscroll-behavior:contain;
+  scroll-padding-block:.6rem;
+}
+body[data-game-style="mission"] .training-actions {
+  background:var(--surface);
+  border-top:1px solid var(--line);
+}
+body[data-game-style="mission"] .training-actions .container {
+  display:flex;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:.45rem;
+  padding-block:.45rem;
+}
+body[data-game-style="mission"] .training-actions .btn { min-height:44px; }
+body[data-game-style="mission"] .training-actions #btn-check { margin-left:0; }
+body[data-game-style="mission"] .footer .container { padding-block:.3rem; }
+
+@media (max-width:640px), (max-height:550px) {
+  body[data-game-style="mission"] .atelier-header .container {
+    min-height:0;
+    padding-block:.35rem;
+    gap:.25rem .6rem;
+  }
+  body[data-game-style="mission"] .brand-sub { display:none; }
+  body[data-game-style="mission"] .atelier-main,
+  body[data-game-style="mission"][data-page="train"] .atelier-layout { padding-top:.85rem; }
+  body[data-game-style="mission"] .training-actions .btn { padding:.4rem .6rem; font-size:.82rem; }
+}
+@media (max-width:640px) {
+  body[data-game-style="mission"] .nav { justify-content:space-between; }
+  body[data-game-style="mission"] .nav-link { padding-inline:.15rem; }
+}
