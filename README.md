@@ -2,7 +2,7 @@
 
 Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter anderem mit Übungen zu Kostenarten, Kostenstellen, Deckungsbeitrag, Zuschlagskalkulation, BAB und Break-even.
 
-**Version 1.6.0: Lernmission mit gestuften Hilfen und ausdrücklichem Weiter-Schritt.** Die App ist über [GitHub Pages online nutzbar](https://hhhhhhhhhhhh12.github.io/bwl-app/). Details und Bereitstellungsstatus stehen in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). Dieser Release ergänzt gestufte Hilfen, einen ausdrücklichen Weiter-Schritt und fachlich korrigierte Aufgaben in allen zwölf aktiven Themen. Der Nutzer hat Integration, Push und Merge ausdrücklich freigegeben. Einzelheiten stehen in [docs/LERNFUEHRUNG_2026_10_28.md](docs/LERNFUEHRUNG_2026_10_28.md). Visuelle Nutzerabnahme und Prüfungen auf weiteren Geräten und Browsern bleiben offen.
+**Version 1.6.0.** Die Lernmission umfasst zwölf Themen, gestufte Hilfen und einen ausdrücklichen Weiter-Schritt. Details zur Lernführung stehen in [docs/LERNFUEHRUNG_2026_10_28.md](docs/LERNFUEHRUNG_2026_10_28.md).
 
 ## Aufbau
 
@@ -16,7 +16,19 @@ Eine browserbasierte Lernanwendung für Kosten- und Leistungsrechnung, unter and
 - `js/train/`: Trainingssteuerung und Aufgabenmodule.
 - `css/`, `assets/`: Styles, Symbole und lokale Schriftdatei.
 
-Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallation und keinen Build-Schritt. Die Dateien sind für die Auslieferung über einen Webserver vorgesehen; die Versionsdatei wird relativ per HTTP abgerufen. Als Hosting ist GitHub Pages aus `main` und dem Repository-Hauptordner ausgewählt; `.nojekyll` hält die statischen Dateien unverändert.
+Die Anwendung besteht aus HTML, CSS und JavaScript. Es gibt keine Paketinstallation und keinen Build-Schritt.
+
+## Lokal starten
+
+Voraussetzungen sind Git und Python 3. Klone das öffentliche Repository und starte einen lokalen Webserver:
+
+```sh
+git clone https://github.com/Hhhhhhhhhhhh12/bwl-app.git
+cd bwl-app
+python3 -m http.server 8000 --bind 127.0.0.1
+```
+
+Öffne [http://127.0.0.1:8000/](http://127.0.0.1:8000/) im Browser. Der Server ist nur auf dem eigenen Gerät erreichbar. Beende ihn mit `Ctrl+C`. Verwende beim nächsten Start dieselbe Adresse und denselben Port, damit der Browser den lokalen Lernstand wiederfindet. Die frühere Pages-Bereitstellung ist [hier dokumentiert](docs/GITHUB_PAGES.md).
 
 ## Korrekturen in 1.5.1
 
@@ -36,7 +48,7 @@ Die App speichert Fortschritte und Einstellungen lokal im jeweiligen Browser. Es
 
 Die Versionsgeschichte beginnt mit der ausgewählten Referenzfassung 1.4.4. Darauf folgt die gezielte Zusammenführung ergänzender Quellen: Startablauf, kompatible zusätzliche Kostenarten-Aufgaben, begrenzte Ersatzsuche und Layout-Ergänzungen. Die bisherige Aufteilung in getrennte HTML-Seiten bleibt erhalten. Einzelheiten stehen in [docs/QUELLEN_UND_STATUS.md](docs/QUELLEN_UND_STATUS.md).
 
-Die enthaltene `.htaccess` stammt unverändert aus der Referenzfassung und beschreibt den historischen Apache-Betrieb unter `/bwl-app/`. GitHub Pages verarbeitet diese Apache-Datei nicht. Alle aktiven HTML-Seiten enthalten deshalb zusätzlich die dort unterstützte Content Security Policy und die Referrer-Regel als Meta-Angaben. HTTP-Header-Regeln werden dadurch nicht vollständig nachgebildet; Einzelheiten stehen in der Hosting-Dokumentation.
+Die enthaltene `.htaccess` stammt unverändert aus der Referenzfassung und beschreibt den historischen Apache-Betrieb unter `/bwl-app/`. Der lokale Python-Server verarbeitet diese Datei nicht. Die aktiven HTML-Seiten enthalten eine Content Security Policy und eine Referrer-Regel als Meta-Angaben. Zusätzliche HTTP-Schutzheader aus der Apache-Datei gelten nur bei entsprechender Serverkonfiguration.
 
 ## Lokale Prüfung
 
@@ -58,11 +70,10 @@ Bei einer externen Installation kann `BWL_PLAYWRIGHT_MODULE` auf das vorhandene 
 
 ## Ziel und offene Schritte
 
-Langfristiges Ziel ist eine eigenständige, online nutzbare und visuell hochwertige BWL-Lernapp. Nach dem sichtbaren Variantenvergleich und der Rückmeldung zur Spielidentität hat der Nutzer „Lernmission“ mit ruhigem Hintergrund ausgewählt. Die lokale Umsetzung umfasst alle aktiven Seiten, helle und dunkle Darstellung, einen Levelpfad aus gespeicherten Abschlüssen, Punkteanzeigen und einen klaren Arbeitsbereich mit aufklappbarem Rechner. Auswahl, Umsetzung, technische Prüfung und visuelle Abnahme sind in [docs/LERNATELIER.md](docs/LERNATELIER.md) getrennt dokumentiert.
+Langfristiges Ziel ist eine eigenständige und visuell hochwertige BWL-Lernapp. Nach dem sichtbaren Variantenvergleich und der Rückmeldung zur Spielidentität hat der Nutzer „Lernmission“ mit ruhigem Hintergrund ausgewählt. Die lokale Umsetzung umfasst alle aktiven Seiten, helle und dunkle Darstellung, einen Levelpfad aus gespeicherten Abschlüssen, Punkteanzeigen und einen klaren Arbeitsbereich mit aufklappbarem Rechner. Auswahl, Umsetzung, technische Prüfung und visuelle Abnahme sind in [docs/LERNATELIER.md](docs/LERNATELIER.md) getrennt dokumentiert.
 
 - Visuelle Nutzerabnahme und Prüfung auf echten Geräten sowie in weiteren Browsern.
 - Zusätzliche externe Fachabnahme und Ausbau der bisher vereinfachten Aufgabenmodelle.
 - Datenübernahme für vorhandene Lernstände.
-- Weitere Geräte- und Browserprüfung des veröffentlichten Stands.
 
-Historische Dateien wie `js/router.js`, `js/train-engine.js`, `style.css` und `js/dev/selftest.js` bleiben nachvollziehbar erhalten, werden von den aktiven HTML-Seiten jedoch nicht geladen. Der Selftest enthält Schreibcode und ist keine nachgewiesen schreibfreie Prüfroutine. Im Repository ist kein eigener Test- oder Deployment-Workflow definiert; GitHub Pages veröffentlicht `main` automatisch.
+Historische Dateien wie `js/router.js`, `js/train-engine.js`, `style.css` und `js/dev/selftest.js` bleiben nachvollziehbar erhalten, werden von den aktiven HTML-Seiten jedoch nicht geladen. Der Selftest enthält Schreibcode und ist keine nachgewiesen schreibfreie Prüfroutine. Im Repository ist kein eigener Test- oder Deployment-Workflow definiert.
