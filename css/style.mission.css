@@ -299,5 +299,5 @@ body[data-game-style="mission"] .footer .container { padding-block:.3rem; }
 }
 @media (max-width:640px) {
   body[data-game-style="mission"] .nav { justify-content:space-between; }
-  body[data-game-style="mission"] .nav-link { padding-inline:.25rem; }
+  body[data-game-style="mission"] .nav-link { padding-inline:.15rem; }
 }
