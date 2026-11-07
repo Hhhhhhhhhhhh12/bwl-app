@@ -1,0 +1,8 @@
+.speech-content { display:grid; gap:.65rem; padding:1rem 0 .25rem; }
+.speech-content p { margin:0; }
+.speech-actions { display:flex; flex-wrap:wrap; gap:.5rem; }
+.speech-consent { display:flex; align-items:flex-start; gap:.6rem; }
+.speech-consent input { flex:0 0 auto; margin-top:.25rem; }
+.speech-content textarea { box-sizing:border-box; width:100%; padding:.65rem; border:1px solid var(--line, #b8c2cc); border-radius:8px; color:var(--ink); background:var(--surface); font:inherit; resize:vertical; }
+.speech-content textarea:focus-visible { outline:3px solid var(--brand); outline-offset:2px; }
+.speech-content > button { justify-self:start; }

@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/style.dashboard.css">
   <link rel="stylesheet" href="css/style.atelier.css">
   <link rel="stylesheet" href="css/style.mission.css">
+  <link rel="stylesheet" href="css/style.speech.css">
 </head>
 <body data-page="train" data-design="lernatelier" data-game-style="mission">
   <a class="sr-only skip-link" href="#main-content">Zum Inhalt</a>
@@ -47,6 +48,25 @@
       <div class="task-controls atelier-answer-actions"><span class="mission-reward" id="mission-reward-text"></span><p id="task-feedback" class="atelier-feedback" hidden></p></div>
     </div>
     <div class="atelier-tools"><button class="btn" id="btn-hint" type="button" aria-expanded="false" aria-controls="task-guidance">Hinweis</button><button class="btn" id="btn-help" type="button" aria-expanded="false" aria-controls="task-guidance">Rechenansatz</button><button class="btn" id="btn-reveal" data-action="reveal" type="button" aria-expanded="false">Vollständige Lösung · ohne XP</button><button class="btn" id="btn-retry-task" type="button" hidden>Neu selbst lösen</button></div>
+    <details class="atelier-calculator speech-panel" id="speech-panel">
+      <summary>Vorlesen und Diktieren</summary>
+      <div class="speech-content">
+        <p id="speech-notice">Die Sprachfunktionen verwenden deinen Browser. Je nach Browser und Stimme können Audio oder vorgelesener Text an einen externen Sprachdienst übertragen werden. Die BWL-App speichert keine Audioaufnahme. Tippen bleibt jederzeit möglich.</p>
+        <label class="speech-consent"><input id="speech-consent" type="checkbox"> Ich möchte die Sprachfunktionen mit diesen möglichen Übertragungen verwenden.</label>
+        <div class="speech-actions">
+          <button class="btn" id="speech-read" type="button" disabled>Aufgabe vorlesen</button>
+          <button class="btn" id="speech-stop" type="button" disabled>Sprache stoppen</button>
+        </div>
+        <label for="speech-target">Antwortfeld für das Diktat</label>
+        <select id="speech-target" disabled></select>
+        <button class="btn" id="speech-dictate" type="button" disabled>Diktat starten</button>
+        <label for="speech-preview">Erkannten Text prüfen und bei Bedarf korrigieren</label>
+        <textarea id="speech-preview" rows="2" aria-describedby="speech-preview-help" disabled></textarea>
+        <p id="speech-preview-help" class="muted">Prüfe insbesondere Zahlen und Dezimalzeichen. Die Übernahme ersetzt den Inhalt des ausgewählten Feldes. Deine Antwort wird erst mit „Antwort prüfen“ bewertet.</p>
+        <button class="btn" id="speech-apply" type="button" disabled>In Antwortfeld übernehmen</button>
+        <p id="speech-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </details>
     <details class="atelier-calculator" id="calculator"><summary>Taschenrechner öffnen</summary><div id="calc-mount"></div></details>
     <div class="atelier-secondary-actions"><button class="btn" id="btn-change-topic" type="button">Thema wechseln</button><button class="btn" id="btn-skip-topic" type="button">Thema aus meiner Auswahl nehmen</button></div>
   </section></div>
@@ -96,5 +116,6 @@
   <script defer src="js/train/topics/lager.js"></script>
   <script defer src="js/calc.js"></script>
   <script defer src="js/app.js"></script>
+  <script defer src="js/train/speech.js"></script>
 </body>
 </html>
