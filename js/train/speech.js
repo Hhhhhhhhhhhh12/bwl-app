@@ -34,7 +34,11 @@
   function usable(field) {
     return !!field && task.contains(field) && !field.disabled && !field.readOnly && isVisible(field);
   }
-  function selected() { return fields[Number(target.value)] || null; }
+  function selected() {
+    if (target.value === '') return null;
+    const index = Number(target.value);
+    return Number.isInteger(index) ? fields[index] || null : null;
+  }
   function updateControls() {
     const allowed = consent.checked;
     const busy = !!recognizer;
@@ -61,6 +65,10 @@
     fields = [...task.querySelectorAll('input[data-answer], textarea[data-answer]')]
       .filter(field => !['hidden', 'checkbox', 'radio', 'button', 'submit', 'file', 'password'].includes(field.type) && usable(field));
     target.replaceChildren();
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = fields.length ? 'Antwortfeld auswählen' : 'Kein beschreibbares Antwortfeld';
+    target.append(placeholder);
     fields.forEach((field, index) => {
       const option = document.createElement('option');
       option.value = String(index);
@@ -68,11 +76,7 @@
       option.textContent = `${index + 1}. ${label.replace(/\s+/g, ' ').trim()}`;
       target.append(option);
     });
-    if (!fields.length) {
-      const option = document.createElement('option');
-      option.textContent = 'Kein beschreibbares Antwortfeld';
-      target.append(option);
-    }
+    target.value = '';
     updateControls();
   }
   function resetForTask() {
@@ -211,15 +215,10 @@
     announce(preview.value ? 'Sprache gestoppt. Bereits erkannter Text bleibt zur Prüfung erhalten.' : 'Sprache gestoppt.');
   });
   consent.addEventListener('change', () => {
-    cancelSpeech(); clearDraft(); updateControls();
-    announce(consent.checked ? 'Du kannst jetzt vorlesen lassen oder ein Diktat starten.' : 'Sprachfunktionen ausgeschaltet.');
+    cancelSpeech(); clearDraft(); target.value = ''; updateControls();
+    announce(consent.checked ? 'Wähle für ein Diktat zuerst ausdrücklich ein Antwortfeld aus.' : 'Sprachfunktionen ausgeschaltet.');
   });
   target.addEventListener('change', () => { cancelSpeech(); clearDraft(); updateControls(); });
-  task.addEventListener('focusin', event => {
-    const index = fields.indexOf(event.target);
-    if (index < 0 || selected() === event.target) return;
-    cancelSpeech(); clearDraft(); target.value = String(index); updateControls();
-  });
   document.addEventListener('bwl:task-state', resetForTask);
   new MutationObserver(resetForTask).observe(task, { childList: true });
   document.addEventListener('visibilitychange', () => { if (document.hidden) cancelSpeech(); });
