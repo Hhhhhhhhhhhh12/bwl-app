@@ -843,3 +843,311 @@ for (const width of [320,390]) for (const theme of ['light','dark']) for (const 
     await context.close();
   });
 }
+
+async function speechSession(t, { supported = true, viewport } = {}) {
+  const { page, errors, violations } = await session(t, {
+    selection: ['deckungsbeitrag'], progress: blank(), randomSeed: 781, viewport
+  });
+  await page.addInitScript(supported => {
+    const speech = window.testSpeech = { recognizers: [], utterances: [], cancellations: 0 };
+    class FakeRecognition {
+      constructor() { speech.recognizers.push(this); }
+      start() {
+        if (speech.failStart) throw Error('simulated start failure');
+        this.onstart();
+      }
+      abort() {
+        this.aborted = true;
+        this.result('Ergebnis während abort()');
+      }
+      result(transcript) {
+        this.onresult({ results: [Object.assign([{ transcript }], { isFinal: true })] });
+      }
+    }
+    Object.defineProperties(window, {
+      SpeechRecognition: { value: supported ? FakeRecognition : undefined },
+      webkitSpeechRecognition: { value: undefined },
+      SpeechSynthesisUtterance: { value: supported ? class { constructor(text) { this.text = text; } } : undefined },
+      speechSynthesis: { value: supported ? {
+        getVoices: () => [],
+        speak: utterance => speech.utterances.push(utterance),
+        cancel: () => { speech.cancellations++; }
+      } : undefined }
+    });
+  }, supported);
+  await page.goto(`${origin}/train.html?topic=deckungsbeitrag&difficulty=4`);
+  const control = name => page.locator('#speech-' + name);
+  const fields = page.locator('#bab-wrapper input[data-answer]');
+  const summary = page.locator('#speech-panel summary');
+  const start = control('dictate');
+  const target = control('target');
+  const preview = control('preview');
+  const apply = control('apply');
+  const consent = control('consent');
+  const values = () => fields.evaluateAll(inputs => inputs.map(input => input.value));
+  const count = () => page.evaluate(() => window.testSpeech.recognizers.length);
+  const signal = (type, value, index) => page.evaluate(({ type, value, index }) => {
+    const recognition = window.testSpeech.recognizers.at(index ?? -1);
+    if (type === 'result') recognition.result(value);
+    if (type === 'end') recognition.onend();
+    if (type === 'error') recognition.onerror({ error: value });
+  }, { type, value, index });
+  const aborted = () => page.evaluate(() => window.testSpeech.recognizers.at(-1).aborted);
+  t.after(() => { assert.deepEqual(errors, []); assert.deepEqual(violations, []); });
+  return { page, control, fields, summary, start, target, preview, apply, consent, values, count, signal, aborted };
+}
+
+test('speech: explicit selection, keyboard controls and separate grading at 320px', async t => {
+  const { page, fields, summary, start, target, preview, apply, consent, values, count, signal } =
+    await speechSession(t, { viewport: { width: 320, height: 568 } });
+  const before = await saved(page);
+  const initial = await values();
+  await summary.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await target.inputValue(), '');
+  assert.equal(await target.locator('option:checked').textContent(), 'Antwortfeld auswählen');
+  assert.equal(await start.isDisabled(), true);
+  await consent.focus();
+  await page.keyboard.press('Space');
+  assert.equal(await start.isDisabled(), true);
+  await fields.first().focus();
+  assert.equal(await target.inputValue(), '');
+  assert.equal(await start.isDisabled(), true);
+  assert.equal(await count(), 0);
+
+  await consent.focus();
+  await page.keyboard.press('Tab'); // Read aloud is enabled, Stop is disabled.
+  await page.keyboard.press('Tab');
+  assert.equal(await target.evaluate(select => document.activeElement === select), true);
+  // Commit a native select value through Playwright; headless Chromium does not expose the popup keyboard UI.
+  await target.selectOption('0');
+  await start.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await count(), 1);
+  const answer = await fields.first().getAttribute('data-answer');
+  await signal('result', 'zu korrigierender Text');
+  assert.equal(await apply.isDisabled(), true);
+  await signal('end');
+  assert.equal(await preview.inputValue(), 'zu korrigierender Text');
+  assert.deepEqual(await values(), initial);
+  await preview.fill(answer);
+  assert.deepEqual(await values(), initial);
+  assert.deepEqual(await saved(page), before);
+  await apply.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await fields.first().inputValue(), answer);
+  assert.equal(await preview.inputValue(), '');
+  assert.equal(await page.locator('#task-feedback').isVisible(), false);
+  assert.deepEqual(await saved(page), before);
+
+  const { width, scroll } = await layoutState(page);
+  assert.equal(width, 320);
+  assert.equal(scroll, width);
+  for (const control of [target, start, preview, apply]) {
+    const box = await control.boundingBox();
+    assert.ok(box && box.x >= 0 && box.x + box.width <= width + 1);
+  }
+
+  await answerAll(page);
+  assert.deepEqual(await saved(page), before);
+  await page.locator('#btn-check').click();
+  const after = await saved(page);
+  assert.equal(after.points, before.points + 20);
+  assert.equal(after.topics.deckungsbeitrag.correct, 1);
+  await start.dispatchEvent('click');
+  assert.equal(await count(), 1, 'solved read-only field cannot start recognition');
+});
+
+test('speech: switching fields, tasks and consent discards recognition and stale drafts', async t => {
+  const { page, summary, start, target, preview, apply, consent, values, signal, aborted } = await speechSession(t);
+  const before = await saved(page);
+  const initial = await values();
+  await summary.click();
+  await consent.check();
+  await target.selectOption('0');
+  await start.click();
+  await signal('result', 'alter Entwurf');
+  assert.equal(await target.isDisabled(), true);
+  // The UI locks the selector during recognition. Deliver a change event to exercise its cancellation handler.
+  await target.evaluate(select => { select.value = '1'; select.dispatchEvent(new Event('change')); });
+  assert.equal(await aborted(), true);
+  assert.equal(await preview.inputValue(), '');
+  await start.click();
+  await signal('result', 'zu spät für Feld 1', 0);
+  await signal('end', undefined, 0);
+  assert.equal(await start.isDisabled(), true, 'late end must not stop the new recognizer');
+  assert.equal(await preview.inputValue(), '');
+  await signal('result', 'Entwurf für Feld 2');
+  await signal('end');
+  assert.equal(await apply.isEnabled(), true);
+  await target.selectOption('0');
+  assert.equal(await preview.inputValue(), '');
+  assert.equal(await apply.isDisabled(), true);
+  assert.deepEqual(await values(), initial);
+
+  await start.click();
+  await signal('result', 'alte Aufgabe');
+  await page.locator('#btn-next').click();
+  assert.match(await page.locator('#session-pill').textContent(), /Level 2\/15/);
+  assert.equal(await aborted(), true);
+  await signal('result', 'zu spät für alte Aufgabe');
+  assert.equal(await target.inputValue(), '');
+  assert.equal(await preview.inputValue(), '');
+  assert.equal(await start.isDisabled(), true);
+  assert.equal(await apply.isDisabled(), true);
+  assert.deepEqual(await values(), initial);
+
+  await target.selectOption('0');
+  await start.click();
+  await signal('result', 'vor Widerruf');
+  await consent.uncheck();
+  assert.equal(await aborted(), true);
+  await signal('result', 'zu spät nach Widerruf');
+  await consent.check();
+  assert.equal(await target.inputValue(), '');
+  assert.equal(await preview.inputValue(), '');
+  assert.equal(await start.isDisabled(), true);
+  assert.deepEqual(await saved(page), before);
+});
+
+test('speech: Stop, closed panel, hidden document and pagehide ignore late results', async t => {
+  const { page, control, summary, start, target, preview, consent, values, signal, aborted } = await speechSession(t);
+  const before = await saved(page);
+  const initial = await values();
+  await summary.click();
+  await consent.check();
+  await target.selectOption('0');
+
+  for (const stop of ['button', 'panel', 'visibilitychange', 'pagehide']) {
+    await start.click();
+    await signal('result', 'erkannt');
+    if (stop === 'button') await control('stop').click();
+    if (stop === 'panel') {
+      await summary.click();
+      await page.waitForFunction(() => window.testSpeech.recognizers.at(-1).aborted);
+    }
+    if (stop === 'visibilitychange') {
+      await page.evaluate(() => {
+        Object.defineProperty(document, 'hidden', { configurable: true, value: true });
+        document.dispatchEvent(new Event('visibilitychange'));
+        delete document.hidden;
+      });
+    }
+    if (stop === 'pagehide') await page.evaluate(() => window.dispatchEvent(new Event('pagehide')));
+    assert.equal(await aborted(), true, stop);
+    await signal('result', 'zu spät');
+    await signal('end');
+    assert.equal(await preview.inputValue(), 'erkannt', stop);
+    assert.deepEqual(await values(), initial, stop);
+    assert.equal(await control('stop').isDisabled(), true, stop);
+    if (stop === 'panel') await summary.click();
+  }
+  assert.deepEqual(await saved(page), before);
+});
+
+test('speech: disabled, read-only and hidden fields reject dictation and stale apply', async t => {
+  const { page, fields, summary, start, target, preview, apply, consent, values, count, signal } = await speechSession(t);
+  const before = await saved(page);
+  const initial = await values();
+  await summary.click();
+  await consent.check();
+
+  for (const [index, property] of ['disabled', 'readOnly', 'hidden'].entries()) {
+    const field = fields.nth(index);
+    await target.selectOption(String(index));
+    await start.click();
+    await signal('result', 'nicht übernehmen');
+    await signal('end');
+    assert.equal(await apply.isEnabled(), true);
+    await field.evaluate((input, property) => { input[property] = true; }, property);
+    await apply.dispatchEvent('click');
+    assert.equal(await preview.inputValue(), 'nicht übernehmen');
+    assert.deepEqual(await values(), initial, property);
+    await start.dispatchEvent('click');
+    assert.equal(await count(), index + 1, property);
+  }
+
+  await page.evaluate(() => document.dispatchEvent(new CustomEvent('bwl:task-state')));
+  assert.equal(await target.locator('option').count(), 2, 'placeholder and one usable field');
+  assert.equal(await target.inputValue(), '');
+  assert.equal(await apply.isDisabled(), true);
+  assert.deepEqual(await saved(page), before);
+});
+
+test('speech: simulated recognition errors leave answers and progress untouched', async t => {
+  const { page, control, summary, start, target, preview, apply, consent, values, signal, aborted } = await speechSession(t);
+  const before = await saved(page);
+  const initial = await values();
+  await summary.click();
+  await consent.check();
+  await target.selectOption('0');
+
+  for (const [error, status] of [
+    ['not-allowed', /Mikrofonzugriff wurde nicht erlaubt/],
+    ['service-not-allowed', /Sprachdienst nicht erlaubt/],
+    ['audio-capture', /kein nutzbares Mikrofon/],
+    ['no-speech', /keine Sprache erkannt/],
+    ['network', /Sprachdienst ist nicht erreichbar/],
+    ['language-not-supported', /unterstützt Deutsch hier nicht/]
+  ]) {
+    await start.click();
+    await signal('error', error);
+    assert.equal(await aborted(), true);
+    await signal('result', 'zu spät');
+    assert.match(await control('status').textContent(), status);
+    assert.equal(await preview.inputValue(), '');
+    assert.equal(await apply.isDisabled(), true);
+    assert.equal(await start.isEnabled(), true);
+  }
+
+  await page.evaluate(() => { window.testSpeech.failStart = true; });
+  await start.click();
+  await signal('result', 'zu spät nach Startfehler');
+  assert.match(await control('status').textContent(), /konnte nicht gestartet werden/);
+  assert.equal(await preview.inputValue(), '');
+  assert.equal(await apply.isDisabled(), true);
+  assert.deepEqual(await values(), initial);
+  assert.deepEqual(await saved(page), before);
+});
+
+test('speech: missing APIs leave manual answers and progress available', async t => {
+  const { page, control, fields, summary, start, target, preview, apply, consent } =
+    await speechSession(t, { supported: false });
+  const before = await saved(page);
+  await summary.click();
+  assert.match(await control('status').textContent(), /bietet diese Sprachfunktionen nicht an/);
+  await consent.check();
+  for (const element of [control('read'), control('stop'), target, start, preview, apply]) {
+    assert.equal(await element.isDisabled(), true);
+  }
+  await fields.first().fill('123');
+  assert.equal(await fields.first().inputValue(), '123');
+  assert.deepEqual(await saved(page), before);
+});
+
+test('speech: simulated read-aloud excludes solutions and stops on task change', async t => {
+  const { page, control, summary, consent, values } = await speechSession(t);
+  const before = await saved(page);
+  const initial = await values();
+  await summary.click();
+  await page.locator('#bab-wrapper').evaluate(task => {
+    for (const attributes of [{ 'data-explain': '' }, { hidden: '' }, { 'data-tip': '' }]) {
+      const node = document.createElement('span');
+      for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value);
+      node.textContent = 'AUSGELASSENER TESTTEXT';
+      task.append(node);
+    }
+  });
+  await consent.check();
+  await control('read').click();
+  const spoken = await page.evaluate(() => window.testSpeech.utterances.map(utterance => utterance.text));
+  assert.equal(spoken.length, 1);
+  assert.match(spoken[0], /Deckungsbeitrag/i);
+  assert.doesNotMatch(spoken[0], /AUSGELASSENER TESTTEXT/);
+  assert.deepEqual(await values(), initial);
+  assert.deepEqual(await saved(page), before);
+  const cancellations = await page.evaluate(() => window.testSpeech.cancellations);
+  await page.locator('#btn-next').click();
+  assert.ok(await page.evaluate(() => window.testSpeech.cancellations) > cancellations);
+  assert.equal(await control('stop').isDisabled(), true);
+});
