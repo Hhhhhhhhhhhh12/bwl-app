@@ -88,11 +88,12 @@
 
   // Read only visible text nodes. Form controls, tooltips and all solution
   // sections are excluded, including solutions the user has already revealed.
+  // Glossary terms are visible text; their tooltip definitions are attributes.
   function taskText() {
     const walker = document.createTreeWalker(task, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const parent = node.parentElement;
-        if (!parent || parent.closest('[data-explain], input, select, textarea, button, script, style, [data-tip], [data-info], [data-i], .i, .sr-only') || !isVisible(parent)) {
+        if (!parent || parent.closest('[data-explain], input, select, textarea, button, script, style, [data-tip]:not(.info-term), [data-info], [data-i], .i, .sr-only') || !isVisible(parent)) {
           return NodeFilter.FILTER_REJECT;
         }
         return node.textContent.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
